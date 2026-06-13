@@ -100,15 +100,15 @@ MODEL_MAX_PROMPT   = {"nova-reel": 512}
 MODEL_MAX_DURATION = {"veo": 8}
 
 
-def _read_prompt(path):
-    """Read prompt text from a .md file (the block after '## Prompt')."""
+def _read_section(path, marker):
+    """Read one '## <marker>' block from a .md file (up to the next '##')."""
     md = Path(path)
     if not md.exists():
         return None
     text = md.read_text()
-    marker = "## Prompt"
-    if marker in text:
-        after = text.split(marker, 1)[1]
+    head = "## " + marker
+    if head in text:
+        after = text.split(head, 1)[1]
         lines = []
         for line in after.splitlines():
             if line.startswith("##"):
@@ -118,18 +118,38 @@ def _read_prompt(path):
     return None
 
 
-def _build_prompt(raw, compact=False):
+def _read_prompt(path):
+    """Read the scene text (the block after '## Prompt')."""
+    return _read_section(path, "Prompt")
+
+
+def _read_style(path):
+    """Read an optional per-clip style override ('## Style').
+
+    Most clips omit this and inherit the default ambient-loop VIDEO_STYLE.
+    A clip that needs different direction — e.g. a moving camera / walking
+    shot, which contradicts the default "static locked-off camera" — drops
+    a '## Style' block to replace the style suffix just for itself.
+    """
+    return _read_section(path, "Style")
+
+
+def _build_prompt(raw, compact=False, style_override=None):
     """Append the mascot clause and video style suffix to a raw prompt.
 
     `compact=True` uses the shorter clause/style so the whole prompt fits a
-    tight per-model budget (e.g. nova-reel's 512-char cap).
+    tight per-model budget (e.g. nova-reel's 512-char cap). `style_override`
+    (a clip's '## Style' block) replaces the default style suffix when set.
     """
     clause = MASCOT_CLAUSE_COMPACT if compact else MASCOT_CLAUSE
-    style  = VIDEO_STYLE_COMPACT if compact else VIDEO_STYLE
+    if style_override:
+        style = style_override
+    else:
+        style = VIDEO_STYLE_COMPACT if compact else VIDEO_STYLE
     return ", ".join(p for p in (raw, clause, style) if p)
 
 
-def _fit_prompt(raw, model):
+def _fit_prompt(raw, model, style_override=None):
     """Build the prompt for `model`, respecting its prompt-length cap.
 
     Order of fallback: full prompt → compact clause/style → compact with the
@@ -138,18 +158,18 @@ def _fit_prompt(raw, model):
     shrunk prompt never looks like the full one.
     """
     budget = MODEL_MAX_PROMPT.get(model)
-    full = _build_prompt(raw)
+    full = _build_prompt(raw, style_override=style_override)
     if not budget or len(full) <= budget:
         return full
 
-    compact = _build_prompt(raw, compact=True)
+    compact = _build_prompt(raw, compact=True, style_override=style_override)
     if len(compact) <= budget:
         print("  note: prompt > %d chars for %s — using compact style"
               % (budget, model))
         return compact
 
     # Still over: keep the full compact clause+style, trim only the scene.
-    fixed = _build_prompt("", compact=True)   # clause + style, no scene
+    fixed = _build_prompt("", compact=True, style_override=style_override)
     room  = budget - len(fixed) - 2           # 2 for the ", " before the scene
     if room <= 0:
         print("  WARN: compact clause+style alone exceed %d for %s — "
@@ -158,7 +178,7 @@ def _fit_prompt(raw, model):
     trimmed = raw[:room].rstrip(" ,")
     print("  WARN: prompt > %d for %s — trimming the scene to fit "
           "(shorten the .md for cleaner results)" % (budget, model))
-    return _build_prompt(trimmed, compact=True)
+    return _build_prompt(trimmed, compact=True, style_override=style_override)
 
 
 def download_to(prompt, out_path, seed=42, duration=DURATION, aspect=ASPECT,
