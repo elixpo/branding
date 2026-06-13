@@ -24,32 +24,45 @@ import time
 from pathlib import Path
 from dotenv import load_dotenv
 
+# Key lives in .env.local (gitignored). Load it first, then fall back to
+# .env — load_dotenv() won't override a var that .env.local already set.
+load_dotenv(".env.local")
 load_dotenv()
 
 KEY      = os.getenv("POLLINATIONS_KEY")
 BASE     = "https://gen.pollinations.ai/video"
 MODEL    = "ltx-2"
-DURATION = 4         # seconds — short promo loops
+DURATION = 5         # seconds — short, cozy, looping
 ASPECT   = "1:1"     # square, matches the rest of the mascot assets
 
 # ── Style snippets (kept in sync with MASCOT.md by hand) ─────────────────────
 # Appended to every prompt so clips stay on-brand even when the .md only
-# describes the scene. Oreo is always the subject, rendered in the
-# vectorized-anime video look — NOT the pixel-art sticker look.
+# describes the scene. The video Oreo must look EXACTLY like the Elixpo
+# stickers — cute kawaii 2D pixel art, NOT 3D / voxel / Minecraft.
 
+# Canonical Oreo identity — matches the sticker art (cream body, dark rounded
+# patches, big sparkly eyes, pink cheeks, thick outline, red E-badge).
 MASCOT_CLAUSE = (
-    "the main subject is Oreo the panda: warm cream-white fur, dark patches, "
-    "rosy pink cheeks, and a red E-badge on the chest"
+    "the main subject is Oreo: a cute kawaii pixel-art panda exactly like the "
+    "Elixpo stickers — warm cream-white body rgb(240,238,232), dark rounded "
+    "ear and eye patches rgb(38,38,48), big sparkly black eyes with white "
+    "catchlights, rosy pink cheeks rgb(255,93,104), thick dark outline, and a "
+    "red E-badge rgb(220,60,50) on the chest"
 )
 
-# The signature motion: a fixed, static shot where the panda holds completely
-# still while only the surrounding environment drifts — a calm ambient loop.
+# 2D pixel-art look matching the stickers + aesthetic ambient MOTION. The trap:
+# a flat "static" prompt makes the model Ken-Burns-zoom a still frame. So name
+# the things that gently move (breeze, grass, petals, fur) for a cozy lo-fi
+# loop, and explicitly forbid both the zoom AND any 3D/voxel drift.
 VIDEO_STYLE = (
-    "vectorized aesthetic anime style, clean vector shapes, soft gradients, "
-    "lush vibrant saturated colours, cinematic fixed static shot, the panda "
-    "remains completely motionless while the surrounding environment gently "
-    "sways and ripples with subtle natural motion as if blown by a soft "
-    "invisible breeze, seamless loop, no text, no watermark"
+    "2D animated pixel-art illustration in the Elixpo sticker style, thick "
+    "dark outlines, vibrant warm celebration colours, cozy lo-fi aesthetic, "
+    "soft golden warm sunlight; Oreo sits calmly and content in a gentle cool "
+    "breeze that ruffles his fur and ears while grass, flowers and petals sway "
+    "and drift, soft leaves and little sparkles float past, slow drifting "
+    "clouds; smooth hand-animated seamless loop with subtle parallax, gentle "
+    "continuous motion NOT a static image, no camera zoom, no pan, locked-off "
+    "framing, no 3D, no voxel, no realism, no text, no watermark"
 )
 
 
@@ -76,14 +89,16 @@ def _build_prompt(raw):
     return ", ".join(p for p in (raw, MASCOT_CLAUSE, VIDEO_STYLE) if p)
 
 
-def download_to(prompt, out_path, seed=42, duration=DURATION, aspect=ASPECT):
+def download_to(prompt, out_path, seed=42, duration=DURATION, aspect=ASPECT,
+                model=MODEL):
     """Render one clip and save the MP4 to out_path. Returns True on success."""
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    print("→ %s  (%ss, %s)\n  %s..." % (out_path, duration, aspect, prompt[:90]))
+    print("→ %s  (%ss, %s, %s)\n  %s..." %
+          (out_path, duration, aspect, model, prompt[:90]))
 
     if not KEY:
-        print("  ERROR: POLLINATIONS_KEY not set in .env — cannot authenticate")
+        print("  ERROR: POLLINATIONS_KEY not set in .env.local — cannot authenticate")
         return False
 
     # NOTE: User-Agent is REQUIRED — the API returns 403 without it.
@@ -93,7 +108,7 @@ def download_to(prompt, out_path, seed=42, duration=DURATION, aspect=ASPECT):
     }
     enc = urllib.parse.quote(prompt)
     qs  = urllib.parse.urlencode({
-        "model":       MODEL,
+        "model":       model,
         "duration":    duration,
         "aspectRatio": aspect,
         "seed":        seed,
@@ -114,7 +129,7 @@ def download_to(prompt, out_path, seed=42, duration=DURATION, aspect=ASPECT):
                 time.sleep(15 * (attempt + 1))
                 continue
             out_path.write_bytes(data)
-            print("  saved %d bytes  [model=%s]" % (len(data), MODEL))
+            print("  saved %d bytes  [model=%s]" % (len(data), model))
             return True
         except urllib.error.HTTPError as e:
             # Read the response body so we can show *why* the server refused.
@@ -126,7 +141,7 @@ def download_to(prompt, out_path, seed=42, duration=DURATION, aspect=ASPECT):
 
             # 4xx won't fix themselves — bail fast with the full message.
             if e.code in (400, 401, 403, 404, 422):
-                print("  FATAL HTTP %d %s   [model=%s]" % (e.code, e.reason, MODEL))
+                print("  FATAL HTTP %d %s   [model=%s]" % (e.code, e.reason, model))
                 if body:
                     print("  ── server response ──")
                     for line in short.splitlines():
@@ -149,8 +164,14 @@ def download_to(prompt, out_path, seed=42, duration=DURATION, aspect=ASPECT):
     return False
 
 
-def generate_videos(only_names=None, seed=42, duration=DURATION, aspect=ASPECT):
-    """Generate clips from prompts/videos/*.md → videos/<stem>.mp4."""
+def generate_videos(only_names=None, seed=42, duration=DURATION, aspect=ASPECT,
+                    model=MODEL):
+    """Generate clips from prompts/videos/*.md → videos/<stem>.mp4.
+
+    When `model` is not the default, the model name is appended to the
+    filename (videos/<stem>__<model>.mp4) so several models can be A/B'd
+    against the same prompt without clobbering each other's output.
+    """
     prompts_dir = Path("prompts") / "videos"
     out_dir     = Path("videos")
 
@@ -169,15 +190,18 @@ def generate_videos(only_names=None, seed=42, duration=DURATION, aspect=ASPECT):
         return
 
     print("Generating %d clip(s)  [%ss, %s, seed=%d, model=%s]...\n" %
-          (len(mds), duration, aspect, seed, MODEL))
+          (len(mds), duration, aspect, seed, model))
+    # Tag the filename with the model only when it's not the default, so the
+    # canonical output stays videos/<stem>.mp4 while A/B runs sit beside it.
+    tag = "" if model == MODEL else "__%s" % model.replace("/", "-")
     for md in mds:
         raw = _read_prompt(md)
         if not raw:
             print("  SKIP %s — no ## Prompt block" % md.name)
             continue
-        out = out_dir / ("%s.mp4" % md.stem)
+        out = out_dir / ("%s%s.mp4" % (md.stem, tag))
         download_to(_build_prompt(raw), out, seed=seed,
-                    duration=duration, aspect=aspect)
+                    duration=duration, aspect=aspect, model=model)
         # Videos are expensive and slow — pace the requests generously.
         time.sleep(10)
     print("\nDone. Clips in %s/" % out_dir)

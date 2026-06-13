@@ -1,40 +1,45 @@
 # prompts/videos
 
 Prompts for short Oreo mascot video clips. One `.md` per clip, named
-`NN_slug.md` (e.g. `01_coral_field.md`), each with a `## Prompt` block:
+`NN_slug.md` (e.g. `01_breeze.md`), each with a `## Prompt` block:
 
 ```markdown
-# Oreo in a coral flower field
+# Oreo in a warm afternoon breeze
 
 ## Prompt
-A fixed side-angle shot of Oreo the panda lying completely still in a dense bed
-of vibrant orange, pink, and purple coral-like flowers that gently sway and
-ripple in a soft breeze
+Oreo sits peacefully on a small grassy hill in warm golden light, eyes gently
+blinking, enjoying a cool breeze; tall grass and wildflowers sway around him and
+soft leaves drift past while slow clouds cross the warm sky behind him
 ```
 
 ## The look
 
-These clips are **not** the pixel-art sticker style. They're a
-**vectorized aesthetic anime** look: clean vector shapes, soft gradients,
-lush saturated colour.
+The video Oreo must look **exactly like the Elixpo stickers** — cute
+kawaii **2D pixel art**, thick dark outlines, big sparkly eyes, pink
+cheeks, red E-badge, vibrant warm colours ([MASCOT.md](../../MASCOT.md)).
+**Not** 3D, not voxel, not Minecraft, not realism.
 
-The signature motion is a **fixed, static shot** — the panda holds
-**completely still** while only the surrounding environment drifts (flowers
-sway, water ripples, petals drift, clouds crawl) as if blown by a soft
-invisible breeze. A calm ambient loop, not an action clip.
+These are **aesthetic, meaningful** little loops — a calm, cozy lo-fi
+mood: Oreo resting in warm weather, a cool breeze moving the world around
+him. Short (5s) and seamless so they can repeat.
 
-So write the `## Prompt` block to describe **the scene and what gently
-moves around the still panda** — not what the panda does. The generator
-appends the canonical mascot clause and the vectorized-anime style suffix
-automatically; Oreo's colours live in [MASCOT.md](../../MASCOT.md).
+The clips must **actually animate** (an early attempt just slow-zoomed a
+still frame), so the style is **motion-first**: the breeze ruffles Oreo's
+fur, grass and flowers sway, petals and sparkles drift, clouds crawl. The
+camera is locked off — **no zoom, no pan**.
+
+Write the `## Prompt` block to describe **the mood and what gently moves**
+— the setting, the light, and which elements sway, drift, or float. The
+generator appends the canonical sticker-matching mascot clause and the
+2D pixel-art style suffix automatically.
 
 ## Generate
 
 ```bash
-python tools/generate_videos.py                 # every prompt here → videos/<stem>.mp4
-python tools/generate_videos.py 01_coral_field  # just one
+python tools/generate_videos.py             # every prompt here → videos/<stem>.mp4
+python tools/generate_videos.py 01_breeze   # just one
 python tools/generate_videos.py --duration 8 --aspect 16:9
 ```
 
 Output MP4s land in [`videos/`](../../videos/). Model: `ltx-2`, default
-4-second square clips.
+5-second square clips.
