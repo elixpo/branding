@@ -1,8 +1,8 @@
 # elixpo_me — portfolio service
 
-**Asset name:** `elixpo_me`
+**Asset name:** `me.elixpo`
 **Output size:** 1024×1024
-**Target file:** `assets/icons/web/elixpo_me.png`
+**Target file:** `assets/icons/web/me.elixpo.png`
 **Service:** personal portfolio / showcase pages.
 
 ## Prompt

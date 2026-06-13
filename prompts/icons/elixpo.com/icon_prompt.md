@@ -1,8 +1,8 @@
 # elixpo_main — elixpo.com flagship service
 
-**Asset name:** `elixpo_main`
+**Asset name:** `elixpo.com`
 **Output size:** 1024×1024
-**Target file:** `assets/icons/web/elixpo_main.png`
+**Target file:** `assets/icons/web/elixpo.com.png`
 **Service:** the overall Elixpo umbrella service (hero mascot icon).
 
 ## Prompt

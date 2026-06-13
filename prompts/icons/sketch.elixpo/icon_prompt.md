@@ -1,8 +1,8 @@
 # lixsketch — open infinite canvas (Excalidraw-like)
 
-**Asset name:** `lixsketch`
+**Asset name:** `sketch.elixpo`
 **Output size:** 1024×1024
-**Target file:** `assets/icons/web/lixsketch.png`
+**Target file:** `assets/icons/web/sketch.elixpo.png`
 **Service:** open canvas drawing app, hand-drawn / Excalidraw style.
 
 ## Prompt

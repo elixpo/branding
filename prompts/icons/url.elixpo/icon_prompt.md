@@ -1,8 +1,8 @@
 # elixpo_url — URL shortener service
 
-**Asset name:** `elixpo_url`
+**Asset name:** `url.elixpo`
 **Output size:** 1024×1024
-**Target file:** `assets/icons/web/elixpo_url.png`
+**Target file:** `assets/icons/web/url.elixpo.png`
 **Service:** URL shortener (long link → short link).
 
 ## Prompt

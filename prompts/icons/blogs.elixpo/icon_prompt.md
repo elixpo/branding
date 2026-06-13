@@ -1,8 +1,8 @@
 # lixblogs — multitenant blog service
 
-**Asset name:** `lixblogs`
+**Asset name:** `blogs.elixpo`
 **Output size:** 1024×1024
-**Target file:** `assets/icons/web/lixblogs.png`
+**Target file:** `assets/icons/web/blogs.elixpo.png`
 **Service:** multitenant blogging platform (many blogs, one service).
 
 ## Prompt

@@ -1,8 +1,8 @@
 # elixpo_accounts — SSO / identity service
 
-**Asset name:** `elixpo_accounts`
+**Asset name:** `accounts.elixpo`
 **Output size:** 1024×1024
-**Target file:** `assets/icons/web/elixpo_accounts.png`
+**Target file:** `assets/icons/web/accounts.elixpo.png`
 **Service:** single sign-on / accounts (one key, many doors).
 
 ## Prompt

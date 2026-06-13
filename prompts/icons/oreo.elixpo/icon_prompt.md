@@ -1,8 +1,8 @@
 # oreo_os — oreo.elixpo, the MicroPython badge OS
 
-**Asset name:** `oreo_os`
+**Asset name:** `oreo.elixpo`
 **Output size:** 1024×1024
-**Target file:** `assets/icons/web/oreo_os.png`
+**Target file:** `assets/icons/web/oreo.elixpo.png`
 **Service:** OreoOS — the OS for the MicroPython hardware badge.
 
 ## Prompt
