@@ -20,7 +20,8 @@ pixel-art panda mascot.
 | [`prompts/stickers/`](prompts/stickers/) | Prompt per sticker | ✅ Yes — this repo |
 | [`prompts/icons/`](prompts/icons/) | Icon prompts, mirrored from upstream OreoOS | ❌ Mirror — see "Icon sync" |
 | [`tools/`](tools/) | Pollinations-based generation + transparency + sheet compiler | — |
-| [`scripts/`](scripts/) | Issue-driven asset generation entrypoint | — |
+| [`scripts/`](scripts/) | Local helper scripts — batch prompt generation, optimisation, transparency | — |
+| [`.github/scripts/`](.github/scripts/) | CI automation, incl. the issue-driven asset generation entrypoint | — |
 | [`requested/`](requested/) | Community-requested assets generated via the issue workflow | ✅ Yes |
 | [`.github/`](.github/) | Issue templates + CI workflow | — |
 
