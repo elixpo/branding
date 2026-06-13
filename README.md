@@ -11,22 +11,6 @@ pixel-art panda mascot.
 
 ---
 
-## What lives here
-
-| Folder | Contents | Source of truth? |
-|---|---|---|
-| [`MASCOT.md`](MASCOT.md) | Canonical mascot guide — palette, anatomy, prompt rules | ✅ Yes |
-| [`stickers/`](stickers/) | Final sticker PNGs (1024×1024) | ✅ Yes — this repo |
-| [`prompts/stickers/`](prompts/stickers/) | Prompt per sticker | ✅ Yes — this repo |
-| [`prompts/icons/`](prompts/icons/) | Icon prompts, mirrored from upstream OreoOS | ❌ Mirror — see "Icon sync" |
-| [`tools/`](tools/) | Pollinations-based generation + transparency + sheet compiler | — |
-| [`scripts/`](scripts/) | Local helper scripts — batch prompt generation, optimisation, transparency | — |
-| [`.github/scripts/`](.github/scripts/) | CI automation, incl. the issue-driven asset generation entrypoint | — |
-| [`requested/`](requested/) | Community-requested assets generated via the issue workflow | ✅ Yes |
-| [`.github/`](.github/) | Issue templates + CI workflow | — |
-
----
-
 ## Requesting an asset (community workflow)
 
 1. **Open an issue** using the **"Sticker / Icon Request"** template.
@@ -73,7 +57,7 @@ needed locally. The CI workflow uses the same endpoint.
 ## Icon sync
 
 Icon prompts (`prompts/icons/`) are **mirrored** from the OreoOS
-firmware repository (`Circuit-Overtime/badgr`), where the icons live
+firmware repository (`elixpo/oreo`), where the icons live
 alongside the apps that use them. The upstream repo is the source of
 truth for icon prompts.
 
