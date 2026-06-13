@@ -23,7 +23,8 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+# This script lives at .github/scripts/ — three levels deep from the repo root.
+ROOT = Path(__file__).resolve().parent.parent.parent
 REQUESTED = ROOT / "requested"
 REQUESTED.mkdir(exist_ok=True)
 
