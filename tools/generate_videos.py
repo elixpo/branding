@@ -33,9 +33,12 @@ load_dotenv()
 
 KEY      = os.getenv("POLLINATIONS_KEY")
 BASE     = "https://gen.pollinations.ai/video"
-MODEL    = "ltx-2"
+# nova-reel is the default: it held the HD-2D depth + kawaii-pixel look and
+# (unlike ltx-2) didn't burn in garbled captions or ignore the aspect ratio.
+# It renders landscape ~6s; the 512-char prompt cap triggers the compact style.
+MODEL    = "nova-reel"
 DURATION = 5         # seconds — short, cozy, looping
-ASPECT   = "1:1"     # square, matches the rest of the mascot assets
+ASPECT   = "16:9"    # nova-reel renders landscape; keep the request consistent
 
 # ── Style snippets (kept in sync with MASCOT.md by hand) ─────────────────────
 # Appended to every prompt so clips stay on-brand even when the .md only

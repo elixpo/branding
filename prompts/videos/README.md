@@ -49,6 +49,15 @@ python tools/generate_videos.py 01_breeze --model veo
 python tools/generate_videos.py 01_breeze --model seedance-pro
 ```
 
-Output MP4s land in [`videos/`](../../videos/). Default model `ltx-2`,
-5-second square clips. For richer depth/quality try `veo`, `seedance-pro`,
-or the 1080p variants (`wan-pro-1080p`, `p-video-1080p`).
+Output MP4s land in [`videos/`](../../videos/). Default model `nova-reel`
+(holds the HD-2D depth + kawaii-pixel look without garbled captions;
+renders landscape ~6s). For A/B try `veo`, `seedance-pro` (paid), or the
+1080p variants (`wan-pro-1080p`, `p-video-1080p`).
+
+## Seamless loops
+
+These clips repeat, so describe a **cyclical action that starts and ends
+in the same pose** — e.g. "pencil moving in soft repeating strokes,
+beginning and ending on the exact same pose so it loops". The style
+suffix already asks for a seamless loop and a static camera; the scene
+just needs to avoid a one-way action that wouldn't repeat cleanly.
