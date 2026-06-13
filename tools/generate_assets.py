@@ -28,8 +28,7 @@ import urllib.parse
 import time
 from pathlib import Path
 from dotenv import load_dotenv
-
-load_dotenv()
+load_dotenv(".env.local")
 
 KEY   = os.getenv("POLLINATIONS_KEY")
 BASE  = "https://gen.pollinations.ai/image"
