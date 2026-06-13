@@ -1,4 +1,4 @@
-# Oreo showing a portfolio (for portfolio service)
+# Oreo reading a CV (for portfolio service)
 
 ## Prompt
-Oreo sits in a sunlit golden meadow proudly holding up a small framed picture that gently catches the light in a soft repeating shimmer, starting and ending on the same calm pose for a seamless loop
+Oreo sits in a sunlit golden meadow reading a CV he holds, the page filled with neat rows of tiny pixel lines and a small photo, eyes scanning down then up, beginning and ending on the same pose to loop
