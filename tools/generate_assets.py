@@ -13,6 +13,11 @@ Stickers (prompts/stickers/<name>.md → stickers/<name>.png at 1024x1024):
   python tools/generate_assets.py --stickers 01_hello    # single sticker
   python tools/generate_assets.py --stickers --seed 7    # different seed
 
+Website icons (prompts/icons/websites/<name>.md → assets/icons/web/<name>.png):
+  python tools/generate_assets.py --web                  # all website icons
+  python tools/generate_assets.py --web lixsketch        # single icon
+  (sticker-style on a cream background, transparency applied automatically)
+
 Theme reference: prompts/THEME.md
 """
 
@@ -114,34 +119,29 @@ def download_to(prompt, out_path, width=200, height=200, seed=42):
     return False
 
 
-def generate_stickers(only_names=None, seed=42, size=1024):
-    """Generate the printable-sheet stickers.
+def _generate_alpha_batch(prompts_dir, out_dir, only_names, seed, size, label):
+    """Generate a folder of sticker-style PNGs with the cream-background
+    transparency pass applied. Shared by stickers and website icons —
+    both want a flat cream background flood-filled to transparent.
 
-    Reads prompts/stickers/*.md and writes stickers/<stem>.png at
-    `size`x`size` (default 1024). Different from icons/app sprites:
-    these aren't device assets — they're print artwork that gets
-    composited into a sheet by tools/compile_sticker_sheet.py.
+    Returns the number of prompts processed (0 if nothing to do).
     """
-    prompts_dir = Path("prompts") / "stickers"
-    out_dir     = Path("stickers")
-
     if not prompts_dir.exists():
         print("No prompts directory at %s" % prompts_dir)
-        return
+        return 0
 
     mds = sorted(prompts_dir.glob("*.md"))
-    # Drop README.md if it's there — only numbered stickers should be
-    # generated. Same `only_names` filter as the per-app mode for
-    # picking single ones by stem (e.g. "01_hello").
+    # Drop README.md if it's there — only named assets should be generated.
+    # `only_names` filters by stem (e.g. "01_hello" or "lixsketch").
     mds = [m for m in mds if m.stem.lower() != "readme"]
     if only_names:
         mds = [m for m in mds if m.stem in only_names]
     if not mds:
-        print("No sticker .md prompt files in %s (after filtering)" % prompts_dir)
-        return
+        print("No %s .md prompt files in %s (after filtering)" % (label, prompts_dir))
+        return 0
 
-    print("Generating %d sticker(s)  [%dx%d, seed=%d]...\n" %
-          (len(mds), size, size, seed))
+    print("Generating %d %s(s)  [%dx%d, seed=%d]...\n" %
+          (len(mds), label, size, size, seed))
 
     # Defer the transparency import so users without Pillow can still
     # run the icon/app generators. If it's unavailable we just warn
@@ -170,7 +170,7 @@ def generate_stickers(only_names=None, seed=42, size=1024):
         out = out_dir / ("%s.png" % md.stem)
         ok = download_to(prompt, out, width=size, height=size, seed=seed)
         # Auto-strip the warm-cream background as soon as the file
-        # lands. Done per-sticker (not in a final pass) so a
+        # lands. Done per-asset (not in a final pass) so a
         # crash/interrupt mid-batch still leaves the already-generated
         # ones transparent. Fully in-place — same path overwritten.
         if ok and _alpha_ok and out.exists():
@@ -180,7 +180,35 @@ def generate_stickers(only_names=None, seed=42, size=1024):
             except Exception as e:
                 print("  warn: transparency pass failed: %s" % e)
         time.sleep(8)
-    print("\nDone. Run:  python tools/compile_sticker_sheet.py")
+    return len(mds)
+
+
+def generate_stickers(only_names=None, seed=42, size=1024):
+    """Generate the printable-sheet stickers.
+
+    Reads prompts/stickers/*.md and writes stickers/<stem>.png at
+    `size`x`size` (default 1024). Different from icons/app sprites:
+    these aren't device assets — they're print artwork that gets
+    composited into a sheet by tools/compile_sticker_sheet.py.
+    """
+    n = _generate_alpha_batch(Path("prompts") / "stickers", Path("stickers"),
+                              only_names, seed, size, "sticker")
+    if n:
+        print("\nDone. Run:  python tools/compile_sticker_sheet.py")
+
+
+def generate_web_icons(only_names=None, seed=42, size=1024):
+    """Generate the website service icons.
+
+    Reads prompts/icons/websites/*.md and writes assets/icons/web/<stem>.png.
+    Sticker-style art on a flat cream background, run through the same
+    transparency pass so they land transparent-ready for favicons / headers.
+    """
+    n = _generate_alpha_batch(Path("prompts") / "icons" / "websites",
+                              Path("assets") / "icons" / "web",
+                              only_names, seed, size, "web icon")
+    if n:
+        print("\nDone. Transparent PNGs in assets/icons/web/")
 
 
 def generate_app(app_name, only_names=None, seed=42):
@@ -298,6 +326,15 @@ def main():
         idx  = args.index("--stickers")
         only = args[idx + 1:]
         generate_stickers(only_names=only or None, seed=seed)
+        return
+
+    # ── website icons mode ───────────────────────────────────────────────────
+    # Sticker-style service icons → assets/icons/web/, transparency applied.
+    # Positional args after --web filter by stem (e.g. `--web lixsketch`).
+    if "--web" in args:
+        idx  = args.index("--web")
+        only = args[idx + 1:]
+        generate_web_icons(only_names=only or None, seed=seed)
         return
 
     # ── per-app mode ─────────────────────────────────────────────────────────
