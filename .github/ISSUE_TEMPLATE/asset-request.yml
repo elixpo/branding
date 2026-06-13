@@ -1,0 +1,83 @@
+name: "Sticker / Icon Request"
+description: "Request a new sticker or icon in the Oreo / Elixpo style."
+title: "[asset] "
+labels: ["asset-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing an asset! Read [MASCOT.md](../blob/main/MASCOT.md)
+        before filling this out so your request stays inside the brand.
+
+        A maintainer will review and, if it fits, apply the
+        **`approved`** label — that triggers the bot to generate and
+        commit the image automatically.
+
+  - type: dropdown
+    id: asset_type
+    attributes:
+      label: Asset type
+      description: What kind of asset is this?
+      options:
+        - Sticker (1024×1024, transparent PNG)
+        - Icon (200×200, used in apps)
+        - Banner (1024×512)
+        - Other (describe in vibe field)
+    validations:
+      required: true
+
+  - type: input
+    id: slug
+    attributes:
+      label: Asset slug
+      description: |
+        Short kebab-case name used as the filename
+        (`requested/<issue#>-<slug>.png`). 1-3 words.
+      placeholder: "happy-soldering"
+    validations:
+      required: true
+
+  - type: textarea
+    id: vibe
+    attributes:
+      label: One-line vibe
+      description: |
+        Describe the scene in one short sentence. Focus on what Oreo is
+        doing, the mood, and the key prop or accent.
+      placeholder: "Oreo the panda holding a soldering iron with sparks flying around"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: features_mascot
+    attributes:
+      label: Does this feature the Oreo mascot?
+      description: |
+        If yes, the bot will inject the canonical Mascot Clause so the
+        panda anatomy stays on-brand. If no (e.g. an object icon), the
+        clause is skipped.
+      options:
+        - "Yes — Oreo is in the scene"
+        - "No — object / icon only, no mascot"
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Extra notes (optional)
+      description: |
+        Anything else — preferred accent colour from the palette, a
+        prop to include, what NOT to draw. Keep it short. Anything
+        contradicting MASCOT.md will be ignored.
+      placeholder: "Use TEAL accent for the sparks. No safety goggles."
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Brand check
+      options:
+        - label: "I have read [MASCOT.md](../blob/main/MASCOT.md) and my request fits the warm-celebration, kawaii-pixel-art style."
+          required: true
+        - label: "I understand a maintainer must apply the `approved` label before generation runs."
+          required: true

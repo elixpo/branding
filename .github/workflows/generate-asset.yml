@@ -1,0 +1,103 @@
+name: Generate asset from issue
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  generate:
+    # Fire only when the label that was just applied is `approved` or `regenerate`
+    if: >
+      (github.event.label.name == 'approved' || github.event.label.name == 'regenerate')
+      && contains(github.event.issue.labels.*.name, 'asset-request')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Pillow (for sticker transparency)
+        run: pip install --quiet Pillow
+
+      - name: Pick a seed
+        id: seed
+        run: |
+          if [ "${{ github.event.label.name }}" = "regenerate" ]; then
+            # Vary the seed on regenerate so the model produces a different image
+            echo "value=$(( ( RANDOM % 9000 ) + 1000 ))" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=42" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate the asset
+        id: generate
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+          SEED: ${{ steps.seed.outputs.value }}
+        run: python scripts/generate_from_issue.py
+
+      - name: Commit the generated file
+        id: commit
+        run: |
+          git config user.name  "elixpo-assets-bot"
+          git config user.email "elixpo-assets-bot@users.noreply.github.com"
+          git add "${{ steps.generate.outputs.file }}"
+          if git diff --cached --quiet; then
+            echo "No changes to commit." >&2
+            exit 0
+          fi
+          git commit -m "asset: #${{ github.event.issue.number }} ${{ steps.generate.outputs.slug }}
+
+          Generated from issue #${{ github.event.issue.number }} (seed ${{ steps.seed.outputs.value }}).
+          Type: ${{ steps.generate.outputs.asset_type }}
+          Requested by: @${{ github.event.issue.user.login }}"
+          git push
+          echo "commit_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Comment on the issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const file = "${{ steps.generate.outputs.file }}";
+            const slug = "${{ steps.generate.outputs.slug }}";
+            const seed = "${{ steps.seed.outputs.value }}";
+            const sha  = "${{ steps.commit.outputs.commit_sha }}" || context.sha;
+            const owner = context.repo.owner;
+            const repo  = context.repo.repo;
+
+            const blob = `https://github.com/${owner}/${repo}/blob/${sha}/${file}`;
+            const raw  = `https://raw.githubusercontent.com/${owner}/${repo}/${sha}/${file}`;
+            const label = "${{ github.event.label.name }}";
+            const action = label === "regenerate"
+              ? "Regenerated with a new seed"
+              : "Generated";
+
+            const body = [
+              `### ${action} — \`${slug}\``,
+              ``,
+              `![preview](${raw})`,
+              ``,
+              `- **File:** [${file}](${blob})`,
+              `- **Seed:** \`${seed}\``,
+              `- **Commit:** ${sha.substring(0,7)}`,
+              ``,
+              `Not quite right? Add the **\`regenerate\`** label to retry with a new seed.`,
+              `Looks good? Close this issue — the asset is already in the repo. 🎉`,
+            ].join("\n");
+
+            await github.rest.issues.createComment({
+              owner, repo,
+              issue_number: context.issue.number,
+              body
+            });
