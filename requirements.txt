@@ -1,0 +1,5 @@
+# Local asset-generation tooling (scripts/ + tools/).
+# CI automation under .github/scripts/ manages its own deps.
+
+python-dotenv>=1.0    # loads POLLINATIONS_KEY from .env
+Pillow>=10.0          # sticker transparency + sheet compositing
