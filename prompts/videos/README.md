@@ -66,6 +66,26 @@ generator auto-switches to a compact clause/style; keep each
 `video_prompt.md` scene under ~200 chars so the loop instruction at the
 end survives intact (the tool warns if it has to trim).
 
+## Custom direction (`## Style`)
+
+By default every clip gets the ambient-loop style — depth, gentle motion,
+**static locked-off camera**. A clip that needs different direction (a
+moving camera, a walking shot) can add an optional `## Style` block that
+**replaces** the default style suffix just for that clip:
+
+```markdown
+## Prompt
+Oreo walks along a path through a lush rice paddy at golden hour…
+
+## Style
+cinematic HD-2D kawaii pixel-art, … smooth cinematic side-tracking camera
+panning to follow Oreo as he walks, flat 2D pixel art
+```
+
+The mascot identity clause is still appended, so Oreo stays on-brand —
+only the style/camera direction changes. Keep `## Style` concise too; it
+counts against the same nova-reel 512-char budget.
+
 ## Seamless loops
 
 These clips repeat, so describe a **cyclical action that starts and ends

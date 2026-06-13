@@ -301,8 +301,9 @@ def generate_videos(only_names=None, seed=42, duration=DURATION, aspect=ASPECT,
         if not raw:
             print("  SKIP %s — no ## Prompt block" % domain)
             continue
+        style_override = _read_style(md)   # optional '## Style' per clip
         out = out_dir / ("%s%s.mp4" % (domain, tag))
-        download_to(_fit_prompt(raw, model), out, seed=seed,
+        download_to(_fit_prompt(raw, model, style_override), out, seed=seed,
                     duration=duration, aspect=aspect, model=model)
         # Videos are expensive and slow — pace the requests generously.
         time.sleep(10)
