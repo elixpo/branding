@@ -45,7 +45,7 @@ jobs:
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
           SEED: ${{ steps.seed.outputs.value }}
-        run: python scripts/generate_from_issue.py
+        run: python scripts/asset_generate_from_issue.py
 
       - name: Commit the generated file
         id: commit
