@@ -1,15 +1,22 @@
 # prompts/videos
 
-Prompts for short Oreo mascot video clips. One `.md` per clip, named
-`NN_slug.md` (e.g. `01_breeze.md`), each with a `## Prompt` block:
+Prompts for short Oreo mascot video clips — **one per service domain**,
+mirroring the icon layout. Each service folder holds a single
+`video_prompt.md` with a `## Prompt` block:
+
+```
+prompts/videos/<domain>/video_prompt.md   →   videos/<domain>.mp4
+```
+
+e.g. `prompts/videos/sketch.elixpo/video_prompt.md`:
 
 ```markdown
-# Oreo in a warm afternoon breeze
+# Oreo sketching (for Elixpo Sketch)
 
 ## Prompt
-Oreo sits peacefully on a small grassy hill in warm golden light, eyes gently
-blinking, enjoying a cool breeze; tall grass and wildflowers sway around him and
-soft leaves drift past while slow clouds cross the warm sky behind him
+Oreo sits in a sunlit golden meadow sketching on a small paper pad in his lap,
+pencil moving in soft repeating strokes, glancing down then up, starting and
+ending on the same pose for a seamless loop
 ```
 
 ## The look
@@ -39,20 +46,25 @@ sticker-matching mascot clause and the HD-2D style suffix automatically.
 ## Generate
 
 ```bash
-python tools/generate_videos.py             # every prompt here → videos/<stem>.mp4
-python tools/generate_videos.py 01_breeze   # just one
-python tools/generate_videos.py --duration 8 --aspect 16:9
+python tools/generate_videos.py                  # every domain → videos/<domain>.mp4
+python tools/generate_videos.py sketch.elixpo    # just one domain
+python tools/generate_videos.py --duration 8 --aspect 9:16
 
 # A/B different models on the same prompt+seed (output gets a __<model> suffix
 # so they don't overwrite each other):
-python tools/generate_videos.py 01_breeze --model veo
-python tools/generate_videos.py 01_breeze --model seedance-pro
+python tools/generate_videos.py sketch.elixpo --model veo
+python tools/generate_videos.py sketch.elixpo --model seedance-pro
 ```
 
 Output MP4s land in [`videos/`](../../videos/). Default model `nova-reel`
 (holds the HD-2D depth + kawaii-pixel look without garbled captions;
 renders landscape ~6s). For A/B try `veo`, `seedance-pro` (paid), or the
 1080p variants (`wan-pro-1080p`, `p-video-1080p`).
+
+**Prompt budget:** nova-reel caps the prompt at 512 chars, so the
+generator auto-switches to a compact clause/style; keep each
+`video_prompt.md` scene under ~200 chars so the loop instruction at the
+end survives intact (the tool warns if it has to trim).
 
 ## Seamless loops
 

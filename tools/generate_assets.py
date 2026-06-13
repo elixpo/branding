@@ -13,9 +13,9 @@ Stickers (prompts/stickers/<name>.md → stickers/<name>.png at 1024x1024):
   python tools/generate_assets.py --stickers 01_hello    # single sticker
   python tools/generate_assets.py --stickers --seed 7    # different seed
 
-Website icons (prompts/icons/websites/<name>.md → assets/icons/web/<name>.png):
+Website icons (prompts/icons/<domain>/icon_prompt.md → assets/icons/web/<domain>.png):
   python tools/generate_assets.py --web                  # all website icons
-  python tools/generate_assets.py --web lixsketch        # single icon
+  python tools/generate_assets.py --web sketch.elixpo    # single icon
   (sticker-style on a cream background, transparency applied automatically)
 
 Theme reference: prompts/THEME.md
@@ -119,10 +119,17 @@ def download_to(prompt, out_path, width=200, height=200, seed=42):
     return False
 
 
-def _generate_alpha_batch(prompts_dir, out_dir, only_names, seed, size, label):
+def _generate_alpha_batch(prompts_dir, out_dir, only_names, seed, size, label,
+                          nested=False):
     """Generate a folder of sticker-style PNGs with the cream-background
     transparency pass applied. Shared by stickers and website icons —
     both want a flat cream background flood-filled to transparent.
+
+    Two layouts:
+      flat   (nested=False): prompts_dir/<name>.md          → out_dir/<name>.png
+      nested (nested=True):  prompts_dir/<domain>/icon_prompt.md
+                                                            → out_dir/<domain>.png
+    `only_names` filters by name (stem, or domain folder when nested).
 
     Returns the number of prompts processed (0 if nothing to do).
     """
@@ -130,14 +137,19 @@ def _generate_alpha_batch(prompts_dir, out_dir, only_names, seed, size, label):
         print("No prompts directory at %s" % prompts_dir)
         return 0
 
-    mds = sorted(prompts_dir.glob("*.md"))
-    # Drop README.md if it's there — only named assets should be generated.
-    # `only_names` filters by stem (e.g. "01_hello" or "lixsketch").
-    mds = [m for m in mds if m.stem.lower() != "readme"]
+    if nested:
+        # One prompt per domain folder; the folder name is the asset name.
+        mds = sorted(prompts_dir.glob("*/icon_prompt.md"))
+        name_of = lambda m: m.parent.name
+    else:
+        # Flat: each <name>.md is one asset. Drop README.md if present.
+        mds = sorted(prompts_dir.glob("*.md"))
+        mds = [m for m in mds if m.stem.lower() != "readme"]
+        name_of = lambda m: m.stem
     if only_names:
-        mds = [m for m in mds if m.stem in only_names]
+        mds = [m for m in mds if name_of(m) in only_names]
     if not mds:
-        print("No %s .md prompt files in %s (after filtering)" % (label, prompts_dir))
+        print("No %s prompt files in %s (after filtering)" % (label, prompts_dir))
         return 0
 
     print("Generating %d %s(s)  [%dx%d, seed=%d]...\n" %
@@ -165,9 +177,9 @@ def _generate_alpha_batch(prompts_dir, out_dir, only_names, seed, size, label):
     for md in mds:
         prompt = _read_prompt(md)
         if not prompt:
-            print("  SKIP %s — no ## Prompt block" % md.name)
+            print("  SKIP %s — no ## Prompt block" % name_of(md))
             continue
-        out = out_dir / ("%s.png" % md.stem)
+        out = out_dir / ("%s.png" % name_of(md))
         ok = download_to(prompt, out, width=size, height=size, seed=seed)
         # Auto-strip the warm-cream background as soon as the file
         # lands. Done per-asset (not in a final pass) so a
@@ -200,13 +212,15 @@ def generate_stickers(only_names=None, seed=42, size=1024):
 def generate_web_icons(only_names=None, seed=42, size=1024):
     """Generate the website service icons.
 
-    Reads prompts/icons/websites/*.md and writes assets/icons/web/<stem>.png.
-    Sticker-style art on a flat cream background, run through the same
-    transparency pass so they land transparent-ready for favicons / headers.
+    Reads prompts/icons/<domain>/icon_prompt.md and writes
+    assets/icons/web/<domain>.png. Sticker-style art on a flat cream
+    background, run through the same transparency pass so they land
+    transparent-ready for favicons / headers. Folders without an
+    icon_prompt.md (e.g. the oreoOS app-icon set) are ignored.
     """
-    n = _generate_alpha_batch(Path("prompts") / "icons" / "websites",
+    n = _generate_alpha_batch(Path("prompts") / "icons",
                               Path("assets") / "icons" / "web",
-                              only_names, seed, size, "web icon")
+                              only_names, seed, size, "web icon", nested=True)
     if n:
         print("\nDone. Transparent PNGs in assets/icons/web/")
 

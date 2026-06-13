@@ -1,19 +1,19 @@
 """Generate short Oreo mascot video clips via the Pollinations AI video API.
 
-Reads prompts/videos/<name>.md (the block after '## Prompt') and writes
-videos/<name>.mp4. Mirrors tools/generate_assets.py: same POLLINATIONS_KEY
-from .env, same '## Prompt' convention, same retry/backoff. The difference
-is the endpoint (/video instead of /image), an MP4 payload, and the
-duration/aspect-ratio knobs that only videos have.
+Reads prompts/videos/<domain>/video_prompt.md (the block after '## Prompt')
+and writes videos/<domain>.mp4 — one clip per service domain. Mirrors
+tools/generate_assets.py: same POLLINATIONS_KEY from .env, same '## Prompt'
+convention, same retry/backoff. The difference is the endpoint (/video
+instead of /image), an MP4 payload, and the duration/aspect-ratio knobs.
 
 Usage:
-  python tools/generate_videos.py                 # all prompts in prompts/videos/
-  python tools/generate_videos.py 01_wave         # single clip by stem
-  python tools/generate_videos.py --seed 7        # different seed
-  python tools/generate_videos.py --duration 8    # longer clips (default 5s)
-  python tools/generate_videos.py --aspect 16:9   # widescreen (default 1:1)
-  python tools/generate_videos.py --model veo     # A/B a different video model
-                                                  # (non-default → videos/<stem>__<model>.mp4)
+  python tools/generate_videos.py                      # all domains
+  python tools/generate_videos.py sketch.elixpo        # single domain
+  python tools/generate_videos.py --seed 7             # different seed
+  python tools/generate_videos.py --duration 8         # longer (default 5s)
+  python tools/generate_videos.py --aspect 9:16        # vertical (default 16:9)
+  python tools/generate_videos.py --model veo          # A/B a different model
+                                              # (non-default → videos/<domain>__<model>.mp4)
 
 Mascot reference: MASCOT.md
 """
@@ -238,10 +238,12 @@ def download_to(prompt, out_path, seed=42, duration=DURATION, aspect=ASPECT,
 
 def generate_videos(only_names=None, seed=42, duration=DURATION, aspect=ASPECT,
                     model=MODEL):
-    """Generate clips from prompts/videos/*.md → videos/<stem>.mp4.
+    """Generate clips from prompts/videos/<domain>/video_prompt.md
+    → videos/<domain>.mp4 (one clip per service domain).
 
+    `only_names` filters by domain (the folder name, e.g. "sketch.elixpo").
     When `model` is not the default, the model name is appended to the
-    filename (videos/<stem>__<model>.mp4) so several models can be A/B'd
+    filename (videos/<domain>__<model>.mp4) so several models can be A/B'd
     against the same prompt without clobbering each other's output.
     """
     prompts_dir = Path("prompts") / "videos"
@@ -249,16 +251,16 @@ def generate_videos(only_names=None, seed=42, duration=DURATION, aspect=ASPECT,
 
     if not prompts_dir.exists():
         print("No prompts directory at %s" % prompts_dir)
-        print("Add prompts/videos/<name>.md with a '## Prompt' block first.")
+        print("Add prompts/videos/<domain>/video_prompt.md first.")
         return
 
-    mds = sorted(prompts_dir.glob("*.md"))
-    # Drop README.md — only named clip prompts should be generated.
-    mds = [m for m in mds if m.stem.lower() != "readme"]
+    # One prompt per domain folder: prompts/videos/<domain>/video_prompt.md.
+    # The domain (parent folder name) is the clip's identity.
+    mds = sorted(prompts_dir.glob("*/video_prompt.md"))
     if only_names:
-        mds = [m for m in mds if m.stem in only_names]
+        mds = [m for m in mds if m.parent.name in only_names]
     if not mds:
-        print("No video .md prompt files in %s (after filtering)" % prompts_dir)
+        print("No <domain>/video_prompt.md under %s (after filtering)" % prompts_dir)
         return
 
     # Clamp duration to the model's cap (e.g. veo maxes out at 8s).
@@ -271,14 +273,15 @@ def generate_videos(only_names=None, seed=42, duration=DURATION, aspect=ASPECT,
     print("Generating %d clip(s)  [%ss, %s, seed=%d, model=%s]...\n" %
           (len(mds), duration, aspect, seed, model))
     # Tag the filename with the model only when it's not the default, so the
-    # canonical output stays videos/<stem>.mp4 while A/B runs sit beside it.
+    # canonical output stays videos/<domain>.mp4 while A/B runs sit beside it.
     tag = "" if model == MODEL else "__%s" % model.replace("/", "-")
     for md in mds:
+        domain = md.parent.name
         raw = _read_prompt(md)
         if not raw:
-            print("  SKIP %s — no ## Prompt block" % md.name)
+            print("  SKIP %s — no ## Prompt block" % domain)
             continue
-        out = out_dir / ("%s%s.mp4" % (md.stem, tag))
+        out = out_dir / ("%s%s.mp4" % (domain, tag))
         download_to(_fit_prompt(raw, model), out, seed=seed,
                     duration=duration, aspect=aspect, model=model)
         # Videos are expensive and slow — pace the requests generously.
