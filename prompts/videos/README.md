@@ -14,24 +14,27 @@ soft leaves drift past while slow clouds cross the warm sky behind him
 
 ## The look
 
-The video Oreo must look **exactly like the Elixpo stickers** — cute
-kawaii **2D pixel art**, thick dark outlines, big sparkly eyes, pink
-cheeks, red E-badge, vibrant warm colours ([MASCOT.md](../../MASCOT.md)).
-**Not** 3D, not voxel, not Minecraft, not realism.
+Oreo himself stays **exactly like the Elixpo stickers** — cute kawaii
+pixel art, thick dark outline, big sparkly eyes, pink cheeks, red E-badge
+([MASCOT.md](../../MASCOT.md)). **Not** 3D, not voxel, not Minecraft.
 
-These are **aesthetic, meaningful** little loops — a calm, cozy lo-fi
-mood: Oreo resting in warm weather, a cool breeze moving the world around
-him. Short (5s) and seamless so they can repeat.
+But the **world has depth**. The trap to avoid is flat paper-cutout
+parallax — that reads like a PowerPoint slide, no atmosphere. Instead aim
+for an **HD-2D diorama** (Octopath Traveler / Sea of Stars / Eastward
+vibe): the pixel character sits inside a layered scene with real depth —
+**tilt-shift depth of field, a soft bokeh background, a detailed
+foreground, warm volumetric light and god rays, and dust/petals drifting
+at different depths**.
 
-The clips must **actually animate** (an early attempt just slow-zoomed a
-still frame), so the style is **motion-first**: the breeze ruffles Oreo's
-fur, grass and flowers sway, petals and sparkles drift, clouds crawl. The
-camera is locked off — **no zoom, no pan**.
+These are **aesthetic, meaningful** little loops — calm, cozy, alive:
+Oreo resting in warm weather, a cool breeze moving the world around him.
+Short (5s) and seamless so they repeat. Motion-first (an early attempt
+just slow-zoomed a still), camera locked off — **no zoom, no pan**.
 
-Write the `## Prompt` block to describe **the mood and what gently moves**
-— the setting, the light, and which elements sway, drift, or float. The
-generator appends the canonical sticker-matching mascot clause and the
-2D pixel-art style suffix automatically.
+Write the `## Prompt` block to describe **the mood, the depth, and what
+moves** — the setting and light, what sits blurred in the fore/background,
+and which elements sway or drift. The generator appends the canonical
+sticker-matching mascot clause and the HD-2D style suffix automatically.
 
 ## Generate
 
@@ -39,7 +42,13 @@ generator appends the canonical sticker-matching mascot clause and the
 python tools/generate_videos.py             # every prompt here → videos/<stem>.mp4
 python tools/generate_videos.py 01_breeze   # just one
 python tools/generate_videos.py --duration 8 --aspect 16:9
+
+# A/B different models on the same prompt+seed (output gets a __<model> suffix
+# so they don't overwrite each other):
+python tools/generate_videos.py 01_breeze --model veo
+python tools/generate_videos.py 01_breeze --model seedance-pro
 ```
 
-Output MP4s land in [`videos/`](../../videos/). Model: `ltx-2`, default
-5-second square clips.
+Output MP4s land in [`videos/`](../../videos/). Default model `ltx-2`,
+5-second square clips. For richer depth/quality try `veo`, `seedance-pro`,
+or the 1080p variants (`wan-pro-1080p`, `p-video-1080p`).
