@@ -8,15 +8,16 @@ writes the result to `stickers/sheet.png`. Useful for:
   - Sending one file to a print shop instead of a dozen.
   - Posting a single image to social.
 
-Default sheet size is **A4 portrait at 300 DPI** (2480 × 3508 px),
-chosen so a print shop can drop it straight into their workflow.
-Override via CLI flags if you need US Letter, landscape, etc.
+You drive the layout by **how many stickers per row/column** and a
+**fixed per-sticker cell size** — the sheet dimensions are then computed
+to fit. Output goes to `stickers/sheet.png`.
 
 Usage:
     python tools/compile_sticker_sheet.py
-    python tools/compile_sticker_sheet.py --cols 3
-    python tools/compile_sticker_sheet.py --w 2550 --h 3300   # US Letter
-    python tools/compile_sticker_sheet.py --gap 24
+    python tools/compile_sticker_sheet.py --cols 5            # 5 per row
+    python tools/compile_sticker_sheet.py --cols 5 --rows 4   # fixed 5x4 grid
+    python tools/compile_sticker_sheet.py --cell-w 400 --cell-h 400
+    python tools/compile_sticker_sheet.py --gap 24 --margin 40
 
 Requires: Pillow (already in oreoOS/requirements.txt for the optimiser).
 """
@@ -33,25 +34,28 @@ except ImportError:
 
 
 STICKER_DIR = Path("stickers")
-OUT_PATH    = STICKER_DIR / "oreoOS_gummy_sheet.png"
-SKIP_NAMES  = {"sheet.png"}
+OUT_PATH    = STICKER_DIR / "sheet.png"
+# Never composite a previously-generated sheet back into a new one.
+SKIP_NAMES  = {"sheet.png", "oreoOS_gummy_sheet.png"}
 
 
 def parse_args():
     p = argparse.ArgumentParser(
-        description="Composite stickers/*.png into a single printable sheet.",
+        description="Composite stickers/*.png into a single sheet "
+                    "(grid + cell size drive the output dimensions).",
     )
-    # A4 @ 300 DPI default — the most common print-shop format.
-    p.add_argument("--w",    type=int, default=2480,
-                   help="output sheet width in px (default 2480 = A4 @ 300 DPI)")
-    p.add_argument("--h",    type=int, default=3508,
-                   help="output sheet height in px (default 3508 = A4 @ 300 DPI)")
     p.add_argument("--cols", type=int, default=4,
-                   help="number of sticker columns (default 3)")
+                   help="stickers per row (default 4)")
+    p.add_argument("--rows", type=int, default=None,
+                   help="stickers per column; default = enough to fit all")
+    p.add_argument("--cell-w", dest="cell_w", type=int, default=512,
+                   help="fixed sticker cell width in px (default 512)")
+    p.add_argument("--cell-h", dest="cell_h", type=int, default=512,
+                   help="fixed sticker cell height in px (default 512)")
     p.add_argument("--gap",  type=int, default=30,
-                   help="gap between stickers in px (default 40)")
+                   help="gap between stickers in px (default 30)")
     p.add_argument("--margin", type=int, default=20,
-                   help="outer page margin in px (default 80)")
+                   help="outer page margin in px (default 20)")
     p.add_argument("--bg",   default="#FFF8EB",
                    help="sheet background colour (default warm ivory)")
     return p.parse_args()
@@ -81,47 +85,54 @@ def collect_stickers():
 def main():
     args = parse_args()
     files = collect_stickers()
-    print(f"compiling {len(files)} stickers into {args.w}x{args.h} sheet")
 
-    cols = max(1, args.cols)
-    rows = (len(files) + cols - 1) // cols
+    cols   = max(1, args.cols)
+    cell_w = max(1, args.cell_w)
+    cell_h = max(1, args.cell_h)
+    gap    = max(0, args.gap)
+    margin = max(0, args.margin)
 
-    # Compute the cell size so the grid + gaps + margins fit the page.
-    grid_w = args.w - 2 * args.margin - (cols - 1) * args.gap
-    grid_h = args.h - 2 * args.margin - (rows - 1) * args.gap
-    cell_w = grid_w // cols
-    cell_h = grid_h // rows
-    # Stickers are square — use the smaller dimension so nothing stretches.
-    cell = max(1, min(cell_w, cell_h))
+    # Rows: use the requested count, else just enough to hold every sticker.
+    auto_rows = (len(files) + cols - 1) // cols
+    rows = max(1, args.rows) if args.rows else auto_rows
 
-    sheet = Image.new("RGB", (args.w, args.h), args.bg)
+    # A fixed grid (--rows given) has a capacity; warn if some don't fit.
+    capacity = cols * rows
+    if len(files) > capacity:
+        print(f"warning: {len(files)} stickers but grid holds {capacity} "
+              f"({cols}x{rows}) — placing the first {capacity}, "
+              f"dropping {len(files) - capacity}")
+        files = files[:capacity]
 
-    # Centre the grid in the page (in case the cell sizing left slack).
-    actual_grid_w = cols * cell + (cols - 1) * args.gap
-    actual_grid_h = rows * cell + (rows - 1) * args.gap
-    origin_x = (args.w - actual_grid_w) // 2
-    origin_y = (args.h - actual_grid_h) // 2
+    # Sheet size follows from the fixed cell size + grid + gaps + margins.
+    sheet_w = 2 * margin + cols * cell_w + (cols - 1) * gap
+    sheet_h = 2 * margin + rows * cell_h + (rows - 1) * gap
+
+    print(f"compiling {len(files)} stickers into a {cols}x{rows} grid "
+          f"({cell_w}x{cell_h} cells) -> {sheet_w}x{sheet_h} sheet")
+
+    sheet = Image.new("RGB", (sheet_w, sheet_h), args.bg)
 
     for i, fp in enumerate(files):
         r, c = divmod(i, cols)
-        x = origin_x + c * (cell + args.gap)
-        y = origin_y + r * (cell + args.gap)
+        x = margin + c * (cell_w + gap)
+        y = margin + r * (cell_h + gap)
         try:
             im = Image.open(fp).convert("RGBA")
         except Exception as e:
             print(f"  ! skipped {fp.name}: {e}")
             continue
-        im.thumbnail((cell, cell), Image.LANCZOS)
-        # Centre the resized sticker inside its cell.
-        ox = x + (cell - im.width)  // 2
-        oy = y + (cell - im.height) // 2
+        # Fit within the cell without stretching, then centre it.
+        im.thumbnail((cell_w, cell_h), Image.LANCZOS)
+        ox = x + (cell_w - im.width)  // 2
+        oy = y + (cell_h - im.height) // 2
         # Use the alpha channel as the paste mask so the warm-cream
         # sheet background shows through any transparent edges.
         sheet.paste(im, (ox, oy), im)
         print(f"  + {fp.name} -> cell ({r}, {c})")
 
     sheet.save(OUT_PATH, optimize=True)
-    print(f"wrote {OUT_PATH} ({args.w}x{args.h}, {len(files)} stickers)")
+    print(f"wrote {OUT_PATH} ({sheet_w}x{sheet_h}, {len(files)} stickers)")
 
 
 if __name__ == "__main__":
