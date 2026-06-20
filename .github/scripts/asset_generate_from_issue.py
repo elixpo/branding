@@ -51,7 +51,7 @@ MASCOT_CLAUSE = (
 
 ASSET_SIZE = {
     "sticker": (1024, 1024),
-    "icon": (200, 200),
+    "icon": (1024, 1024),
     "banner": (1024, 512),
     "other": (1024, 1024),
 }
@@ -88,17 +88,24 @@ def parse_issue(body: str) -> dict:
     else:
         asset_type = "other"
 
-    slug_raw = (_section(body, "Asset slug") or "").strip()
-    slug = re.sub(r"[^a-z0-9-]+", "-", slug_raw.lower()).strip("-") or "asset"
+    # Single freeform field now drives everything.
+    vibe = (_section(body, "Describe it") or "").strip()
+    if vibe.lower() in {"_no response_", "no response"}:
+        vibe = ""
 
-    vibe = (_section(body, "One-line vibe") or "").strip()
+    # Slug is auto-derived from the description (no separate field anymore):
+    # first few words, kebab-cased.
+    desc_slug = re.sub(r"[^a-z0-9]+", "-", vibe.lower()).strip("-")
+    slug = "-".join(desc_slug.split("-")[:5]) or "asset"
 
-    mascot_raw = (_section(body, "Does this feature the Oreo mascot?") or "").lower()
-    has_mascot = mascot_raw.startswith("yes")
+    # Oreo is included by default (keeps it on-brand); opt out with "no mascot".
+    low = vibe.lower()
+    has_mascot = not any(k in low for k in (
+        "no mascot", "no panda", "without mascot", "without panda",
+        "object only", "icon only", "no oreo",
+    ))
 
-    notes = (_section(body, "Extra notes (optional)") or "").strip()
-    if notes.lower() in {"_no response_", "no response", ""}:
-        notes = ""
+    notes = ""
 
     return {
         "asset_type": asset_type,
@@ -111,11 +118,11 @@ def parse_issue(body: str) -> dict:
 
 def build_prompt(parsed: dict) -> str:
     parts = [parsed["vibe"]]
-    if parsed["notes"]:
-        parts.append(parsed["notes"])
     if parsed["has_mascot"]:
         parts.append(MASCOT_CLAUSE)
-    if parsed["asset_type"] == "sticker":
+    # Stickers and icons both get the die-cut sticker suffix so they render
+    # on a flat cream background that the transparency pass can strip clean.
+    if parsed["asset_type"] in ("sticker", "icon"):
         parts.append(STYLE_SUFFIX_STICKER)
     else:
         parts.append(STYLE_SUFFIX_DEFAULT)
@@ -170,7 +177,7 @@ def main() -> int:
 
     parsed = parse_issue(issue_body)
     if not parsed["vibe"]:
-        print("Issue body missing 'One-line vibe' section", file=sys.stderr)
+        print("Issue body missing the 'Describe it' section", file=sys.stderr)
         return 2
 
     prompt = build_prompt(parsed)
