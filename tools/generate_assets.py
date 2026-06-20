@@ -9,9 +9,11 @@ Per-app sprites (prompts/<app>/<name>.md → apps/<app>/assets/raw/<name>.png):
   python tools/generate_assets.py --app flappy obstacle  # single sprite
 
 Stickers (prompts/stickers/<name>.md → stickers/<name>.png at 1024x1024):
-  python tools/generate_assets.py --stickers             # all 12 prompts
+  python tools/generate_assets.py --stickers             # every sticker prompt
   python tools/generate_assets.py --stickers 01_hello    # single sticker
   python tools/generate_assets.py --stickers --seed 7    # different seed
+  python tools/generate_assets.py --stickers --from 22   # sweep 022 → end
+  python tools/generate_assets.py --stickers --from 22 --to 60   # range 022–060
 
 Website icons (prompts/icons/<domain>/icon_prompt.md → assets/icons/web/<domain>.png):
   python tools/generate_assets.py --web                  # all website icons
@@ -328,6 +330,52 @@ def _pop_seed(args):
     return args, seed
 
 
+def _pop_int_flag(args, flag):
+    """Strip a `--flag N` pair from args. Returns (remaining_args, int or None)."""
+    val = None
+    if flag in args:
+        i = args.index(flag)
+        if i + 1 < len(args):
+            try:
+                val = int(args[i + 1])
+            except ValueError:
+                print("WARN: %s expects an integer; ignoring" % flag)
+            args = args[:i] + args[i + 2:]
+    return args, val
+
+
+def _lead_num(stem):
+    """Leading number of a sticker stem ('021_coding' → 21, '01_hello' → 1)."""
+    digits = ""
+    for ch in stem:
+        if ch.isdigit():
+            digits += ch
+        else:
+            break
+    return int(digits) if digits else None
+
+
+def _stickers_in_range(lo, hi):
+    """Sticker stems whose leading number is within [lo, hi] (either may be None).
+
+    Lets `--stickers --from 22` sweep every prompt from 022 onward without
+    re-rendering the earlier ones.
+    """
+    out = []
+    for m in sorted((Path("prompts") / "stickers").glob("*.md")):
+        if m.stem.lower() == "readme":
+            continue
+        n = _lead_num(m.stem)
+        if n is None:
+            continue
+        if lo is not None and n < lo:
+            continue
+        if hi is not None and n > hi:
+            continue
+        out.append(m.stem)
+    return out
+
+
 def main():
     args, seed = _pop_seed(sys.argv[1:])
 
@@ -336,8 +384,21 @@ def main():
     # are treated as stems to filter on (e.g. `--stickers 01_hello`),
     # mirroring the per-app mode's behaviour.
     if "--stickers" in args:
+        # Optional range sweep: --from N / --to M select by leading number,
+        # e.g. `--stickers --from 22` renders 022 onward. Otherwise any
+        # positional args after --stickers are treated as exact stems.
+        args, num_from = _pop_int_flag(args, "--from")
+        args, num_to   = _pop_int_flag(args, "--to")
         idx  = args.index("--stickers")
         only = args[idx + 1:]
+        if num_from is not None or num_to is not None:
+            only = _stickers_in_range(num_from, num_to)
+            if not only:
+                print("No stickers in range from=%s to=%s" % (num_from, num_to))
+                return
+            print("Sweep: %d sticker(s) in range [%s..%s]" %
+                  (len(only), num_from if num_from is not None else "start",
+                   num_to if num_to is not None else "end"))
         generate_stickers(only_names=only or None, seed=seed)
         return
 
