@@ -192,9 +192,9 @@ def main() -> int:
 
     fetch_image(prompt, out_path, width, height, seed=seed)
 
-    # Sticker transparency pass (optional — we import lazily so the
-    # script still works if Pillow isn't installed).
-    if parsed["asset_type"] == "sticker":
+    # Transparency pass for stickers and icons (optional — imported lazily
+    # so the script still works if Pillow isn't installed).
+    if parsed["asset_type"] in ("sticker", "icon"):
         try:
             sys.path.insert(0, str(ROOT / "tools"))
             from sticker_transparency import make_transparent  # type: ignore
