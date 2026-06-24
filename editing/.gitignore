@@ -1,0 +1,5 @@
+# raw inputs and edited outputs are local-only
+/raw/*
+!/raw/.gitkeep
+/edited/*
+!/edited/.gitkeep
