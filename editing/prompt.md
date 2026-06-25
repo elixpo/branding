@@ -1,92 +1,13 @@
-Transform this image into a richly decorated scrapbook journal page with a warm, nostalgic aesthetic.
+Embed this photograph into a warm, handcrafted torn-paper journal — NOT a traditional scrapbook frame.
 
-Identify the primary focus of the image automatically (person, object, food, pet, artwork, product, scenery, or activity) and treat it as the hero element of the composition.
+SCRAPBOOK FOUNDATION: keep the scrapbook padding THIN and light — minimal layering, no thick paper stacks, oversized borders or bulky frames. Leave a clear breathing margin so the paper and decoration never encroach on, crop, or eat into the subject's space; the foundation should support the photo, never dominate or crowd it. Use lightly torn / deckled paper edges, notebook textures, journal fragments, subtle asymmetrical overlaps and handmade craft textures. Avoid clean geometric borders — it should feel naturally assembled by hand.
 
-The hero element must remain completely recognizable and authentic to the original photograph.
+KEEP ALL DECORATION OFF THE SUBJECT: no paper, artifacts, doodles or layers over the person/hero or their clothing — decorate only the genuinely empty areas around them, scaling the amount to the available space (lighter where the subject already fills the frame).
 
-Preserve:
+COLOR: warm nostalgic grading — yellow-ochre undertones, warm cream and antique-ivory paper, muted parchment, honey highlights, soft amber glow, sunlit beige shadows — while preserving the realistic colors of the original photograph.
 
-* original appearance
-* original colors
-* original proportions
-* original details
-* original textures
-* original lighting characteristics
+DOODLES: scene-aware ink sketchbook pen illustrations inspired by the story of THIS image (books→page sketches, bookmarks, literary marks; food→ingredients, recipe marks; travel→maps, routes, stamps; lifestyle→objects from the scene, observational sketches), as if drawn straight into a personal journal — not generic icons.
 
-Do not redesign, replace, regenerate, beautify, stylize, or alter the hero element.
+ARTIFACTS: a curated, image-specific selection (pressed flowers, dried botanicals, yarn, ribbon, lace, buttons, tickets, postcards, paper labels, bookmarks, film strips, stickers, craft bits), in a different combination every time.
 
-Build a layered scrapbook composition around it.
-
-SURROUND THE IMAGE WITH:
-
-* torn paper textures
-* notebook scraps
-* masking tape
-* washi tape
-* sticky notes
-* journal cutouts
-* decorative frames
-* postage stamps
-* scrapbook stickers
-* paper clips
-* textured borders
-* layered collage elements
-
-FILL EMPTY AREAS WITH:
-
-* hand-drawn doodles
-* sparkles
-* stars
-* arrows
-* swirls
-* organic line art
-* floral sketches
-* thematic icons related to the image
-* playful sketch details
-
-Generate doodles and decorative elements that naturally match the theme of the photograph.
-
-Examples:
-
-* books → pages, bookmarks, coffee cups
-* food → utensils, ingredients, recipe sketches
-* cakes → candles, confetti, balloons, stars
-* bags → fashion sketches, tags, flowers
-* travel → maps, tickets, stamps
-* nature → leaves, flowers, butterflies
-* workspace → notes, pencils, diagrams
-
-The composition should feel handcrafted and personal, like a memory journal or lifestyle scrapbook.
-
-The final artwork should contain abundant decorative elements and layered textures, creating a dense scrapbook aesthetic rather than a simple photo with a few doodles.
-
-COLOR TREATMENT:
-
-Apply a warm nostalgic grading throughout the composition.
-
-Use:
-
-* soft beige tones
-* warm cream paper textures
-* golden highlights
-* subtle amber glow
-* cozy brown undertones
-* gentle vintage warmth
-
-Lighting should feel:
-
-* inviting
-* nostalgic
-* cozy
-* memory-book inspired
-* late afternoon sunlight
-
-Avoid:
-
-* cold tones
-* harsh contrast
-* oversaturated colors
-* empty space
-* minimalist layouts
-
-The result should resemble a handcrafted scrapbook page, Pinterest moodboard, memory journal spread, or premium lifestyle collage.
+NO TEXT WHATSOEVER: no words, quotes, captions, labels, handwriting, letters, typography, book titles, signs, logos, watermarks or text on stamps. Replace any normally-written element with blank paper or abstract ink / sketch marks. Zero readable text — focus purely on imagery, artifacts, textures and visual storytelling.

@@ -62,17 +62,12 @@ IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".webp"}
 # Always prepended — models weight leading instructions most. Action-forward so
 # edit models (esp. kontext) actually ADD the doodles, while scoping preservation to
 # the existing subject. Terse: the whole prompt rides in the GET URL (long -> 414).
+# Short neutral lead — prompt.md governs the decoration style/density. We only pin the
+# core overlay rule: edit the real photo, don't regenerate it; decorate around the subject.
 OVERLAY_GUARD = (
-    "EDIT INSTRUCTION: lightly decorate this exact photo with a FEW cute, minimal "
-    "hand-drawn doodles placed tastefully in the empty background / negative-space areas "
-    "around the subject — small flat white/cream line-art (a flower or two, a leaf, a "
-    "little book, a couple of stars or sparkles, a small heart). Keep it CLEAN and "
-    "SPARSE with lots of breathing room — only a small handful of doodles, NOT a dense "
-    "sticker-bomb; do not overcrowd or cover the background. ABSOLUTELY NO TEXT: no "
-    "words, letters, captions, labels or numbers — simple doodles only. Keep the "
-    "existing photo unchanged otherwise: do not alter, move, recolor, relight or "
-    "regenerate the existing subject or real objects, and add no new person. Doodles "
-    "stay in the empty space and never touch or cover the subject. "
+    "EDIT the real photo, do NOT regenerate it: keep the original pixels and subject "
+    "exactly as-is, and ADD the scrapbook decoration described below in the areas "
+    "AROUND the subject — never drawn on or over the subject, and add no new person. "
 )
 
 # Prepended (after the overlay guard) when a person is detected — leading weight.
@@ -201,10 +196,7 @@ def compose_prompt(template: str, info: dict | None, place_hint: str = "") -> st
             asks.append(f"Scene theme: {info['theme']}.")
         motifs = info.get("motifs") or []
         if motifs:
-            asks.append("DRAW just a FEW (about 5-7 total) small, cute white/cream "
-                        "hand-drawn doodles, tastefully spaced out in the empty areas with "
-                        "plenty of negative space — pick from: " + ", ".join(motifs[:7]) +
-                        ". Keep it minimal and airy, not crowded. No text or letters.")
+            asks.append("Scene-matched doodles to include: " + ", ".join(motifs[:7]) + ".")
     ask_block = (" " + " ".join(asks)) if asks else ""
 
     composed = lead + ask_block + " " + template
