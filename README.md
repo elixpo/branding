@@ -1,13 +1,34 @@
 # elixpo/assets
 
-Shared visual assets for the **Elixpo project series** — stickers,
-icons, banners, splash art. Everything orbits around **Oreo**, the
-pixel-art panda mascot.
+Shared visual assets for the **Elixpo project series** — the brand logo,
+stickers, icons, banners, splash art and short mascot clips. Everything
+orbits around **Oreo**, the pixel-art panda mascot.
 
-> Want to use these assets? Browse [`stickers/`](stickers/) and
-> [`prompts/icons/`](prompts/icons/). Want a new one made? **Open an
-> issue.** A maintainer reviews, applies the `approved` label, and a
-> bot generates the image straight into the repo.
+> Want to use these assets? Browse [`assets/brand/`](assets/brand/),
+> [`stickers/`](stickers/) and [`prompts/icons/`](prompts/icons/). Want a
+> new one made? **Open an issue.** A maintainer reviews, applies the
+> `approved` label, and a bot generates the image straight into the repo.
+
+---
+
+## Repository layout
+
+```
+ref/        Brand source-of-truth — MASCOT.md (identity, palette, rules)
+            and image_models.md (Pollinations model registry).
+docs/       Guides — pollinations-api.md (the generation API reference).
+prompts/    Prompt sources, by class:
+              brand/      logo · wordmark · lockup
+              stickers/   the printable sticker set
+              icons/      per-domain web/app service icons
+              videos/     per-domain mascot clips
+assets/     Generated brand marks (brand/), web icons (icons/web/), PWA
+            bundles (pwa/) and licences.
+stickers/   Generated 1024² sticker PNGs (transparent, optimised).
+videos/     Generated mascot MP4s.
+editing/    The Elixpo "scrapbook" photo effect (klein) — see below.
+tools/      The generation pipeline (Python + Pillow).
+```
 
 ---
 
