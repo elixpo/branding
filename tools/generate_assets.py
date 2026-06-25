@@ -41,6 +41,11 @@ KEY   = os.getenv("POLLINATIONS_KEY")
 BASE  = "https://gen.pollinations.ai/image"
 MODEL = "gptimage"
 
+# Per-app sprite source canvas — 16:9 (the app/device aspect). Generated big
+# for quality; tools/optimize_assets.py downscales each sprite to its real
+# PER_APP_SIZES target.
+APP_SPRITE_W, APP_SPRITE_H = 1024, 576
+
 
 def _read_prompt(path):
     """Read prompt text from a .md file (the block after '## Prompt')."""
@@ -247,7 +252,11 @@ def generate_brand(only_names=None, seed=42, size=1024):
 
 
 def generate_app(app_name, only_names=None, seed=42):
-    """Generate all assets for one app: prompts/<app>/*.md → apps/<app>/assets/raw/*.png"""
+    """Generate all assets for one app: prompts/<app>/*.md → apps/<app>/assets/raw/*.png
+
+    Sprites render on a 16:9 canvas (APP_SPRITE_W×APP_SPRITE_H); the optimiser
+    downscales each to its real PER_APP_SIZES target afterwards.
+    """
     prompts_dir = Path("prompts") / app_name
     out_dir     = Path("apps") / app_name / "assets" / "raw"
 
@@ -262,15 +271,15 @@ def generate_app(app_name, only_names=None, seed=42):
         print("No .md prompt files in %s" % prompts_dir)
         return
 
-    print("Generating %d sprite(s) for app '%s'  [seed=%d]...\n" %
-          (len(mds), app_name, seed))
+    print("Generating %d sprite(s) for app '%s'  [%dx%d 16:9, seed=%d]...\n" %
+          (len(mds), app_name, APP_SPRITE_W, APP_SPRITE_H, seed))
     for md in mds:
         prompt = _read_prompt(md)
         if not prompt:
             print("  SKIP %s — no ## Prompt block" % md.name)
             continue
         out = out_dir / ("%s.png" % md.stem)
-        download_to(prompt, out, width=200, height=200, seed=seed)
+        download_to(prompt, out, width=APP_SPRITE_W, height=APP_SPRITE_H, seed=seed)
         time.sleep(8)
     print("\nDone. Run:  python tools/optimize_assets.py --app %s" % app_name)
 
