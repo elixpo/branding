@@ -1,64 +1,92 @@
-You can use the following reusable, generic prompt template for this style of edit:
+Transform this image into a richly decorated scrapbook journal page with a warm, nostalgic aesthetic.
 
----
+Identify the primary focus of the image automatically (person, object, food, pet, artwork, product, scenery, or activity) and treat it as the hero element of the composition.
 
-## Cozy Aesthetic Doodle Photo Edit Prompt
+The hero element must remain completely recognizable and authentic to the original photograph.
 
-**Task:**
-Transform the provided image into a clean, modern, Pinterest-worthy doodle aesthetic while **strictly preserving the original subject's identity, facial features, expression, hairstyle, skin tone, clothing, and overall appearance**. The subject should remain the primary focus and look naturally integrated into the edited composition.
+Preserve:
 
-### Composition
+* original appearance
+* original colors
+* original proportions
+* original details
+* original textures
+* original lighting characteristics
 
-* Keep the original environment recognizable but subtly enhance it with artistic overlays.
-* Add **minimal hand-drawn doodles** around the subject that complement the scene rather than clutter it.
-* Use thin, elegant line art and sketch-style illustrations with a handcrafted feel.
-* Maintain generous negative space for a premium, aesthetic look.
+Do not redesign, replace, regenerate, beautify, stylize, or alter the hero element.
 
-### Adaptive Context Awareness
+Build a layered scrapbook composition around it.
 
-Analyze the image and identify its theme automatically. Generate doodles, handwritten notes, and decorative elements that match the context.
+SURROUND THE IMAGE WITH:
+
+* torn paper textures
+* notebook scraps
+* masking tape
+* washi tape
+* sticky notes
+* journal cutouts
+* decorative frames
+* postage stamps
+* scrapbook stickers
+* paper clips
+* textured borders
+* layered collage elements
+
+FILL EMPTY AREAS WITH:
+
+* hand-drawn doodles
+* sparkles
+* stars
+* arrows
+* swirls
+* organic line art
+* floral sketches
+* thematic icons related to the image
+* playful sketch details
+
+Generate doodles and decorative elements that naturally match the theme of the photograph.
 
 Examples:
 
-* **Bookstore / Library:** books, stars, bookmarks, coffee cups, reading glasses, quotes, page corners.
-* **Food / Café / Dining:** forks, spoons, cups, chef hats, ingredients, steam, hearts, handwritten menu notes, recipe icons.
-* **Travel:** airplanes, maps, tickets, suitcases, location pins, passport stamps.
-* **Nature:** leaves, flowers, birds, clouds, mountains, butterflies.
-* **Technology / Workspace:** code brackets, laptops, cursors, circuits, sticky notes, light bulbs.
-* **Art / Creativity:** paint brushes, palettes, pencils, sparkles, frames, sketches.
-* **Music:** notes, instruments, headphones, vinyls, waveforms.
-* **Fitness:** dumbbells, shoes, timers, water bottles, energy lines.
+* books → pages, bookmarks, coffee cups
+* food → utensils, ingredients, recipe sketches
+* cakes → candles, confetti, balloons, stars
+* bags → fashion sketches, tags, flowers
+* travel → maps, tickets, stamps
+* nature → leaves, flowers, butterflies
+* workspace → notes, pencils, diagrams
 
-The doodles should always feel **organic and relevant to the image**, never random.
+The composition should feel handcrafted and personal, like a memory journal or lifestyle scrapbook.
 
-### Typography
+The final artwork should contain abundant decorative elements and layered textures, creating a dense scrapbook aesthetic rather than a simple photo with a few doodles.
 
-Include a few tasteful handwritten phrases inspired by the scene, such as:
+COLOR TREATMENT:
 
-* Short quotes
-* One- or two-word labels
-* Tiny annotations
-* Fun captions
-* Decorative arrows and callouts
+Apply a warm nostalgic grading throughout the composition.
 
-The text should blend naturally with the composition and never overpower the subject.
+Use:
 
-### Visual Style
+* soft beige tones
+* warm cream paper textures
+* golden highlights
+* subtle amber glow
+* cozy brown undertones
+* gentle vintage warmth
 
-* Warm, cozy, editorial scrapbook aesthetic.
-* Soft paper textures or lightly textured overlays if appropriate.
-* White or neutral-colored sketch lines with occasional subtle accent colors inspired by the image.
-* Polaroid tape effects, torn paper pieces, sticky notes, or journal-style elements may be added sparingly.
-* Gentle glow or sparkles where suitable.
-* Avoid excessive stickers or overcrowding.
+Lighting should feel:
 
-### Subject Preservation (Highest Priority)
+* inviting
+* nostalgic
+* cozy
+* memory-book inspired
+* late afternoon sunlight
 
-* **Do not alter or regenerate the subject’s face or body.**
-* Preserve facial structure, smile, pose, clothing, accessories, hair, and proportions.
-* Maintain photorealistic fidelity for the subject while only enhancing the surrounding composition.
-* The final result should look like a professionally edited photograph with artistic doodle overlays, **not an AI-generated replacement of the person or object**.
+Avoid:
 
-### Overall Goal
+* cold tones
+* harsh contrast
+* oversaturated colors
+* empty space
+* minimalist layouts
 
-Produce a clean, aesthetic, Instagram-worthy composition that feels like a curated scrapbook page or lifestyle magazine spread, where the doodles and handwritten elements enhance the story told by the original photograph while keeping the subject authentic and instantly recognizable.
+The result should resemble a handcrafted scrapbook page, Pinterest moodboard, memory journal spread, or premium lifestyle collage.

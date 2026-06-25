@@ -1,39 +1,55 @@
 # Cozy Doodle Photo Editing
 
-Image-to-image editing pipeline on top of the [Pollinations API](../pollinations_asset_generate.md).
-Drop raw photos in `raw/`, run the script, get doodle-aesthetic edits in `edited/`.
+Context-aware image-to-image editing on top of the [Pollinations API](../pollinations_asset_generate.md).
+Drop raw photos in `raw/` (repo root), run the script, get doodle-aesthetic edits in
+`edited/` that **keep the subject 100% intact** and add cozy scrapbook doodles around it.
 
 ## Layout
 
 ```
 editing/
-├── edit.py           # the pipeline (stdlib only, no pip deps)
-├── prompt.md         # the cozy-doodle edit instruction sent to the model
-├── image_models.md   # full Pollinations image/video model registry (reference)
-├── raw/              # INPUT photos — gitignored
-└── edited/           # OUTPUT edits — gitignored
+├── edit.py           # the pipeline (Pillow only, no other deps)
+├── prompt.md         # the cozy-doodle style prompt (sent to the model)
+├── image_models.md   # Pollinations image/video model registry (reference)
+└── README.md
+raw/                  # INPUT photos      — gitignored (repo root)
+edited/               # OUTPUT edits       — gitignored (repo root)
 ```
 
 ## How it works
 
 For each image in `raw/`:
 
-1. Upload it to `media.pollinations.ai` → content-addressed reference URL.
-2. `GET gen.pollinations.ai/image/<prompt.md>?model=<model>&image=<url>` → edited image.
-3. Save to `edited/<name>.<model>.<ext>` (model in the filename so you can A/B models).
+1. **Upload** it to `media.pollinations.ai` → reference URL.
+2. **Analyze** it with a vision text model (`openai`) → scene theme, scene-specific
+   doodle motifs, 2 short captions, and whether a **person/face** is present.
+3. **Compose** a tight prompt: an action-forward "add doodles in the empty space" guard
+   + the concrete draw/write asks + `prompt.md` style + (if a person is present) a
+   hard **face/subject lock** at both ends.
+4. **Edit** with an image model and **fit** the result back to the original's exact
+   size (padding, never cropping, so no doodle is lost).
 
-## Models
+Output: `edited/<name>.<model>.jpg` — model is in the filename so you can A/B models.
 
-Default is **`gptimage`** (GPT Image 1 Mini — fast & affordable). Paid-only models
-are deliberately excluded. Free image-editing models (text+image input):
+## Models (free / non-paid only)
 
-| model            | notes                       |
-| ---------------- | --------------------------- |
-| `gptimage`       | fast & affordable (default) |
-| `gptimage-large` | higher-fidelity edits       |
-| `kontext`        | FLUX.1 in-context editing   |
-| `klein`          | FLUX.2 Klein 4B, fast       |
-| `nova-canvas`    | editing & inpainting        |
+| model            | preserves subject | adds doodles | notes                              |
+| ---------------- | ----------------- | ------------ | ---------------------------------- |
+| **`klein`** ⭐    | yes (face/aspect) | yes          | FLUX.2 — **default**, best balance |
+| `kontext`        | yes (strongest)   | minimal      | too conservative to add doodles    |
+| `gptimage-large` | no (re-renders)   | rich         | great doodles but the face drifts  |
+| `gptimage`       | no                | rich         | faster/cheaper version             |
+| `nova-canvas`    | partial           | some         | editing & inpainting               |
+
+**Why klein is the default:** `kontext` keeps the face perfectly but won't add the
+scrapbook doodles; `gptimage*` adds rich doodles but repaints the whole frame so the
+face/lighting/aspect drift. `klein` (FLUX.2) is the one free model that does both —
+preserves the subject and framing while still drawing doodles.
+
+> The look is **doodle/sticker-only — no text**. Diffusion models can't spell small
+> handwriting reliably, so the pipeline draws flowers, books, stars, hearts and
+> sparkles scattered around the subject like a sticker sheet, and explicitly forbids
+> words/letters.
 
 ## Auth
 
@@ -44,18 +60,14 @@ The script reads the key from `$POLLINATIONS_KEY` / `$POLLINATIONS_API_KEY`, els
 ## Usage
 
 ```bash
-cd editing
-
-python edit.py                          # edit all raw/ images with gptimage
-python edit.py --model gptimage-large   # higher fidelity
-python edit.py --only myphoto.jpg       # just one file (repeatable)
-python edit.py --model kontext --force  # try another model, overwrite outputs
-python edit.py --seed 7                 # reproducible seed
+python editing/edit.py                          # edit all raw/ images with klein
+python editing/edit.py --only raw_6.jpeg        # one file (repeatable)
+python editing/edit.py --model gptimage-large   # richer doodles, face drifts
+python editing/edit.py --model kontext          # max subject preservation
+python editing/edit.py --no-vision              # skip analysis, send prompt.md verbatim
+python editing/edit.py --no-fit                 # don't snap back to original size
+python editing/edit.py --seed 7 --force         # reproducible, overwrite outputs
 ```
 
-Outputs never collide across models, so to compare quality run the same photo
-through several models and diff the `edited/<name>.<model>.jpg` results.
-
-> **Note on `gptimage`:** it returns square (1024×1024). For non-square photos
-> where framing matters, try `kontext` or `gptimage-large`, or pass
-> `--width/--height`.
+To compare models on one photo, run it through several — outputs never collide
+(`edited/<name>.<model>.jpg`).

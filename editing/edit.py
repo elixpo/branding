@@ -1,59 +1,99 @@
 #!/usr/bin/env python3
 """
-Cozy doodle photo editor — Pollinations image-to-image.
+Cozy doodle photo editor — context-aware Pollinations image-to-image.
 
-Reads raw photos from editing/raw/, applies the doodle-aesthetic edit prompt
-(prompt.md, in this folder) with an image-editing model, and writes results to
-editing/edited/. Each raw image is first uploaded to media.pollinations.ai to
-get a reference URL, then passed to the generation endpoint as ?image=<url>.
+Reads raw photos from raw/ (repo root), and for each one:
+  1. uploads it to media.pollinations.ai            -> reference URL
+  2. runs a vision pass (chat completions w/ image)  -> scene + themed doodles + face?
+  3. composes a context-aware prompt = action-forward doodle asks + prompt.md style
+     (+ a hard face/subject lock when a person/face is detected)
+  4. edits with an image model (default klein)       -> edited/<name>.<model>.<ext>
+     then snaps the result to the original aspect ratio (no white padding)
 
-  Pipeline:  raw/photo.jpg  --upload-->  media URL  --gptimage-->  edited/photo.<model>.jpg
+The vision step is what makes the doodles match THIS image (bookstore -> books &
+bookmarks, café -> mugs & steam, beach -> waves & shells) instead of generic decor.
 
-Free image-editing models (paid_only models are intentionally omitted — see
-image_models.md). All accept text+image input:
-
-  gptimage        GPT Image 1 Mini   fast & affordable           (default)
-  gptimage-large  GPT Image 1.5      higher fidelity edits
-  kontext         FLUX.1 Kontext     in-context editing
-  klein           FLUX.2 Klein 4B    fast editing
+Free image-editing models (paid_only excluded — see image_models.md), all text+image:
+  klein           FLUX.2 Klein 4B    preserves subject + adds doodles   (default)
+  kontext         FLUX.1 Kontext     max preservation, few doodles
+  gptimage-large  GPT Image 1.5      rich doodles but redraws the face
+  gptimage        GPT Image 1 Mini   faster/cheaper, also redraws
   nova-canvas     Nova Canvas        editing & inpainting
 
 Usage:
-  python edit.py                       # edit every raw/ image with gptimage
-  python edit.py --model gptimage-large
-  python edit.py --only myphoto.jpg    # one file (repeatable)
-  python edit.py --model kontext --only a.jpg --only b.png   # compare a model
-  python edit.py --force               # re-edit even if output exists
-  python edit.py --seed 7              # fix the seed for reproducibility
+  python editing/edit.py                       # edit every raw/ image (klein)
+  python editing/edit.py --only raw_6.jpeg     # one file (repeatable)
+  python editing/edit.py --model gptimage-large
+  python editing/edit.py --aspect 9:16         # force a ratio (default: original)
+  python editing/edit.py --no-vision           # skip analysis, send template verbatim
+  python editing/edit.py --force --seed 7      # overwrite, reproducible seed
 
-Auth: reads the key from $POLLINATIONS_KEY / $POLLINATIONS_API_KEY, falling back
-to the POLLINATIONS_KEY line in ../.env.local. Get a key at enter.pollinations.ai.
+Auth: $POLLINATIONS_KEY / $POLLINATIONS_API_KEY, falling back to the POLLINATIONS_KEY
+line in .env.local at the repo root. Get a key at enter.pollinations.ai.
 """
 
 import argparse
+import io
 import json
 import mimetypes
 import os
+import re
 import sys
 import urllib.parse
 import urllib.request
 import uuid
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
-RAW_DIR = HERE / "raw"
-OUT_DIR = HERE / "edited"
+from PIL import Image
+
+HERE = Path(__file__).resolve().parent      # editing/
+ROOT = HERE.parent                          # repo root
+RAW_DIR = ROOT / "raw"
+OUT_DIR = ROOT / "edited"
 PROMPT_FILE = HERE / "prompt.md"
 
 GEN_BASE = "https://gen.pollinations.ai"
 MEDIA_BASE = "https://media.pollinations.ai"
+USER_AGENT = "elixpo-editing/1.0 (+pollinations img2img)"  # endpoints 403 the default urllib UA
 
-# The endpoints reject urllib's default UA (403); send an explicit one.
-USER_AGENT = "elixpo-editing/1.0 (+pollinations img2img)"
-
-# Free (non paid_only) models that accept image input, per image_models.md.
 FREE_EDIT_MODELS = {"gptimage", "gptimage-large", "kontext", "klein", "nova-canvas"}
 IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".webp"}
+
+# Always prepended — models weight leading instructions most. Action-forward so
+# edit models (esp. kontext) actually ADD the doodles, while scoping preservation to
+# the existing subject. Terse: the whole prompt rides in the GET URL (long -> 414).
+OVERLAY_GUARD = (
+    "EDIT INSTRUCTION: lightly decorate this exact photo with a FEW cute, minimal "
+    "hand-drawn doodles placed tastefully in the empty background / negative-space areas "
+    "around the subject — small flat white/cream line-art (a flower or two, a leaf, a "
+    "little book, a couple of stars or sparkles, a small heart). Keep it CLEAN and "
+    "SPARSE with lots of breathing room — only a small handful of doodles, NOT a dense "
+    "sticker-bomb; do not overcrowd or cover the background. ABSOLUTELY NO TEXT: no "
+    "words, letters, captions, labels or numbers — simple doodles only. Keep the "
+    "existing photo unchanged otherwise: do not alter, move, recolor, relight or "
+    "regenerate the existing subject or real objects, and add no new person. Doodles "
+    "stay in the empty space and never touch or cover the subject. "
+)
+
+# Prepended (after the overlay guard) when a person is detected — leading weight.
+FACE_FREEZE_LEAD = (
+    "CRITICAL: a real person is present. The face is a FROZEN, DO-NOT-TOUCH zone — "
+    "reproduce every facial pixel exactly from the input (eyes, nose, mouth, brows, "
+    "skin, glasses, expression). Make ZERO pixel changes on or near the face, and keep "
+    "all doodles/text far from it. "
+)
+
+# Appended whenever the vision pass detects a human in the photo — trailing weight.
+SUBJECT_LOCK = (
+    " SUBJECT LOCK (highest priority): keep the person 100% intact and identical to the "
+    "input. Do NOT redraw, shift, recolor, smooth, beautify, age, reshape or regenerate "
+    "the person — above all the FACE: make NO pixel change on or within a wide margin "
+    "around the face. Copy face, expression, skin, hair, glasses, clothing and pose "
+    "pixel-for-pixel. Every doodle, caption and overlay stays OFF the subject, in the "
+    "surrounding empty space only. If you cannot place a doodle without touching the "
+    "subject, omit it. The subject — especially the face — must look pixel-identical to "
+    "the original photo."
+)
 
 
 def load_key() -> str:
@@ -61,7 +101,7 @@ def load_key() -> str:
         v = os.environ.get(var)
         if v:
             return v.strip()
-    env_local = HERE.parent / ".env.local"
+    env_local = ROOT / ".env.local"
     if env_local.exists():
         for line in env_local.read_text().splitlines():
             line = line.strip()
@@ -69,8 +109,17 @@ def load_key() -> str:
                 val = line.split("=", 1)[1].strip().strip("\"'")
                 if val:
                     return val
-    sys.exit("No API key. Set POLLINATIONS_KEY or add it to ../.env.local "
+    sys.exit("No API key. Set POLLINATIONS_KEY or add it to .env.local "
              "(get one at https://enter.pollinations.ai).")
+
+
+def _post_json(url: str, payload: dict, key: str, timeout: int):
+    req = urllib.request.Request(url, data=json.dumps(payload).encode(), method="POST")
+    req.add_header("Authorization", f"Bearer {key}")
+    req.add_header("Content-Type", "application/json")
+    req.add_header("User-Agent", USER_AGENT)
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return json.loads(r.read())
 
 
 def upload(path: Path, key: str) -> str:
@@ -96,14 +145,77 @@ def upload(path: Path, key: str) -> str:
     return url
 
 
-def edit(image_url: str, prompt: str, model: str, key: str, seed, width, height):
-    """Run image-to-image edit, return (bytes, content_type)."""
-    params = {
+def describe_scene(image_url: str, key: str, model: str) -> dict:
+    """Vision pass: return {scene, theme, motifs[], has_person}."""
+    instruction = (
+        "You are art-directing a cozy doodle overlay for this photo. Respond with ONLY a "
+        "JSON object, no prose, with keys: "
+        '"theme" (2-4 words), '
+        '"scene" (one vivid sentence describing setting, key objects, mood, palette), '
+        '"motifs" (array of 6-7 short, cute hand-drawn doodle ideas that match this '
+        "scene — e.g. flowers, leaves, books, stars, sparkles, hearts, scene icons — "
+        "just a small tasteful set, not a dense sheet), "
+        '"has_person" (true if any human face/person is visible, else false).'
+    )
+    payload = {
         "model": model,
-        "image": image_url,
-        "nologo": "true",
-        "key": key,
+        "messages": [{
+            "role": "user",
+            "content": [
+                {"type": "text", "text": instruction},
+                {"type": "image_url", "image_url": {"url": image_url}},
+            ],
+        }],
     }
+    data = _post_json(f"{GEN_BASE}/v1/chat/completions", payload, key, timeout=120)
+    content = data["choices"][0]["message"]["content"]
+    m = re.search(r"\{.*\}", content, re.DOTALL)
+    if not m:
+        raise RuntimeError(f"vision returned no JSON: {content[:200]}")
+    info = json.loads(m.group(0))
+    info.setdefault("motifs", [])
+    info.setdefault("has_person", False)
+    return info
+
+
+def compose_prompt(template: str, info: dict | None, place_hint: str = "") -> str:
+    """Build a compact prompt: hard guard + style + this-image scene context.
+
+    place_hint biases doodle placement into the area that survives an aspect crop
+    (e.g. for 9:16 the left/right edges get cut, so keep doodles central/top/bottom).
+
+    Kept short on purpose — the entire prompt travels in the GET URL, and overly
+    long prompts both trip HTTP 414 and dilute the model's focus.
+    """
+    lead = OVERLAY_GUARD
+    if info is not None and info.get("has_person"):
+        lead += FACE_FREEZE_LEAD
+
+    # Concrete asks go HIGH (right after the guard) so conservative edit models
+    # like kontext actually render them instead of dropping them at the tail.
+    asks = []
+    if place_hint:
+        asks.append(place_hint)
+    if info is not None:
+        if info.get("theme"):
+            asks.append(f"Scene theme: {info['theme']}.")
+        motifs = info.get("motifs") or []
+        if motifs:
+            asks.append("DRAW just a FEW (about 5-7 total) small, cute white/cream "
+                        "hand-drawn doodles, tastefully spaced out in the empty areas with "
+                        "plenty of negative space — pick from: " + ", ".join(motifs[:7]) +
+                        ". Keep it minimal and airy, not crowded. No text or letters.")
+    ask_block = (" " + " ".join(asks)) if asks else ""
+
+    composed = lead + ask_block + " " + template
+    if info is not None and info.get("has_person"):
+        composed += SUBJECT_LOCK
+    return composed
+
+
+def edit(image_url, prompt, model, key, seed, width, height):
+    """Run image-to-image edit, return (bytes, content_type)."""
+    params = {"model": model, "image": image_url, "nologo": "true", "key": key}
     if seed is not None:
         params["seed"] = str(seed)
     if width:
@@ -121,19 +233,88 @@ def edit(image_url: str, prompt: str, model: str, key: str, seed, width, height)
     return data, ctype
 
 
+# Canonical output canvases (no white padding — strict aspect via a tiny center-crop).
+ASPECTS = {
+    "9:16": (1080, 1920),
+    "16:9": (1920, 1080),
+    "4:5": (1080, 1350),
+    "1:1": (1080, 1080),
+    "3:4": (1080, 1440),
+}
+
+
+def fit_to_size(data: bytes, tw: int, th: int):
+    """Snap the edit to an EXACT tw×th canvas. No padding: center-crop the (small)
+    aspect mismatch, then resize. We already ask the model for this aspect, so the
+    crop is minimal and no white bars are ever introduced. Returns (bytes, ctype)."""
+    edit = Image.open(io.BytesIO(data)).convert("RGB")
+    ew, eh = edit.size
+    target = tw / th
+    if abs(ew / eh - target) > 0.005:
+        if ew / eh > target:               # too wide -> trim sides
+            nw = round(eh * target)
+            x = (ew - nw) // 2
+            edit = edit.crop((x, 0, x + nw, eh))
+        else:                              # too tall -> trim top/bottom
+            nh = round(ew / target)
+            y = (eh - nh) // 2
+            edit = edit.crop((0, y, ew, y + nh))
+    if edit.size != (tw, th):
+        edit = edit.resize((tw, th), Image.LANCZOS)
+    buf = io.BytesIO()
+    edit.save(buf, format="JPEG", quality=95)
+    return buf.getvalue(), "image/jpeg"
+
+
+def gen_dims(src: Path):
+    """The canvas we ask the MODEL to render — always the input's own aspect ratio
+    (scaled to a sane long edge). Generating at the source aspect means the model
+    never has to stretch the subject to fill a different shape (no 'fat' distortion)."""
+    ow, oh = Image.open(src).size
+    long_edge = 1536
+    if ow >= oh:
+        gw = min(ow, long_edge); gh = round(gw * oh / ow)
+    else:
+        gh = min(oh, long_edge); gw = round(gh * ow / oh)
+    return gw, gh
+
+
+def out_dims(src: Path, aspect: str, width, height):
+    """The final saved canvas. 'original' = same aspect as input; a named aspect
+    (e.g. 9:16) is reached later by center-cropping the model's original-aspect output
+    (proportions preserved — never stretched). Explicit --width/--height override."""
+    if aspect == "original":
+        ow, oh = gen_dims(src)
+    else:
+        ow, oh = ASPECTS[aspect]
+    return (width or ow), (height or oh)
+
+
 def out_path(stem: str, model: str, ctype: str) -> Path:
     ext = {"image/png": ".png", "image/jpeg": ".jpg", "image/webp": ".webp"}.get(ctype, ".png")
     return OUT_DIR / f"{stem}.{model}{ext}"
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Cozy doodle photo editor (Pollinations img2img).")
-    ap.add_argument("--model", default="gptimage", help="edit model (default: gptimage)")
+    ap = argparse.ArgumentParser(description="Context-aware cozy doodle photo editor.")
+    ap.add_argument("--model", default="klein",
+                    help="edit model (default: klein — FLUX.2, preserves the subject & "
+                         "framing while adding doodles; kontext = max preservation but "
+                         "few doodles; gptimage-large = rich doodles but redraws the face)")
     ap.add_argument("--only", action="append", default=[], metavar="FILE",
                     help="edit only this raw/ filename (repeatable)")
     ap.add_argument("--seed", type=int, default=None, help="fix seed for reproducibility")
-    ap.add_argument("--width", type=int, default=None, help="output width (model permitting)")
-    ap.add_argument("--height", type=int, default=None, help="output height (model permitting)")
+    ap.add_argument("--aspect", default="original", choices=["original", *ASPECTS],
+                    help="output aspect ratio (default: original = same as input); "
+                         "pass e.g. 9:16 to force a different one")
+    ap.add_argument("--width", type=int, default=None, help="override output width")
+    ap.add_argument("--height", type=int, default=None, help="override output height")
+    ap.add_argument("--no-vision", action="store_true",
+                    help="skip the scene-analysis pass; send prompt.md verbatim")
+    ap.add_argument("--describe-model", default="openai",
+                    help="vision model for the analysis pass (default: openai)")
+    ap.add_argument("--no-fit", action="store_true",
+                    help="skip snapping the output to the exact target size")
     ap.add_argument("--force", action="store_true", help="re-edit even if output exists")
     args = ap.parse_args()
 
@@ -142,7 +323,7 @@ def main() -> int:
               f"({', '.join(sorted(FREE_EDIT_MODELS))}); proceeding anyway.", file=sys.stderr)
 
     key = load_key()
-    prompt = PROMPT_FILE.read_text().strip()
+    template = PROMPT_FILE.read_text().strip()
     OUT_DIR.mkdir(exist_ok=True)
 
     if args.only:
@@ -150,7 +331,6 @@ def main() -> int:
     else:
         targets = sorted(p for p in RAW_DIR.iterdir()
                          if p.is_file() and p.suffix.lower() in IMAGE_EXTS)
-
     if not targets:
         print(f"No images in {RAW_DIR}. Drop photos there (png/jpg/webp) and rerun.")
         return 1
@@ -161,7 +341,6 @@ def main() -> int:
             print(f"skip {src.name}: not found", file=sys.stderr)
             failures += 1
             continue
-        dest = out_path(src.stem, args.model, "image/jpeg")
         existing = next((OUT_DIR.glob(f"{src.stem}.{args.model}.*")), None)
         if existing and not args.force:
             print(f"skip {src.name}: {existing.name} exists (use --force to redo)")
@@ -169,12 +348,41 @@ def main() -> int:
         try:
             print(f"[{src.name}] uploading…", flush=True)
             url = upload(src, key)
-            print(f"[{src.name}] editing with {args.model}…", flush=True)
-            data, ctype = edit(url, prompt, args.model, key, args.seed, args.width, args.height)
+
+            info = None
+            if not args.no_vision:
+                print(f"[{src.name}] analyzing scene…", flush=True)
+                info = describe_scene(url, key, args.describe_model)
+                tag = "person/face detected — face lock ON" if info.get("has_person") else "no person"
+                print(f"[{src.name}] theme: {info.get('theme','?')} ({tag})")
+
+            gw, gh = gen_dims(src)                                 # generate at source aspect
+            ow, oh = out_dims(src, args.aspect, args.width, args.height)
+
+            # If the output aspect crops the generated frame, keep doodles in the kept zone.
+            place_hint = ""
+            if abs(gw / gh - ow / oh) > 0.01:
+                if ow / oh < gw / gh:   # taller/narrower output -> sides get cropped
+                    place_hint = ("PLACEMENT: the final image is cropped to a TALLER, "
+                                  "narrower frame, so put EVERY doodle and caption note in "
+                                  "the central column and the TOP and BOTTOM bands — keep "
+                                  "them well away from the far LEFT and RIGHT edges, which "
+                                  "are cut off. ")
+                else:                   # wider/shorter output -> top/bottom get cropped
+                    place_hint = ("PLACEMENT: the final image is cropped to a WIDER, "
+                                  "shorter frame, so put EVERY doodle and caption note along "
+                                  "the LEFT and RIGHT sides and center — keep them well away "
+                                  "from the very TOP and BOTTOM edges, which are cut off. ")
+            prompt = compose_prompt(template, info, place_hint)
+            print(f"[{src.name}] editing with {args.model} @ {gw}x{gh} -> out {ow}x{oh}…",
+                  flush=True)
+            data, ctype = edit(url, prompt, args.model, key, args.seed, gw, gh)
+            if not args.no_fit:
+                data, ctype = fit_to_size(data, ow, oh)            # crop to target aspect, no stretch
             dest = out_path(src.stem, args.model, ctype)
             dest.write_bytes(data)
-            print(f"[{src.name}] -> {dest.relative_to(HERE)} ({len(data)//1024} KB)")
-        except Exception as e:  # noqa: BLE001 — surface any per-file failure, keep going
+            print(f"[{src.name}] -> {dest.relative_to(ROOT)} ({len(data)//1024} KB)")
+        except Exception as e:  # noqa: BLE001 — surface per-file failure, keep going
             print(f"[{src.name}] FAILED: {e}", file=sys.stderr)
             failures += 1
 
