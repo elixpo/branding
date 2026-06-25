@@ -18,11 +18,15 @@ brand marks don't.)
 | [`wordmark.md`](wordmark.md) | Wordmark + tagline | **yes** | no | inline text logo, footer, letterhead |
 | [`lockup.md`](lockup.md) | Mark + wordmark + tagline | **yes** | yes | primary horizontal logo — site header, README hero |
 
-The wordmark and lockup carry the tagline **"Built in the Open"** beneath
-"Elixpo". Text is coloured from the panda palette so the type reads as the
-same brand as the mascot: **charcoal** letters (`#262630`, the panda's
-patches), the capital **E** in the signature **badge-red** (`#DC3C32`, the
-chest E-badge), and the tagline in **warm muted brown-pink** (`#A07864`).
+The wordmark and lockup carry a **small** tagline **"Built in the Open"**
+beneath "Elixpo" (about a third of the wordmark's height), with a few
+light on-brand **doodles** (sparkle, star, heart, bamboo leaf) scattered
+in the surrounding cream space — never over the letters. Text is coloured
+from the panda palette so the type reads as the same brand as the mascot:
+**charcoal** letters (`#262630`, the panda's patches), the capital **E** in
+the signature **badge-red** (`#DC3C32`, the chest E-badge), and the tagline
+in **warm muted brown-pink** (`#A07864`). Doodles use the brand accents
+(coral-pink, gold, teal, green).
 
 ```
 prompts/brand/<variant>.md   →   assets/brand/<variant>.png

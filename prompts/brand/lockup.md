@@ -21,9 +21,14 @@ rosy pink cheeks rgb(255,93,104), and a round red chest badge rgb(220,60,50)
 bearing a single bold clean capital letter E in cream-white and nothing
 else. The "Elixpo" letters are deep charcoal rgb(38,38,48) matching the
 panda's dark patches, with a thick dark outline and the capital E filled in
-the signature badge-red rgb(220,60,50) to echo the chest badge; the tagline
-is in warm muted brown-pink rgb(160,120,100). Balanced spacing between mark
-and wordmark, pixel art cartoon style, thick uniform dark outline, vibrant
-warm celebration colours, cute kawaii style, flat even lighting, warm cream
-white background rgb(255,248,235), wide horizontal 16:9 crop, no other
-words, no watermark.
+the signature badge-red rgb(220,60,50) to echo the chest badge; the tiny
+tagline is in warm muted brown-pink rgb(160,120,100). Scatter a few small
+cute hand-drawn pixel-art doodles in the empty cream space around the
+wordmark — never on the letters or the mascot — like a sparkle, a little
+star, a tiny heart and a bamboo leaf, lightly coloured in the brand accents
+(coral-pink rgb(255,93,104), gold rgb(255,190,30), teal rgb(0,180,165)),
+kept sparse so mark and wordmark stay the focus. Balanced spacing between
+mark and wordmark, pixel art cartoon style, thick uniform dark outline,
+vibrant warm celebration colours, cute kawaii style, flat even lighting,
+warm cream white background rgb(255,248,235), wide horizontal 16:9 crop, no
+other words, no watermark.
