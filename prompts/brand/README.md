@@ -30,9 +30,12 @@ python tools/generate_assets.py --brand lockup          # one variant
 python tools/generate_assets.py --brand --seed 7        # different seed
 ```
 
-Each variant renders at 1024×1024 on a warm-cream background and is run
-through the transparency pass, so the marks land transparent-ready for the
-web. Output goes to [`assets/brand/`](../../assets/brand/).
+Each variant renders on a wide **16:9** (1024×576) warm-cream canvas —
+the lockup and wordmark are horizontal — and is run through the
+transparency pass, so the marks land transparent-ready for the web. The
+mascot mark sits centered with even margins (crop to its bounding box for
+a square favicon/avatar). Output goes to
+[`assets/brand/`](../../assets/brand/).
 
 ## A note on text fidelity
 

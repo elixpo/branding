@@ -15,5 +15,6 @@ and a round red chest badge rgb(220,60,50) bearing a single bold clean
 capital letter E in cream-white and nothing else. Bold, confident logo
 silhouette, pixel art cartoon style, thick uniform dark outline
 rgb(38,38,48), vibrant warm celebration colours, cute kawaii style, flat
-even lighting, warm cream white background rgb(255,248,235), square 1:1
-crop, no extra text, no wordmark, no watermark.
+even lighting, warm cream white background rgb(255,248,235), the emblem
+centered with generous even margin on all sides, no extra text, no
+wordmark, no watermark.
