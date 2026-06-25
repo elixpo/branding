@@ -57,21 +57,44 @@ abuse of the generator.
 ## Local generation
 
 ```bash
+# Brand marks — logo, wordmark, lockup → assets/brand/:
+python tools/generate_assets.py --brand
+python tools/generate_assets.py --brand lockup        # one variant
+
 # Generate every sticker that has a prompt:
 python tools/generate_assets.py --stickers
 
 # Generate one sticker:
 python tools/generate_assets.py --stickers 01_hello
 
-# Strip the cream background to transparent (auto-run by the above):
+# Strip the cream background to transparent + save optimised PNG
+# (both auto-run by the generators above):
 python tools/sticker_transparency.py 01_hello
+
+# Losslessly re-compress the committed stickers (no re-render, same pixels):
+python tools/sticker_transparency.py --optimize-only
 
 # Compile all stickers into a printable A4 sheet:
 python tools/compile_sticker_sheet.py
 ```
 
-The Pollinations endpoint is free and unauthenticated — no API key
-needed locally. The CI workflow uses the same endpoint.
+Generated stickers and marks are saved as **optimised** PNGs — lossless
+`optimize + compress_level=9`, so the art is pixel-identical but markedly
+smaller on disk. The Pollinations endpoint backs every generator.
+
+---
+
+## Scrapbook photo effect (`editing/`)
+
+The Elixpo **scrapbook** look — a warm torn-paper journal effect, the
+go-to treatment used by the [me.elixpo](https://me.elixpo) site. Drop
+photos in `editing/raw/`, run the pipeline (default model **`klein`**),
+and get doodle-decorated edits in `editing/edited/` with the subject kept
+100% intact. See [`editing/README.md`](editing/README.md).
+
+```bash
+python editing/edit.py                  # edit every editing/raw/ photo
+```
 
 ---
 

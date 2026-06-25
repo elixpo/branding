@@ -41,10 +41,10 @@ KEY   = os.getenv("POLLINATIONS_KEY")
 BASE  = "https://gen.pollinations.ai/image"
 MODEL = "gptimage"
 
-# Per-app sprite source canvas — 16:9 (the app/device aspect). Generated big
-# for quality; tools/optimize_assets.py downscales each sprite to its real
-# PER_APP_SIZES target.
-APP_SPRITE_W, APP_SPRITE_H = 1024, 576
+# Brand marks render on a wide 16:9 canvas (the logo lockup/wordmark are
+# horizontal). Per-app sprites stay square (1:1). The optimiser downscales
+# each to its real target size afterwards.
+BRAND_W, BRAND_H = 1024, 576
 
 
 def _read_prompt(path):
@@ -131,10 +131,13 @@ def download_to(prompt, out_path, width=200, height=200, seed=42):
 
 
 def _generate_alpha_batch(prompts_dir, out_dir, only_names, seed, size, label,
-                          nested=False):
+                          nested=False, height=None):
     """Generate a folder of sticker-style PNGs with the cream-background
-    transparency pass applied. Shared by stickers and website icons —
-    both want a flat cream background flood-filled to transparent.
+    transparency pass applied. Shared by stickers, website icons and brand
+    marks — all want a flat cream background flood-filled to transparent.
+
+    `size` is the canvas width; `height` defaults to `size` (square). Pass a
+    different `height` for a non-square canvas (the brand lockup is 16:9).
 
     Two layouts:
       flat   (nested=False): prompts_dir/<name>.md          → out_dir/<name>.png
@@ -163,8 +166,9 @@ def _generate_alpha_batch(prompts_dir, out_dir, only_names, seed, size, label,
         print("No %s prompt files in %s (after filtering)" % (label, prompts_dir))
         return 0
 
+    h = height or size
     print("Generating %d %s(s)  [%dx%d, seed=%d]...\n" %
-          (len(mds), label, size, size, seed))
+          (len(mds), label, size, h, seed))
 
     # Defer the transparency import so users without Pillow can still
     # run the icon/app generators. If it's unavailable we just warn
@@ -191,7 +195,7 @@ def _generate_alpha_batch(prompts_dir, out_dir, only_names, seed, size, label,
             print("  SKIP %s — no ## Prompt block" % name_of(md))
             continue
         out = out_dir / ("%s.png" % name_of(md))
-        ok = download_to(prompt, out, width=size, height=size, seed=seed)
+        ok = download_to(prompt, out, width=size, height=h, seed=seed)
         # Auto-strip the warm-cream background as soon as the file
         # lands. Done per-asset (not in a final pass) so a
         # crash/interrupt mid-batch still leaves the already-generated
@@ -236,27 +240,24 @@ def generate_web_icons(only_names=None, seed=42, size=1024):
         print("\nDone. Transparent PNGs in assets/icons/web/")
 
 
-def generate_brand(only_names=None, seed=42, size=1024):
+def generate_brand(only_names=None, seed=42, width=BRAND_W, height=BRAND_H):
     """Generate the brand marks (logo, wordmark, lockup).
 
     Reads prompts/brand/<variant>.md and writes assets/brand/<variant>.png.
     Same flat sticker-style pipeline as the web icons (cream background →
-    transparency pass), so the marks land transparent-ready for the web.
+    transparency pass), so the marks land transparent-ready for the web —
+    but on a wide 16:9 canvas, since the wordmark and lockup are horizontal.
     The wordmark/lockup deliberately contain the "Elixpo" text — that's the
     one place the no-text rule is lifted (see prompts/brand/README.md).
     """
     n = _generate_alpha_batch(Path("prompts") / "brand", Path("assets") / "brand",
-                              only_names, seed, size, "brand mark")
+                              only_names, seed, width, "brand mark", height=height)
     if n:
         print("\nDone. Transparent brand marks in assets/brand/")
 
 
 def generate_app(app_name, only_names=None, seed=42):
-    """Generate all assets for one app: prompts/<app>/*.md → apps/<app>/assets/raw/*.png
-
-    Sprites render on a 16:9 canvas (APP_SPRITE_W×APP_SPRITE_H); the optimiser
-    downscales each to its real PER_APP_SIZES target afterwards.
-    """
+    """Generate all assets for one app: prompts/<app>/*.md → apps/<app>/assets/raw/*.png"""
     prompts_dir = Path("prompts") / app_name
     out_dir     = Path("apps") / app_name / "assets" / "raw"
 
@@ -271,15 +272,15 @@ def generate_app(app_name, only_names=None, seed=42):
         print("No .md prompt files in %s" % prompts_dir)
         return
 
-    print("Generating %d sprite(s) for app '%s'  [%dx%d 16:9, seed=%d]...\n" %
-          (len(mds), app_name, APP_SPRITE_W, APP_SPRITE_H, seed))
+    print("Generating %d sprite(s) for app '%s'  [seed=%d]...\n" %
+          (len(mds), app_name, seed))
     for md in mds:
         prompt = _read_prompt(md)
         if not prompt:
             print("  SKIP %s — no ## Prompt block" % md.name)
             continue
         out = out_dir / ("%s.png" % md.stem)
-        download_to(prompt, out, width=APP_SPRITE_W, height=APP_SPRITE_H, seed=seed)
+        download_to(prompt, out, width=200, height=200, seed=seed)
         time.sleep(8)
     print("\nDone. Run:  python tools/optimize_assets.py --app %s" % app_name)
 
