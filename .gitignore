@@ -9,6 +9,11 @@ Thumbs.db
 .idea/
 .vscode/
 *.tmp
+
+# Scrapbook editing pipeline I/O (editing/edit.py)
+editing/raw/
+editing/edited/
+# legacy repo-root locations (pre-refactor)
 raw/
 out/
 edited/

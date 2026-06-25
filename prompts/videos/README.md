@@ -23,7 +23,7 @@ ending on the same pose for a seamless loop
 
 Oreo himself stays **exactly like the Elixpo stickers** — cute kawaii
 pixel art, thick dark outline, big sparkly eyes, pink cheeks, red E-badge
-([MASCOT.md](../../MASCOT.md)). **Not** 3D, not voxel, not Minecraft.
+([ref/MASCOT.md](../../ref/MASCOT.md)). **Not** 3D, not voxel, not Minecraft.
 
 But the **world has depth**. The trap to avoid is flat paper-cutout
 parallax — that reads like a PowerPoint slide, no atmosphere. Instead aim

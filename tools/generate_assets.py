@@ -20,7 +20,12 @@ Website icons (prompts/icons/<domain>/icon_prompt.md → assets/icons/web/<domai
   python tools/generate_assets.py --web sketch.elixpo    # single icon
   (sticker-style on a cream background, transparency applied automatically)
 
-Theme reference: prompts/THEME.md
+Brand marks (prompts/brand/<variant>.md → assets/brand/<variant>.png):
+  python tools/generate_assets.py --brand                # logo, wordmark, lockup
+  python tools/generate_assets.py --brand lockup         # single variant
+  (cream-background marks, transparency applied; wordmarks may contain text)
+
+Mascot reference: ref/MASCOT.md
 """
 
 import os
@@ -226,6 +231,21 @@ def generate_web_icons(only_names=None, seed=42, size=1024):
         print("\nDone. Transparent PNGs in assets/icons/web/")
 
 
+def generate_brand(only_names=None, seed=42, size=1024):
+    """Generate the brand marks (logo, wordmark, lockup).
+
+    Reads prompts/brand/<variant>.md and writes assets/brand/<variant>.png.
+    Same flat sticker-style pipeline as the web icons (cream background →
+    transparency pass), so the marks land transparent-ready for the web.
+    The wordmark/lockup deliberately contain the "Elixpo" text — that's the
+    one place the no-text rule is lifted (see prompts/brand/README.md).
+    """
+    n = _generate_alpha_batch(Path("prompts") / "brand", Path("assets") / "brand",
+                              only_names, seed, size, "brand mark")
+    if n:
+        print("\nDone. Transparent brand marks in assets/brand/")
+
+
 def generate_app(app_name, only_names=None, seed=42):
     """Generate all assets for one app: prompts/<app>/*.md → apps/<app>/assets/raw/*.png"""
     prompts_dir = Path("prompts") / app_name
@@ -409,6 +429,15 @@ def main():
         idx  = args.index("--web")
         only = args[idx + 1:]
         generate_web_icons(only_names=only or None, seed=seed)
+        return
+
+    # ── brand marks mode ─────────────────────────────────────────────────────
+    # Logo / wordmark / lockup → assets/brand/, transparency applied.
+    # Positional args after --brand filter by variant (e.g. `--brand lockup`).
+    if "--brand" in args:
+        idx  = args.index("--brand")
+        only = args[idx + 1:]
+        generate_brand(only_names=only or None, seed=seed)
         return
 
     # ── per-app mode ─────────────────────────────────────────────────────────

@@ -2,7 +2,8 @@
 """
 Cozy doodle photo editor — context-aware Pollinations image-to-image.
 
-Reads raw photos from raw/ (repo root), and for each one:
+This is the Elixpo "scrapbook" effect — the go-to torn-paper journal look used
+by the me.elixpo site. Reads raw photos from editing/raw/, and for each one:
   1. uploads it to media.pollinations.ai            -> reference URL
   2. runs a vision pass (chat completions w/ image)  -> scene + themed doodles + face?
   3. composes a context-aware prompt = action-forward doodle asks + prompt.md style
@@ -13,7 +14,7 @@ Reads raw photos from raw/ (repo root), and for each one:
 The vision step is what makes the doodles match THIS image (bookstore -> books &
 bookmarks, café -> mugs & steam, beach -> waves & shells) instead of generic decor.
 
-Free image-editing models (paid_only excluded — see image_models.md), all text+image:
+Free image-editing models (paid_only excluded — see ref/image_models.md), all text+image:
   klein           FLUX.2 Klein 4B    preserves subject + adds doodles   (default)
   kontext         FLUX.1 Kontext     max preservation, few doodles
   gptimage-large  GPT Image 1.5      rich doodles but redraws the face
@@ -21,7 +22,7 @@ Free image-editing models (paid_only excluded — see image_models.md), all text
   nova-canvas     Nova Canvas        editing & inpainting
 
 Usage:
-  python editing/edit.py                       # edit every raw/ image (klein)
+  python editing/edit.py                       # edit every editing/raw/ image (klein)
   python editing/edit.py --only raw_6.jpeg     # one file (repeatable)
   python editing/edit.py --model gptimage-large
   python editing/edit.py --aspect 9:16         # force a ratio (default: original)
@@ -48,8 +49,8 @@ from PIL import Image
 
 HERE = Path(__file__).resolve().parent      # editing/
 ROOT = HERE.parent                          # repo root
-RAW_DIR = ROOT / "raw"
-OUT_DIR = ROOT / "edited"
+RAW_DIR = HERE / "raw"                       # editing/raw/  — INPUT photos (gitignored)
+OUT_DIR = HERE / "edited"                    # editing/edited/ — OUTPUT edits (gitignored)
 PROMPT_FILE = HERE / "prompt.md"
 
 GEN_BASE = "https://gen.pollinations.ai"

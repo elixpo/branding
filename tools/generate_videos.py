@@ -15,7 +15,7 @@ Usage:
   python tools/generate_videos.py --model veo          # A/B a different model
                                               # (non-default → videos/<domain>__<model>.mp4)
 
-Mascot reference: MASCOT.md
+Mascot reference: ref/MASCOT.md
 """
 
 import os
@@ -40,7 +40,7 @@ MODEL    = "nova-reel"
 DURATION = 5         # seconds — short, cozy, looping
 ASPECT   = "16:9"    # nova-reel renders landscape; keep the request consistent
 
-# ── Style snippets (kept in sync with MASCOT.md by hand) ─────────────────────
+# ── Style snippets (kept in sync with ref/MASCOT.md by hand) ─────────────────────
 # Appended to every prompt so clips stay on-brand even when the .md only
 # describes the scene. The video Oreo must look EXACTLY like the Elixpo
 # stickers — cute kawaii 2D pixel art, NOT 3D / voxel / Minecraft.

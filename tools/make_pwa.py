@@ -24,7 +24,7 @@ import json
 import sys
 from pathlib import Path
 
-# Brand colours from MASCOT.md.
+# Brand colours from ref/MASCOT.md.
 BG_COLOUR    = "#FFF8EB"   # warm ivory canvas
 THEME_COLOUR = "#FF5D68"   # primary pink/red
 

@@ -1,8 +1,13 @@
-# Cozy Doodle Photo Editing
+# Cozy Doodle Photo Editing — the Elixpo scrapbook effect
 
-Context-aware image-to-image editing on top of the [Pollinations API](../pollinations_asset_generate.md).
-Drop raw photos in `raw/` (repo root), run the script, get doodle-aesthetic edits in
-`edited/` that **keep the subject 100% intact** and add cozy scrapbook doodles around it.
+The **go-to "scrapbook" effect** for the Elixpo brand — the warm torn-paper journal
+look used by the [me.elixpo](https://me.elixpo) site. Context-aware image-to-image
+editing on top of the [Pollinations API](../docs/pollinations-api.md), powered by the
+**`klein`** model.
+
+Drop raw photos in `editing/raw/`, run the script, get doodle-aesthetic edits in
+`editing/edited/` that **keep the subject 100% intact** and add cozy scrapbook doodles
+around it.
 
 ## Layout
 
@@ -10,15 +15,15 @@ Drop raw photos in `raw/` (repo root), run the script, get doodle-aesthetic edit
 editing/
 ├── edit.py           # the pipeline (Pillow only, no other deps)
 ├── prompt.md         # the cozy-doodle style prompt (sent to the model)
-├── image_models.md   # Pollinations image/video model registry (reference)
+├── raw/              # INPUT photos   — gitignored
+├── edited/           # OUTPUT edits   — gitignored
 └── README.md
-raw/                  # INPUT photos      — gitignored (repo root)
-edited/               # OUTPUT edits       — gitignored (repo root)
+ref/image_models.md   # Pollinations image/video model registry (reference)
 ```
 
 ## How it works
 
-For each image in `raw/`:
+For each image in `editing/raw/`:
 
 1. **Upload** it to `media.pollinations.ai` → reference URL.
 2. **Analyze** it with a vision text model (`openai`) → scene theme, scene-specific

@@ -9,11 +9,19 @@ cream-ish pixels, and mark only the filled regions transparent. The
 panda's interior is unreachable from any corner because the thick
 dark outline blocks the fill, so it stays opaque.
 
+Every PNG is written back **optimised**: lossless `optimize=True,
+compress_level=9` (full zlib + Pillow's IDAT shrink). That keeps the
+sticker pixel-for-pixel identical — no quality loss — while typically
+cutting the file size by a third or more. Pass `--optimize-only` to skip
+the flood-fill and just re-compress existing transparent stickers in
+place (useful for shrinking the committed set without re-rendering).
+
 Usage:
     python tools/sticker_transparency.py                    # all stickers/*.png
     python tools/sticker_transparency.py 01_hello           # single sticker
     python tools/sticker_transparency.py --tolerance 50     # looser fill
     python tools/sticker_transparency.py --out stickers/transparent/   # write copies
+    python tools/sticker_transparency.py --optimize-only    # just recompress, no fill
 
 Defaults overwrite the source PNG in place — pass `--out <dir>` to
 write to a separate folder instead, so you can keep the warm-cream
@@ -47,6 +55,18 @@ STICKER_DIR = Path("stickers")
 SENTINEL = (255, 0, 255)
 
 
+def save_png(im, out_path):
+    """Write a PNG with maximum lossless compression.
+
+    `optimize=True` plus `compress_level=9` is fully lossless — every
+    pixel (and the alpha channel) is preserved exactly — so the sticker
+    stays high quality while landing much smaller on disk. Centralised
+    here so every write path (flood-fill and optimise-only) compresses
+    identically.
+    """
+    im.save(out_path, format="PNG", optimize=True, compress_level=9)
+
+
 def parse_args():
     p = argparse.ArgumentParser(
         description="Make sticker backgrounds transparent via corner flood-fill.",
@@ -61,7 +81,15 @@ def parse_args():
                    help="output directory (default: overwrite in place)")
     p.add_argument("--in-dir", default=str(STICKER_DIR),
                    help="input directory (default: stickers/)")
+    p.add_argument("--optimize-only", action="store_true",
+                   help="skip the flood-fill; just losslessly re-compress "
+                        "existing PNGs (shrinks already-transparent stickers)")
     return p.parse_args()
+
+
+def optimize_in_place(in_path, out_path):
+    """Re-encode a PNG with max lossless compression. Pixels unchanged."""
+    save_png(Image.open(in_path), out_path)
 
 
 def collect(in_dir, names):
@@ -102,7 +130,7 @@ def make_transparent(in_path, out_path, tolerance):
         )
         rgba = np.array(im)
         rgba[bg_mask, 3] = 0
-        Image.fromarray(rgba).save(out_path)
+        save_png(Image.fromarray(rgba), out_path)
     else:
         # Pure-Pillow fallback. Slower (~5–15 s for 1024²) but always works.
         px_rgb = rgb.load()
@@ -114,7 +142,7 @@ def make_transparent(in_path, out_path, tolerance):
                 if px_rgb[x, y] == SENTINEL:
                     r, g, b, _ = px_out[x, y]
                     px_out[x, y] = (r, g, b, 0)
-        im_out.save(out_path)
+        save_png(im_out, out_path)
 
 
 def main():
@@ -133,15 +161,30 @@ def main():
     if out_dir:
         out_dir.mkdir(parents=True, exist_ok=True)
 
-    print(f"transparency pass on {len(files)} sticker(s)  "
-          f"[tolerance={args.tolerance}, numpy={'on' if _HAS_NUMPY else 'off'}]")
+    if args.optimize_only:
+        print(f"lossless re-compression on {len(files)} sticker(s)")
+    else:
+        print(f"transparency pass on {len(files)} sticker(s)  "
+              f"[tolerance={args.tolerance}, numpy={'on' if _HAS_NUMPY else 'off'}]")
+
+    saved = 0
     for fp in files:
         out = (out_dir / fp.name) if out_dir else fp
         try:
-            make_transparent(fp, out, args.tolerance)
-            print(f"  + {fp.name}{' → ' + str(out) if out_dir else ''}")
+            before = fp.stat().st_size
+            if args.optimize_only:
+                optimize_in_place(fp, out)
+            else:
+                make_transparent(fp, out, args.tolerance)
+            delta = before - out.stat().st_size
+            saved += delta
+            print(f"  + {fp.name}{' → ' + str(out) if out_dir else ''}  "
+                  f"(-{delta // 1024} KB)")
         except Exception as e:
             print(f"  ! {fp.name}: {e}")
+
+    if saved > 0:
+        print(f"saved {saved // 1024} KB total ({saved / 1048576:.1f} MB)")
 
 
 if __name__ == "__main__":

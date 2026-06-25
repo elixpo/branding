@@ -16,7 +16,7 @@ pixel-art panda mascot.
 1. **Open an issue** using the **"Sticker / Icon Request"** template.
    Describe the vibe in one or two lines. Optionally attach a doodle
    for reference.
-2. A maintainer reviews the prompt against [MASCOT.md](MASCOT.md). If
+2. A maintainer reviews the prompt against [ref/MASCOT.md](ref/MASCOT.md). If
    it fits the brand, they apply the **`approved`** label.
 3. The label fires a GitHub Action that:
    - Reads the prompt from the issue body,
@@ -71,7 +71,7 @@ Open a PR upstream instead.
 ## Branding & legal
 
 - The **Oreo mascot character**, the **chest E-badge**, and the **brand
-  palette** in [MASCOT.md](MASCOT.md) are © 2026 Ayushman Bhattacharya
+  palette** in [ref/MASCOT.md](ref/MASCOT.md) are © 2026 Ayushman Bhattacharya
   and form part of the OreoOS copyright registration (Indian Copyright
   Office Diary `LD-26455/2026-CO`).
 - Assets in this repository are licensed for community use under the
@@ -80,4 +80,4 @@ Open a PR upstream instead.
   character** for use outside Elixpo-aligned projects.
 - The name "Oreo" is used here as an internal codename. The public
   brand for this project is **Elixpo Badge** — see
-  [`MASCOT.md`](MASCOT.md) §Versioning.
+  [`ref/MASCOT.md`](ref/MASCOT.md) §Versioning.
