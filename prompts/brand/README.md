@@ -15,8 +15,14 @@ brand marks don't.)
 | File | Variant | Has text | Has mascot | Use |
 |---|---|---|---|---|
 | [`mascot-mark.md`](mascot-mark.md) | Mascot mark | no | yes | avatar, favicon, app icon, loading mark |
-| [`wordmark.md`](wordmark.md) | Wordmark | **yes** | no | inline text logo, footer, letterhead |
-| [`lockup.md`](lockup.md) | Mark + wordmark lockup | **yes** | yes | primary horizontal logo — site header, README hero |
+| [`wordmark.md`](wordmark.md) | Wordmark + tagline | **yes** | no | inline text logo, footer, letterhead |
+| [`lockup.md`](lockup.md) | Mark + wordmark + tagline | **yes** | yes | primary horizontal logo — site header, README hero |
+
+The wordmark and lockup carry the tagline **"Built in the Open"** beneath
+"Elixpo". Text is coloured from the panda palette so the type reads as the
+same brand as the mascot: **charcoal** letters (`#262630`, the panda's
+patches), the capital **E** in the signature **badge-red** (`#DC3C32`, the
+chest E-badge), and the tagline in **warm muted brown-pink** (`#A07864`).
 
 ```
 prompts/brand/<variant>.md   →   assets/brand/<variant>.png
