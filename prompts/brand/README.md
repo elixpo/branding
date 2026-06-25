@@ -33,8 +33,13 @@ prompts/brand/<variant>.md   →   assets/brand/<variant>.png
 ```bash
 python tools/generate_assets.py --brand                 # all three variants
 python tools/generate_assets.py --brand lockup          # one variant
-python tools/generate_assets.py --brand --seed 7        # different seed
+python tools/generate_assets.py --brand --seed 7        # explore a different seed
 ```
+
+The brand marks are the fixed identity, so `--brand` **pins a seed**
+(`BRAND_SEED` in `tools/generate_assets.py`) — every run reproduces the
+exact same logo. Only pass `--seed` when you're deliberately searching for
+a new look; once you settle on one, bake it into `BRAND_SEED`.
 
 Each variant renders on a wide **16:9** (1024×576) warm-cream canvas —
 the lockup and wordmark are horizontal — and is run through the

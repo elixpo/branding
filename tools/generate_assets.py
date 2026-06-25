@@ -24,6 +24,8 @@ Brand marks (prompts/brand/<variant>.md → assets/brand/<variant>.png):
   python tools/generate_assets.py --brand                # logo, wordmark, lockup
   python tools/generate_assets.py --brand lockup         # single variant
   (cream-background marks, transparency applied; wordmarks may contain text)
+  (seed pinned to BRAND_SEED so the logo is identical every run; pass
+   --seed N only to explore a different one)
 
 Mascot reference: ref/MASCOT.md
 """
@@ -45,6 +47,11 @@ MODEL = "gptimage"
 # horizontal). Per-app sprites stay square (1:1). The optimiser downscales
 # each to its real target size afterwards.
 BRAND_W, BRAND_H = 1024, 576
+
+# The brand marks are the fixed identity — they must come out IDENTICAL on
+# every run. So `--brand` always pins this seed (override only by passing an
+# explicit --seed). Change it and you change the official logo.
+BRAND_SEED = 42
 
 
 def _read_prompt(path):
@@ -240,7 +247,7 @@ def generate_web_icons(only_names=None, seed=42, size=1024):
         print("\nDone. Transparent PNGs in assets/icons/web/")
 
 
-def generate_brand(only_names=None, seed=42, width=BRAND_W, height=BRAND_H):
+def generate_brand(only_names=None, seed=BRAND_SEED, width=BRAND_W, height=BRAND_H):
     """Generate the brand marks (logo, wordmark, lockup).
 
     Reads prompts/brand/<variant>.md and writes assets/brand/<variant>.png.
@@ -249,6 +256,8 @@ def generate_brand(only_names=None, seed=42, width=BRAND_W, height=BRAND_H):
     but on a wide 16:9 canvas, since the wordmark and lockup are horizontal.
     The wordmark/lockup deliberately contain the "Elixpo" text — that's the
     one place the no-text rule is lifted (see prompts/brand/README.md).
+
+    Seed is pinned to BRAND_SEED so the logo is identical on every run.
     """
     n = _generate_alpha_batch(Path("prompts") / "brand", Path("assets") / "brand",
                               only_names, seed, width, "brand mark", height=height)
@@ -444,10 +453,13 @@ def main():
     # ── brand marks mode ─────────────────────────────────────────────────────
     # Logo / wordmark / lockup → assets/brand/, transparency applied.
     # Positional args after --brand filter by variant (e.g. `--brand lockup`).
+    # Seed is pinned to BRAND_SEED for a reproducible logo unless the user
+    # explicitly passes --seed.
     if "--brand" in args:
         idx  = args.index("--brand")
         only = args[idx + 1:]
-        generate_brand(only_names=only or None, seed=seed)
+        brand_seed = seed if "--seed" in sys.argv[1:] else BRAND_SEED
+        generate_brand(only_names=only or None, seed=brand_seed)
         return
 
     # ── per-app mode ─────────────────────────────────────────────────────────

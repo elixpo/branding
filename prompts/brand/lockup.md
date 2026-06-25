@@ -12,8 +12,9 @@ Oreo panda mascot crest as a compact emblem. On the RIGHT, a two-line
 wordmark vertically centered against the mascot: the TOP LINE is the single
 word "Elixpo" in chunky rounded friendly pixel-art letters, correctly
 spelled E-l-i-x-p-o, lowercase with a capital E, on one baseline; directly
-BENEATH it, in much smaller clean rounded letters, the tagline "Built in
-the Open" — three words, correctly spelled, Title Case. Featuring the Oreo
+BENEATH it, in a MUCH SMALLER delicate rounded font — roughly a third the
+height of the wordmark, with relaxed letter-spacing — the tagline "Built in
+the Open", three words, correctly spelled, Title Case. Featuring the Oreo
 panda mascot: warm cream-white fur rgb(240,238,232), dark rounded ear and
 eye patches rgb(38,38,48), big sparkly black eyes with white catchlights,
 rosy pink cheeks rgb(255,93,104), and a round red chest badge rgb(220,60,50)
