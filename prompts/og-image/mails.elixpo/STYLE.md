@@ -31,13 +31,14 @@ Paste this first, then the card's own `## Prompt` body.
 > matrix** — a precise, evenly-spaced grid of tiny `#d9d9dd` dots (a halftone/
 > pegboard dot field), very subtle, receding behind everything.
 >
-> **Mascot — Oreo as a CONTINUOUS one-line drawing:** a single, unbroken, **very
-> thin (fine, delicate)** `#212121` line with only a **few gentle loops and
-> minimal overlaps** — clean and simple, lightly tangled, never a dense
-> scribble — forming a clearly recognisable, **cute, happy and adorable** kawaii panda
-> (round, plump and healthy; a big cheerful smile, rosy cheeks, big bright
-> eyes — Oreo), its head turned **slightly left** toward the text in a gentle
-> three-quarter view. Make it **fairly large** and prominent, filling the
+> **Mascot — Oreo as a TRUE single-line drawing:** ONE unbroken, flowing,
+> hand-drawn **very thin** `#212121` line (a single pen stroke that never lifts)
+> with only a few gentle loops — loose, minimal, elegant. This is **LINE ART**,
+> **not** a polished, accurately-rendered or filled illustration: no solid
+> fills, no detailed/shaded face, no smooth cartoon. The line forms a **cute,
+> friendly** panda, round and plump in shape, its face **suggested minimally**
+> (small dot eyes + a little smile), head turned **slightly left** toward the
+> text. Make it **fairly large** and prominent, filling the
 > **right ~40–42%**, pushed to the right edge and clear of the text zone. Confident and calligraphic, not a messy scribble: the
 > tangles are deliberate and balanced, and the panda still reads instantly.
 > Same crisp weight as the dot matrix. Both **ears** and **one leg** are filled flat coral `#ff7759`. Centred on its

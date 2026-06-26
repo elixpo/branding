@@ -16,12 +16,14 @@ letters); we composite the headline/eyebrow/sub/url ourselves with Pillow at
 exact proportions:
 
 ```
-1. AI design  (gptlarge, 16:9, NO text)  →  <site>/output/<name>.bg.png
-2. Pillow text (## Text block)           →  <site>/output/<name>.png   (final, 1280×720)
+1. AI design  (16:9, NO text)   →  a temporary <name>.bg.png
+2. Pillow text (## Text block)  →  <site>/output/<name>.png   (final, 1280×720)
+3. the temporary .bg.png is DELETED — the final .png is the only kept artifact
 ```
 
-`tools/generate_assets.py --og` runs step 1 then auto-runs step 2.
-`tools/og_compose.py` re-runs step 2 alone (retext without regenerating).
+**Locked.** AI runs aren't reproducible, so once `<name>.png` exists it is
+**not regenerated** — the approved panda is frozen. Use `--force` (or delete
+the `.png`) to intentionally reroll a card.
 
 ## Structure — one folder per site
 
@@ -34,8 +36,8 @@ prompts/og-image/
     ├── prompts/               ← the card prompts
     │   └── default.md  features.md  workspace.md  docs.md  pricing.md
     └── output/
-        ├── <name>.bg.png      ← AI design (text-free)
-        └── <name>.png         ← final composited card (1280×720, 16:9)
+        └── <name>.png         ← final card (1280×720, 16:9); the only artifact
+                                 (the intermediate .bg.png is auto-deleted)
 ```
 
 Each card `.md` holds **two blocks**: `## Prompt` (the text-free design, fed to
@@ -94,9 +96,8 @@ Exact tokens from `mail.elixpo/app/globals.css`, light theme only. See
 python tools/generate_assets.py --og                       # every site, every card
 python tools/generate_assets.py --og mails.elixpo          # one site
 python tools/generate_assets.py --og mails.elixpo default  # one card
-python tools/generate_assets.py --og --seed 11             # explore (seed is pinned otherwise)
-
-python tools/og_compose.py mails.elixpo                    # re-draw text only
+python tools/generate_assets.py --og mails.elixpo --force  # reroll a locked card
+python tools/generate_assets.py --og --seed 11 --force     # reroll with another seed
 ```
 
 ## Files (per site, e.g. `mails.elixpo/`)

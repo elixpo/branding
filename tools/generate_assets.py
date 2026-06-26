@@ -20,7 +20,8 @@ OG cards (prompts/og-image/<site>/prompts/<name>.md → .../output/<name>.png, 1
   python tools/generate_assets.py --og mails.elixpo            # one site, all cards
   python tools/generate_assets.py --og mails.elixpo default    # one card
   python tools/generate_assets.py --og default docs            # those cards, every site
-  # editorial-minimalist; NO transparency pass (flat white card)
+  python tools/generate_assets.py --og mails.elixpo --force    # reroll a locked card
+  # finished <name>.png is LOCKED (not regenerated); .bg.png is deleted after compositing
 
 Website icons (prompts/icons/<domain>/icon_prompt.md → assets/icons/web/<domain>.png):
   python tools/generate_assets.py --web                  # all website icons
@@ -291,7 +292,7 @@ def generate_brand(only_names=None, seed=BRAND_SEED, width=BRAND_W, height=BRAND
 OG_SKIP = {"readme", "style", "palette"}
 
 
-def generate_og(only=None, seed=42):
+def generate_og(only=None, seed=42, force=False):
     """Generate open-graph / social cards, organised per site.
 
     Layout — one folder per site, each with its own prompts and an output/
@@ -300,10 +301,13 @@ def generate_og(only=None, seed=42):
         prompts/og-image/<site>/prompts/<name>.md  →  prompts/og-image/<site>/output/<name>.png
 
     Two-step, so the AI never has to render text:
-      1. AI generates the text-free DESIGN (gptlarge, 16:9) →
-         <site>/output/<name>.bg.png
-      2. Pillow composites the headline/eyebrow/sub/url from the card's
-         `## Text` block → <site>/output/<name>.png
+      1. AI generates the text-free DESIGN (16:9) → a temporary <name>.bg.png
+      2. Pillow composites the `## Text` → <site>/output/<name>.png, then the
+         intermediate .bg.png is DELETED — the final .png is the only artifact.
+
+    LOCKED: AI generation is not reproducible run-to-run, so once <name>.png
+    exists it is NOT regenerated (the approved panda is frozen). Pass `force`
+    (CLI: --force) or delete the .png to intentionally reroll.
 
     Editorial tech-minimalism on the coral "oreo" palette: a faint dotted
     matrix, an entangled one-line Oreo, a couple of geometric shapes.
@@ -348,9 +352,20 @@ def generate_og(only=None, seed=42):
             continue
 
         out_dir.mkdir(parents=True, exist_ok=True)
-        print("[%s] generating %d OG design(s)  [%dx%d, seed=%d, model=%s]...\n" %
-              (site.name, len(mds), OG_W, OG_H, seed, MODEL_OG))
+        print("[%s] OG cards (%d)  [%dx%d, seed=%d, model=%s]%s...\n" %
+              (site.name, len(mds), OG_W, OG_H, seed, MODEL_OG,
+               "  --force" if force else ""))
         for md in mds:
+            final = out_dir / ("%s.png" % md.stem)
+            # LOCK: a finished card stays put. AI generation isn't reproducible
+            # run-to-run, so once <name>.png exists we DON'T regenerate it —
+            # the approved panda is frozen. Use --force (or delete the .png) to
+            # intentionally reroll the design.
+            if final.exists() and not force:
+                print("  [locked] %s — keeping %s (pass --force to reroll)"
+                      % (md.stem, final.name))
+                continue
+
             prompt = _read_prompt(md)
             if not prompt:
                 print("  SKIP %s — no ## Prompt block" % md.stem)
@@ -359,20 +374,23 @@ def generate_og(only=None, seed=42):
             ok = download_to(prompt, bg, width=OG_W, height=OG_H,
                              seed=seed, model=MODEL_OG)
             total += 1
-            # Composite the text right away (so an interrupt still leaves
-            # finished cards). Skips gracefully if Pillow / og_compose absent.
+            # Composite the text, then DELETE the intermediate design — the
+            # final <name>.png is the single artifact we keep.
             if ok and bg.exists():
-                _compose_og_text(md, bg, out_dir / ("%s.png" % md.stem))
+                _compose_og_text(md, bg, final)
+                if final.exists():
+                    try:
+                        bg.unlink()
+                        print("  cleaned intermediate %s" % bg.name)
+                    except OSError:
+                        pass
             time.sleep(8)
 
     if total == 0:
-        print("No OG prompt files matched (site=%s, cards=%s)." %
-              (site_filter or "all", card_filter or "all"))
+        print("No new OG cards generated (existing ones are locked; --force to reroll).")
     else:
-        print("\nDone. Designs → <site>/output/<name>.bg.png, composited cards → "
-              "<site>/output/<name>.png. Copy <site>/output/default.png → "
-              "that app's public/og-image.png.\nRe-run text only:  "
-              "python tools/og_compose.py <site>")
+        print("\nDone. Final cards → <site>/output/<name>.png (intermediates removed). "
+              "Copy <site>/output/default.png → that app's public/og-image.png.")
 
 
 def _compose_og_text(card_md, bg_path, out_path):
@@ -592,11 +610,13 @@ def main():
     # Editorial-minimalist social cards → og-image/, NO transparency pass.
     # Positional args after --og filter by stem (e.g. `--og default docs`).
     if "--og" in args:
+        force = "--force" in args
+        args = [a for a in args if a != "--force"]
         idx  = args.index("--og")
         only = args[idx + 1:]
         # Pin OG_SEED for the locked look unless the user explicitly overrides.
         og_seed = seed if "--seed" in sys.argv[1:] else OG_SEED
-        generate_og(only=only or None, seed=og_seed)
+        generate_og(only=only or None, seed=og_seed, force=force)
         return
 
     # ── per-app mode ─────────────────────────────────────────────────────────

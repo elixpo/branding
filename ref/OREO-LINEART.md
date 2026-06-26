@@ -29,11 +29,13 @@ pick pixel-art for playful / celebratory surfaces.
 ## The panda (locked spec)
 
 - **One continuous, unbroken line** — a true continuous-line / one-line
-  drawing. **Very thin, fine, single-weight** strokes (same weight as the dot
-  matrix). Only a **few gentle loops and minimal overlaps** — clean and
-  simple, lightly tangled, **never a dense scribble**.
-- **Cute, happy & healthy** — round, plump and well; a **big cheerful smile**,
-  rosy cheeks, big bright friendly eyes. A sitting / relaxed pose.
+  drawing (a single pen stroke that never lifts). **Very thin, fine,
+  single-weight** strokes; a few gentle loops, loose and minimal. This is
+  **LINE ART** — **never** a polished, accurately-rendered or filled
+  illustration: no solid fills, no detailed/shaded face, no smooth cartoon.
+- **Cute but minimal** — round, plump *in shape*; the face **suggested with a
+  few simple strokes** (small dot eyes + a little smile), never a detailed
+  rendered face. A relaxed sitting pose.
 - **Head turned slightly toward the LEFT** (toward the headline) — a gentle
   three-quarter view, not full-front, not full-profile.
 - **Fairly large and prominent** but kept on the **right ~40–42%** of the
@@ -92,15 +94,17 @@ whole design.
 ## Pipeline (locked)
 
 ```
-1. AI renders the DESIGN ONLY  (gptimage-large, 16:9, NO text)  → output/<name>.bg.png
+1. AI renders the DESIGN ONLY  (gptimage-large, 16:9, NO text)  → temp <name>.bg.png
 2. Pillow composites the type  (## Text block)                  → output/<name>.png
+3. the temp .bg.png is DELETED — the final .png is the only kept artifact
 ```
 
 - Generator: `tools/generate_assets.py --og <site> [card]`
 - Compositor: `tools/og_compose.py <site> [card]`
 - Prompts + per-site cards: `prompts/og-image/<site>/`
-- Seed is **pinned** (`OG_SEED`) so the locked look reproduces; override with
-  `--seed` only to explore.
+- **Locked:** AI runs vary, so a finished `output/<name>.png` is **never
+  regenerated**. Reroll only with `--force` (or by deleting the `.png`). Seed
+  is pinned (`OG_SEED`); `--seed` explores.
 
 ---
 
