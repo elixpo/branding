@@ -55,10 +55,13 @@ MODEL = "gptimage"
 # each to its real target size afterwards.
 BRAND_W, BRAND_H = 1024, 576
 
-# Open-graph / social cards render at the standard 1200×630. Unlike stickers
-# and brand marks, OG cards keep their flat white background (NO transparency
-# pass) — they are full-bleed editorial-minimalist cards, not cut-out sprites.
-OG_W, OG_H = 1200, 630
+# Open-graph / social cards render 16:9, full-bleed, NO cropping. The AI
+# generates the DESIGN ONLY (faint dotted-matrix background, an entangled
+# one-line Oreo, a couple of geometric shapes) — text-free. We composite the
+# headline/eyebrow/sub/url ourselves with Pillow (tools/og_compose.py) so the
+# model never fumbles the typography. No transparency pass.
+OG_W, OG_H = 1280, 720          # 16:9
+MODEL_OG   = "gptlarge"         # higher-fidelity line art for the OG design
 
 # The brand marks are the fixed identity — they must come out IDENTICAL on
 # every run. So `--brand` always pins this seed (override only by passing an
@@ -84,8 +87,12 @@ def _read_prompt(path):
     return None
 
 
-def download_to(prompt, out_path, width=200, height=200, seed=42):
-    """Generic download — saves the generated PNG to out_path."""
+def download_to(prompt, out_path, width=200, height=200, seed=42, model=MODEL):
+    """Generic download — saves the generated PNG to out_path.
+
+    `model` overrides the image model for this call (default MODEL). OG cards
+    pass MODEL_OG ("gptlarge") for higher-fidelity line art.
+    """
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     print("→ %s  (%dx%d)\n  %s..." % (out_path, width, height, prompt[:90]))
@@ -101,7 +108,7 @@ def download_to(prompt, out_path, width=200, height=200, seed=42):
     }
     enc = urllib.parse.quote(prompt)
     url = "%s/%s?width=%d&height=%d&seed=%d&nologo=true&model=%s" % (
-        BASE, enc, width, height, seed, MODEL
+        BASE, enc, width, height, seed, model
     )
 
     for attempt in range(4):
@@ -114,7 +121,7 @@ def download_to(prompt, out_path, width=200, height=200, seed=42):
                 time.sleep(15 * (attempt + 1))
                 continue
             out_path.write_bytes(data)
-            print("  saved %d bytes  [model=%s]" % (len(data), MODEL))
+            print("  saved %d bytes  [model=%s]" % (len(data), model))
             return True
         except urllib.error.HTTPError as e:
             # Read the response body so we can show *why* the server refused.
@@ -126,7 +133,7 @@ def download_to(prompt, out_path, width=200, height=200, seed=42):
 
             # 401/403/400 won't fix themselves — bail fast with the full message.
             if e.code in (400, 401, 403, 404, 422):
-                print("  FATAL HTTP %d %s   [model=%s]" % (e.code, e.reason, MODEL))
+                print("  FATAL HTTP %d %s   [model=%s]" % (e.code, e.reason, model))
                 if body:
                     print("  ── server response ──")
                     for line in short.splitlines():
