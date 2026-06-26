@@ -594,7 +594,9 @@ def main():
     if "--og" in args:
         idx  = args.index("--og")
         only = args[idx + 1:]
-        generate_og(only=only or None, seed=seed)
+        # Pin OG_SEED for the locked look unless the user explicitly overrides.
+        og_seed = seed if "--seed" in sys.argv[1:] else OG_SEED
+        generate_og(only=only or None, seed=og_seed)
         return
 
     # ── per-app mode ─────────────────────────────────────────────────────────

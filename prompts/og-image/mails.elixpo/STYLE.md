@@ -1,5 +1,8 @@
 # OG style — design prompt + text block
 
+> Derived from the LOCKED reference **`ref/OREO-LINEART.md`**. Keep this in
+> sync with it; that page wins on any conflict.
+
 The AI generates the **design only** (no text); we composite the type with
 Pillow. So each card `.md` has **two** blocks:
 

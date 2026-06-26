@@ -5,6 +5,10 @@ Open-graph (social share) cards for **Elixpo Mails** and the wider suite, in
 **continuous one-line** Oreo, 2–3 understated geometric shapes, and a bold
 serif headline. High-end design-system wireframe, not glowing 3D tech.
 
+> **LOCKED spec:** [`ref/OREO-LINEART.md`](../../ref/OREO-LINEART.md) is the
+> single source of truth for the line-art Oreo + this card system. Everything
+> here derives from it; the seed is pinned (`OG_SEED`) so the look reproduces.
+
 ## Pipeline — AI draws the design, we set the type
 
 The model **only generates the text-free design** (so it never fumbles
@@ -88,7 +92,7 @@ Exact tokens from `mail.elixpo/app/globals.css`, light theme only. See
 python tools/generate_assets.py --og                       # every site, every card
 python tools/generate_assets.py --og mails.elixpo          # one site
 python tools/generate_assets.py --og mails.elixpo default  # one card
-python tools/generate_assets.py --og --seed 7              # different seed (better panda)
+python tools/generate_assets.py --og --seed 11             # explore (seed is pinned otherwise)
 
 python tools/og_compose.py mails.elixpo                    # re-draw text only
 ```
