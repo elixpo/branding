@@ -20,7 +20,8 @@
     "accentTint": "rgba(255,119,89,0.10)",
     "nearBlack": "#17171c",
     "softStone": "#eeece7",
-    "actionBlue": "#1863dc"
+    "actionBlue": "#1863dc",
+    "badgeRed": "#dc3c32"
   },
   "type": {
     "headline": {
@@ -52,9 +53,19 @@
     "lineColor": "#212121",
     "lineWeight": "matches blueprint hairline",
     "color": {
-      "fill": "#ff7759",
-      "where": "both ears, one leg, and a round 'E' chest badge",
-      "note": "the ONLY colour on the mascot (Oreo's accents); the 'E' is the lone letter allowed in the design"
-    }
+      "accents": {
+        "fill": "#ff7759",
+        "where": "both ears and one leg"
+      },
+      "badge": {
+        "fill": "#dc3c32",
+        "letter": "E",
+        "where": "centred on the chest",
+        "style": "clean, bold, stylish, properly aligned",
+        "note": "Oreo's signature red chest badge; the lone letter allowed in the design",
+        "size": "small / compact \u2014 only a fraction of the chest"
+      }
+    },
+    "pose": "fairly large, on the right ~40-42%; happy, smiling, plump and healthy; head turned slightly left toward the text (gentle three-quarter view)"
   }
 }

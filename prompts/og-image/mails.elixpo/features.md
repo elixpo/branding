@@ -10,20 +10,15 @@ intellectual, airy. Flat 2D vector only: NO 3D, NO gradients, NO glow, NO neon,
 NO shadows.
 
 CRITICAL: NO TEXT — no words, letters, numbers or typography anywhere, EXCEPT the single letter "E" inside the panda's small chest badge. Leave
-the entire LEFT ~55% as clean, almost-empty negative space; place ALL artwork
-in the RIGHT ~45%.
+the entire LEFT ~55% as clean, almost-empty negative space; place ALL artwork in the RIGHT ~40%, pushed toward the right edge with a clear gap before the left text zone.
 
 Background: white (#ffffff) covered edge-to-edge by a faint dotted matrix —
 tiny, evenly-spaced #d9d9dd dots (a subtle halftone / pegboard dot field)
 receding behind everything.
 
-Mascot: Oreo the panda as an ENTANGLED one-line drawing — ONE single, unbroken,
-thin #212121 line that loops, overlaps and entangles elegantly into a clearly
-recognisable panda on the right side. The tangles are deliberate and balanced —
-confident and calligraphic, NOT a messy scribble — and the panda reads
-instantly. Colour the panda with coral #ff7759 ONLY: both ears and one leg are filled flat coral, and a small round badge bearing a clean letter "E" sits on its chest (Oreo's signature badge). Coral is the only saturated colour and appears only on the mascot; the rest of the panda is the #212121 line.
+Mascot: Oreo the panda as a CONTINUOUS one-line drawing — ONE single, unbroken, VERY thin (fine, delicate hairline-weight) #212121 line with only a FEW gentle loops and minimal overlaps — clean and simple, only lightly tangled — forming a clearly recognisable, CUTE and adorable kawaii panda — round, plump, HEALTHY and HAPPY — a big cheerful smile, rosy cheeks and big bright friendly eyes (an Oreo-style mascot), its head turned SLIGHTLY toward the LEFT (toward the text) in a gentle three-quarter view — Make the panda fairly LARGE and prominent, filling the RIGHT ~40-42% of the canvas, but kept on the right side — pushed toward the right edge and CLEAR of the left text zone — it must NOT overlap or intercept the empty left area. Clean, calligraphic and simple — the panda reads instantly. Both ears and one leg are filled flat coral #ff7759. On its chest, perfectly centred and aligned, sits a SMALL, compact, perfectly round RED #DC3C32 badge — kept small, only a fraction of the chest — carrying a single clean, bold, stylish letter "E" (Oreo's signature chest badge). Coral and the red badge are the only saturated colours and appear only on the mascot; the rest of the panda is the #212121 line.
 
-Geometry: 2-3 understated geometric shapes in thin hairline #d9d9dd outlines (all #d9d9dd hairline, never filled) — a large open square, an open circle and a short bracket mark — partly overlapping the panda and dot field, perfectly aligned like a design-system wireframe, never filled. Coral appears ONLY on the panda (ears, one leg, the E badge); the dots, geometric shapes and the line are #d9d9dd hairline and #212121 on white.
+Geometry: 2-3 understated geometric shapes in thin hairline #d9d9dd outlines (all #d9d9dd hairline, never filled) — a large open square, an open circle and a short bracket mark — partly overlapping the panda and dot field, perfectly aligned like a design-system wireframe, never filled. Coral and the red E-badge appear ONLY on the panda; the dots, geometric shapes and the line are #d9d9dd hairline and #212121 on white.
 
 ## Text
 eyebrow: CAPABILITIES

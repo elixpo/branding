@@ -1,8 +1,8 @@
 # prompts/og-image — Elixpo Mails OG / social cards
 
 Open-graph (social share) cards for **Elixpo Mails** and the wider suite, in
-**editorial tech minimalism**: a faint **dotted matrix** background, an
-**entangled one-line** Oreo, 2–3 understated geometric shapes, and a bold
+**editorial tech minimalism**: a faint **dotted matrix** background, a
+**continuous one-line** Oreo, 2–3 understated geometric shapes, and a bold
 serif headline. High-end design-system wireframe, not glowing 3D tech.
 
 ## Pipeline — AI draws the design, we set the type
@@ -51,7 +51,8 @@ Exact tokens from `mail.elixpo/app/globals.css`, light theme only. See
 | Slate | `#75758a` | Sub copy (Pillow) |
 | Muted slate | `#93939f` | Eyebrow / url (Pillow) |
 | Hairline | `#d9d9dd` | Dotted matrix + geometric shapes |
-| **Coral (accent)** | `#ff7759` | Underline + the panda's ears / one leg / "E" badge |
+| **Coral (accent)** | `#ff7759` | Underline (Pillow) + the panda's ears & one leg |
+| Badge red | `#dc3c32` | The panda's stylish "E" chest badge |
 
 ## Type (composited by `og_compose.py`, not the AI)
 
@@ -67,17 +68,19 @@ Exact tokens from `mail.elixpo/app/globals.css`, light theme only. See
    glow or neon. **16:9, no cropping.**
 2. **Faint dotted matrix** — an even field of tiny `#d9d9dd` dots over white,
    subtle and receding.
-3. **Entangled one-line Oreo** — ONE unbroken thin `#212121` line that loops,
-   overlaps and **entangles** into a clearly recognisable panda (deliberate,
-   balanced tangles — not a scribble). Coral `#ff7759` fills **both ears and one
-   leg** and forms a small round **"E" chest badge** — the only colour on the
-   mascot (Oreo's accents; see `ref/MASCOT.md`).
+3. **Continuous one-line Oreo** — ONE unbroken **very thin** `#212121` line with a
+   few gentle loops (lightly tangled, NOT a dense scribble) forming a **cute,
+   happy** kawaii panda (plump & healthy, smiling, head turned slightly left
+   toward the text), kept **fairly large** in the **right ~40–42%**, clear of
+   the text. Coral `#ff7759` fills **both
+   ears and one leg**; a small, **compact** round **red `#DC3C32` "E" chest badge** (centred, stylish) is Oreo's signature — the only saturated colours, both on the mascot
+   (see `ref/MASCOT.md`).
 4. **2–3 geometric shapes** — thin `#d9d9dd` hairline outlines (circle / triangle
    / square / arc), framing the mascot, never filled. Coral stays on the panda.
 5. **NO TEXT in the AI image** — the left ~55% is kept empty; the type is added
    by Pillow afterward.
-6. **Coral is the only saturated colour** — it appears only on the panda (ears,
-   one leg, the "E" badge).
+6. **Saturated colour only on the panda** — coral `#ff7759` ears + one leg, and
+   a red `#DC3C32` "E" chest badge. Everything else is ink line + hairline.
 
 ## Generate
 

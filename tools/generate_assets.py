@@ -61,7 +61,11 @@ BRAND_W, BRAND_H = 1024, 576
 # headline/eyebrow/sub/url ourselves with Pillow (tools/og_compose.py) so the
 # model never fumbles the typography. No transparency pass.
 OG_W, OG_H = 1280, 720          # 16:9
-MODEL_OG   = "gptimage-large"         # higher-fidelity line art for the OG design
+MODEL_OG   = "gptimage-large"   # higher-fidelity line art for the OG design
+
+# Locked Oreo line-art look reproduces on this seed (override only with --seed).
+# Canonical reference: ref/OREO-LINEART.md
+OG_SEED = 7
 
 # The brand marks are the fixed identity — they must come out IDENTICAL on
 # every run. So `--brand` always pins this seed (override only by passing an

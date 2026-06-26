@@ -21,21 +21,27 @@ Paste this first, then the card's own `## Prompt` body.
 > typography anywhere in the image — EXCEPT the single letter "E" inside the
 > panda's small chest badge. Leave the **entire left ~55%** as clean,
 > almost-empty negative space (the headline is added later); place the
-> artwork in the **right ~45%**.
+> artwork in the **right ~40%**, pushed to the right edge with a clear gap
+> before the text zone.
 >
 > **Background:** white (`#ffffff`) covered edge-to-edge by a **faint dotted
 > matrix** — a precise, evenly-spaced grid of tiny `#d9d9dd` dots (a halftone/
 > pegboard dot field), very subtle, receding behind everything.
 >
-> **Mascot — Oreo as an ENTANGLED one-line drawing:** a single, unbroken,
-> thin `#212121` line — one continuous-line / one-line drawing — that loops,
-> overlaps and **entangles** elegantly to form a clearly recognisable panda
-> on the right. Confident and calligraphic, not a messy scribble: the
+> **Mascot — Oreo as a CONTINUOUS one-line drawing:** a single, unbroken, **very
+> thin (fine, delicate)** `#212121` line with only a **few gentle loops and
+> minimal overlaps** — clean and simple, lightly tangled, never a dense
+> scribble — forming a clearly recognisable, **cute, happy and adorable** kawaii panda
+> (round, plump and healthy; a big cheerful smile, rosy cheeks, big bright
+> eyes — Oreo), its head turned **slightly left** toward the text in a gentle
+> three-quarter view. Make it **fairly large** and prominent, filling the
+> **right ~40–42%**, pushed to the right edge and clear of the text zone. Confident and calligraphic, not a messy scribble: the
 > tangles are deliberate and balanced, and the panda still reads instantly.
-> Same crisp weight as the dot matrix. Colour the panda with coral `#ff7759` **only**: both **ears** and **one leg**
-> are filled flat coral, and a small round badge bearing a clean letter
-> **"E"** sits on its chest (Oreo's signature badge). The rest of the panda
-> is the `#212121` line.
+> Same crisp weight as the dot matrix. Both **ears** and **one leg** are filled flat coral `#ff7759`. Centred on its
+> chest sits a **small, compact** round **red `#DC3C32` badge** (only a fraction
+> of the chest) carrying a clean,
+> bold, **stylish letter "E"** (Oreo's signature chest badge), crisp and
+> aligned. The rest of the panda is the `#212121` line.
 >
 > **Geometry:** add **2–3 understated geometric shapes** — thin single-weight
 > outlines in `#d9d9dd` hairline (no coral — coral stays on the panda): e.g. a large
@@ -43,8 +49,8 @@ Paste this first, then the card's own `## Prompt` body.
 > intent, partly overlapping the panda/dots, perfectly aligned like a design-
 > system wireframe. They frame the mascot; they never fill or clutter.
 >
-> **Colour:** coral `#ff7759` is the ONLY saturated colour and appears **only on the panda**
-> (both ears, one leg, and the "E" chest badge). Everything else — dots,
+> **Colour:** coral `#ff7759` (ears + one leg) and the red `#DC3C32` "E" badge are the only
+> saturated colours, and appear **only on the panda**. Everything else — dots,
 > shapes, line — is `#d9d9dd` hairline and `#212121` ink on white.
 
 ## Composition (the Pillow text lands here)
