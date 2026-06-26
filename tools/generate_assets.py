@@ -295,14 +295,15 @@ def generate_og(only=None, seed=42):
 
         prompts/og-image/<site>/<name>.md  →  prompts/og-image/<site>/output/<name>.png
 
-    e.g. prompts/og-image/mails.elixpo/default.md → .../mails.elixpo/output/default.png
-    at 1200×630. Editorial tech-minimalism on the coral "oreo" palette (the
-    light theme from mail.elixpo/app/globals.css): a flat white card with a
-    blueprint grid, a one-line Oreo, and a bold serif headline.
+    Two-step, so the AI never has to render text:
+      1. AI generates the text-free DESIGN (gptlarge, 16:9) →
+         <site>/output/<name>.bg.png
+      2. Pillow composites the headline/eyebrow/sub/url from the card's
+         `## Text` block → <site>/output/<name>.png
 
-    UNLIKE stickers/icons/brand marks, OG cards are NOT run through the
-    transparency pass — the white background is part of the card. Non-prompt
-    files (README, STYLE, palette) are skipped automatically.
+    Editorial tech-minimalism on the coral "oreo" palette: a faint dotted
+    matrix, an entangled one-line Oreo, a couple of geometric shapes.
+    Non-prompt files (README, STYLE, palette) are skipped automatically.
 
     `only` filters: the first token may be a <site> name (limit to that site);
     any remaining tokens are card stems (e.g. `["mails.elixpo", "default"]`).
@@ -343,24 +344,47 @@ def generate_og(only=None, seed=42):
             continue
 
         out_dir.mkdir(parents=True, exist_ok=True)
-        print("[%s] generating %d OG card(s)  [%dx%d, seed=%d]...\n" %
-              (site.name, len(mds), OG_W, OG_H, seed))
+        print("[%s] generating %d OG design(s)  [%dx%d, seed=%d, model=%s]...\n" %
+              (site.name, len(mds), OG_W, OG_H, seed, MODEL_OG))
         for md in mds:
             prompt = _read_prompt(md)
             if not prompt:
                 print("  SKIP %s — no ## Prompt block" % md.stem)
                 continue
-            download_to(prompt, out_dir / ("%s.png" % md.stem),
-                        width=OG_W, height=OG_H, seed=seed)
+            bg = out_dir / ("%s.bg.png" % md.stem)
+            ok = download_to(prompt, bg, width=OG_W, height=OG_H,
+                             seed=seed, model=MODEL_OG)
             total += 1
+            # Composite the text right away (so an interrupt still leaves
+            # finished cards). Skips gracefully if Pillow / og_compose absent.
+            if ok and bg.exists():
+                _compose_og_text(md, bg, out_dir / ("%s.png" % md.stem))
             time.sleep(8)
 
     if total == 0:
         print("No OG prompt files matched (site=%s, cards=%s)." %
               (site_filter or "all", card_filter or "all"))
     else:
-        print("\nDone. Rendered %d card(s) into prompts/og-image/<site>/output/. "
-              "Copy <site>/output/default.png → that app's public/og-image.png." % total)
+        print("\nDone. Designs → <site>/output/<name>.bg.png, composited cards → "
+              "<site>/output/<name>.png. Copy <site>/output/default.png → "
+              "that app's public/og-image.png.\nRe-run text only:  "
+              "python tools/og_compose.py <site>")
+
+
+def _compose_og_text(card_md, bg_path, out_path):
+    """Overlay the card's `## Text` onto the AI design via tools/og_compose.py.
+    Best-effort: warns and skips if Pillow or the composer is unavailable."""
+    try:
+        try:
+            from tools.og_compose import compose_card  # type: ignore
+        except Exception:
+            sys.path.insert(0, str(Path("tools").resolve()))
+            from og_compose import compose_card  # type: ignore
+        compose_card(card_md, bg_path, out_path)
+        print("  text composited → %s" % out_path)
+    except Exception as e:
+        print("  warn: text overlay skipped (%s)" % e)
+        print("        run `python tools/og_compose.py` once Pillow is available")
 
 
 def generate_app(app_name, only_names=None, seed=42):

@@ -1,69 +1,77 @@
-# OG style preamble (shared)
+# OG style — design prompt + text block
 
-Every `og-image/*.md` prompt is built as:
-
-```
-<STYLE PREAMBLE>  +  <card-specific HEADLINE / SUBJECT>
-```
-
-Paste this block first, then the card's own `## Prompt` body.
-
-## Style preamble
-
-> A 1200×630 open-graph social card in an **editorial tech-minimalism**
-> style — clean corporate design meets a modern web-architecture portfolio.
-> The mood is structured, intellectual and airy, with **generous
-> whitespace**. Flat 2D vector art only: absolutely **no 3D, no gradients,
-> no glow, no neon, no drop shadows**.
->
-> **Background:** pure white (`#ffffff`). Behind everything, a subtle,
-> precise **blueprint grid** of thin, crisp, single-weight `#d9d9dd` lines —
-> evenly spaced, perfectly aligned, like a high-end design-system wireframe.
-> Add a few understated structural details in the same hairline weight:
-> alignment guides, small measurement ticks, and corner crop-marks. The grid
-> must stay faint and recede behind the content.
->
-> **Accent:** a single saturated **coral `#ff7759`**, used sparingly — one
-> heavy underline, a small badge, and one or two grid node dots. Everything
-> else is `#212121` ink, `#75758a` slate, and `#d9d9dd` hairline on white.
->
-> **Mascot — Oreo as ONE continuous line:** a single, unbroken, **confident
-> thin line** — a clean, recognisable **continuous-line / one-line drawing**
-> in the style of a premium minimalist logo — depicting a **resting panda in
-> profile / three-quarter view**. One smooth stroke traces the head curve,
-> one rounded ear, a single small spiral eye, a soft snout, and then glides
-> out into a long **horizontal horizon line** that ties into the grid. It
-> must read **clearly and immediately as a panda** — elegant, balanced and
-> deliberate, **not abstract, not scribbled**; the line should not tangle or
-> cross itself messily. Strictly flat 2D, same weight as the blueprint
-> lines, no shading, no closed detailed face.
->
-> Exactly **ONE small coral `#ff7759` patch** marks a **single ear** — a
-> small flat fill sitting **flush inside the silhouette**, NOT a separate
-> ball/disc floating on top of the line. It is the only colour on the
-> mascot and stands in for Oreo's badge. No second colour.
->
-> **Typography:** the headline is set in a **bold, high-contrast serif**
-> (editorial, magazine-cover feel) in ink `#212121`, with a **thick coral
-> underline** or a crisp outlined container for emphasis. Eyebrow labels and
-> any URL are **Space Mono**, uppercase, wide letter-spacing, in muted slate
-> `#93939f`. Layout is balanced and grid-aligned: text block on the left,
-> the line-art panda anchored on the right, breathing room around both.
-
-## Composition grid
+The AI generates the **design only** (no text); we composite the type with
+Pillow. So each card `.md` has **two** blocks:
 
 ```
-┌─────────────────────────────────────────────────────────┐  ← crop marks
-│  • mark   ELIXPO · MAILS              ┌───────────────┐  │  eyebrow (mono)
-│                                       │  line-art     │  │
-│  Big Serif Headline                   │   Oreo panda  │  │  headline + panda
-│  ═══════════════  (coral underline)   │  (single wt)  │  │
-│  sub copy in slate                    └───────────────┘  │
-│                                                           │
-│  mails.elixpo.com           · · ·   (coral grid nodes)    │  footer (mono)
-└─────────────────────────────────────────────────────────┘
+## Prompt   →  the text-free DESIGN (fed to the image model, gptlarge, 16:9)
+## Text     →  eyebrow / headline / sub / url  (drawn by tools/og_compose.py)
 ```
 
-- Safe margin: keep all type ≥ 60px from every edge.
-- Headline cap-height ≈ 96–120px. One or two lines max.
-- Panda occupies the right ~32% of the width, vertically centered.
+## Design style preamble (shared)
+
+Paste this first, then the card's own `## Prompt` body.
+
+> A **16:9** social-card **background design** (1280×720), editorial tech-
+> minimalism — clean corporate design meets a modern web-architecture
+> portfolio. Structured, intellectual, airy, with generous whitespace. Flat
+> 2D vector only: NO 3D, NO gradients, NO glow, NO neon, NO drop shadows.
+>
+> **CRITICAL — NO TEXT.** Absolutely no words, letters, numbers, captions or
+> typography anywhere in the image. Leave the **entire left ~55%** as clean,
+> almost-empty negative space (the headline is added later); place the
+> artwork in the **right ~45%**.
+>
+> **Background:** white (`#ffffff`) covered edge-to-edge by a **faint dotted
+> matrix** — a precise, evenly-spaced grid of tiny `#d9d9dd` dots (a halftone/
+> pegboard dot field), very subtle, receding behind everything.
+>
+> **Mascot — Oreo as an ENTANGLED one-line drawing:** a single, unbroken,
+> thin `#212121` line — one continuous-line / one-line drawing — that loops,
+> overlaps and **entangles** elegantly to form a clearly recognisable panda
+> on the right. Confident and calligraphic, not a messy scribble: the
+> tangles are deliberate and balanced, and the panda still reads instantly.
+> Same crisp weight as the dot matrix. Exactly **ONE small coral `#ff7759`
+> patch** marks a single ear — a small flat fill flush inside the silhouette,
+> the only colour on the mascot.
+>
+> **Geometry:** add **2–3 understated geometric shapes** — thin single-weight
+> outlines in `#d9d9dd` hairline (one may be coral `#ff7759`): e.g. a large
+> open circle, a triangle, a small square or a thin arc — placed with
+> intent, partly overlapping the panda/dots, perfectly aligned like a design-
+> system wireframe. They frame the mascot; they never fill or clutter.
+>
+> **Colour:** coral `#ff7759` is the ONLY saturated colour and appears at
+> most twice (the ear patch + one shape/dot). Everything else is `#212121`
+> ink line and `#d9d9dd` hairline on white.
+
+## Composition (the Pillow text lands here)
+
+```
+┌──────────────────────────────────────────────────────────┐ 16:9
+│  EYEBROW (mono)                         ╱◯  entangled      │
+│                                        │    one-line       │
+│  Big Serif Headline                     ╲   Oreo + 2–3     │
+│  ▆▆▆▆▆▆ (coral underline)                   geo shapes     │
+│  sub copy (sans, slate)                                    │
+│                                                            │
+│  url (mono)                                                │
+└──────────────────────────────────────────────────────────┘
+   ← left ~55%: keep EMPTY in the AI design →   right ~45%: art
+```
+
+## `## Text` block format
+
+```
+## Text
+eyebrow: ELIXPO · MAILS
+headline: Event-based transactional email
+sub: Bring your own sender · design · send one-time or by webhook.
+url: mails.elixpo.com
+```
+
+`og_compose.py` draws: eyebrow (Space Mono, tracked, muted slate) → bold
+high-contrast **serif** headline (auto-fit, wrapped, ink) → heavy coral
+underline → sub (Inter, slate) → url (mono, bottom-left). Drop
+`Fraunces-Bold.ttf` / `SpaceMono-Regular.ttf` / `Inter-Regular.ttf` into
+`tools/fonts/` to upgrade from the DejaVu fallbacks.
