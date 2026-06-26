@@ -20,13 +20,17 @@ slate #93939f; below it a bold high-contrast SERIF headline in ink #212121
 reading "Everything you need to send", with a thick coral #ff7759 underline;
 beneath, a slate #75758a line "Your sender · your templates · your team".
 
-Right, vertically centered: ONE continuous, unbroken, thin single-weight line
-— a true one-line / continuous-line drawing — SUGGESTING the facade of Oreo
-the panda (the curve of the head, one folded ear, a single spiral eye, a hint
-of snout) that then flows out into a long horizontal horizon line tying into
-the grid. Minimal, elegant, flat 2D, NOT a detailed face, no shading. Exactly
-ONE small coral #ff7759 patch (a single filled ear) is the only colour on the
-mascot. Beside it, in the SAME hairline weight, a small precise wireframe of
+Right, vertically centered: ONE continuous, unbroken, confident thin line — a 
+clean, recognisable one-line / continuous-line drawing in the style of a 
+premium minimalist logo — depicting a resting Oreo panda in profile (head 
+curve, one rounded ear, a single small spiral eye, a soft snout) that then 
+flows out into a long horizontal horizon line tying into
+the grid. It must read clearly as a panda — elegant and deliberate, NOT 
+abstract or scribbled, the line never tangling messily. Flat 2D, no shading, 
+no closed detailed face. Exactly ONE small coral #ff7759 patch marks a single 
+ear — a small flat fill flush inside the silhouette, NOT a floating ball — 
+the only colour on the mascot. Beside it, in the SAME hairline weight, a 
+small precise wireframe of
 an email / template card with {{ }} placeholder marks and a tiny webhook node
 — a blueprint detail callout sitting on the horizon line, with one coral node
 dot.

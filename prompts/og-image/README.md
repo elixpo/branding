@@ -2,22 +2,37 @@
 
 Open-graph (social share) cards for **Elixpo Mails** and the wider suite.
 A deliberately different aesthetic from the pixel-art stickers: **editorial
-tech minimalism** — crisp blueprint geometry, a single-weight **line-art**
-take on Oreo the panda, generous whitespace, and a bold high-contrast serif
-headline. Think high-end design-system wireframe, not glowing 3D tech.
+tech minimalism** — crisp blueprint geometry, a **one-line** take on Oreo the
+panda, generous whitespace, and a bold high-contrast serif headline. Think
+high-end design-system wireframe, not glowing 3D tech.
+
+## Structure — one folder per site
+
+Each site gets its own folder of prompts plus an `output/` folder that holds
+the rendered PNGs:
 
 ```
-prompts/og-image/<name>.md   →   og-image/<name>.png   (1200 × 630)
+prompts/og-image/<site>/<name>.md  →  prompts/og-image/<site>/output/<name>.png   (1200 × 630)
+
+prompts/og-image/
+└── mails.elixpo/          ← the first site
+    ├── STYLE.md           ← shared style preamble
+    ├── palette.json       ← palette + type tokens
+    ├── default.md  features.md  workspace.md  docs.md  pricing.md
+    └── output/            ← generated cards land here
 ```
 
-The site expects the default card at `public/og-image.png` (1200×630), so
-the canonical render is [`default.md`](default.md) → `og-image/default.png`
-→ copied to each app's `public/og-image.png`.
+Each site expects its default card at `public/og-image.png` (1200×630), so
+the canonical render is `<site>/default.md` → `<site>/output/default.png` →
+copied to that app's `public/og-image.png`.
+
+To **add a site**, copy `mails.elixpo/` to `prompts/og-image/<newsite>/`,
+adjust the headlines/URLs in its prompts, and run `--og <newsite>`.
 
 ## Palette — the "oreo" (Cohere/coral) system
 
 These are the exact tokens from `mail.elixpo/app/globals.css`. OG cards use
-the **light** theme only. See [`palette.json`](palette.json).
+the **light** theme only. See [`mails.elixpo/palette.json`](mails.elixpo/palette.json).
 
 | Token | Hex | Role on the card |
 |---|---|---|
@@ -66,26 +81,29 @@ the **light** theme only. See [`palette.json`](palette.json).
 
 ## Generate
 
+The cards are **AI-generated from these prompts** by the repo generator
+(`tools/generate_assets.py`, Pollinations `gptimage`, 1200×630, no
+transparency pass):
+
 ```bash
-# single card
-python tools/generate_assets.py --og default
-# all og cards
-python tools/generate_assets.py --og
+python tools/generate_assets.py --og                       # every site, every card
+python tools/generate_assets.py --og mails.elixpo          # one site, all cards
+python tools/generate_assets.py --og mails.elixpo default  # one card
+python tools/generate_assets.py --og --seed 7              # try a different seed
 ```
 
-(If the `--og` flag isn't wired in `generate_assets.py` yet, the prompt
-files still stand alone — paste the `## Prompt` block into any 1200×630
-image model, or hand-render from [`og-default.svg`](og-default.svg).)
+Output lands in each site's `output/` folder. Copy
+`mails.elixpo/output/default.png` → that app's `public/og-image.png`.
 
-## Files
+## Files (per site, e.g. `mails.elixpo/`)
 
 | File | What |
 |---|---|
-| [`STYLE.md`](STYLE.md) | The shared style preamble reused by every prompt |
-| [`palette.json`](palette.json) | Machine-readable palette + type tokens |
-| [`default.md`](default.md) | Default / home card (→ `public/og-image.png`) |
-| [`features.md`](features.md) | Capabilities / product card |
-| [`workspace.md`](workspace.md) | Team workspaces card |
-| [`docs.md`](docs.md) | Documentation card |
-| [`pricing.md`](pricing.md) | Pricing card |
-| [`og-default.svg`](og-default.svg) | Hand-built reference render, fully editable |
+| [`mails.elixpo/STYLE.md`](mails.elixpo/STYLE.md) | The shared style preamble reused by every prompt |
+| [`mails.elixpo/palette.json`](mails.elixpo/palette.json) | Machine-readable palette + type tokens |
+| [`mails.elixpo/default.md`](mails.elixpo/default.md) | Default / home card (→ `public/og-image.png`) |
+| [`mails.elixpo/features.md`](mails.elixpo/features.md) | Capabilities / product card |
+| [`mails.elixpo/workspace.md`](mails.elixpo/workspace.md) | Team workspaces card |
+| [`mails.elixpo/docs.md`](mails.elixpo/docs.md) | Documentation card |
+| [`mails.elixpo/pricing.md`](mails.elixpo/pricing.md) | Pricing card |
+| `mails.elixpo/output/` | Generated 1200×630 PNGs |

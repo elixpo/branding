@@ -27,17 +27,21 @@ Paste this block first, then the card's own `## Prompt` body.
 > heavy underline, a small badge, and one or two grid node dots. Everything
 > else is `#212121` ink, `#75758a` slate, and `#d9d9dd` hairline on white.
 >
-> **Mascot — Oreo as ONE continuous line:** a single, unbroken, thin
-> single-weight line — a true **continuous-line / one-line drawing** — that
-> *suggests* the facade of a panda rather than rendering a full detailed
-> face. With one calligraphic stroke: the curve of the head, one folded
-> ear, a single spiral for the eye, the hint of a snout/cheek, and then the
-> same line flowing out into a long **horizontal horizon line** that ties
-> into the grid. Elegant, minimal, calligraphic, strictly flat 2D, no
-> shading, no closed pixel-art face. Its weight matches the blueprint lines.
-> Add exactly **ONE small coral `#ff7759` patch** — a single filled ear or a
-> small soft blob — the only colour on the mascot, standing in for Oreo's
-> badge. No second colour.
+> **Mascot — Oreo as ONE continuous line:** a single, unbroken, **confident
+> thin line** — a clean, recognisable **continuous-line / one-line drawing**
+> in the style of a premium minimalist logo — depicting a **resting panda in
+> profile / three-quarter view**. One smooth stroke traces the head curve,
+> one rounded ear, a single small spiral eye, a soft snout, and then glides
+> out into a long **horizontal horizon line** that ties into the grid. It
+> must read **clearly and immediately as a panda** — elegant, balanced and
+> deliberate, **not abstract, not scribbled**; the line should not tangle or
+> cross itself messily. Strictly flat 2D, same weight as the blueprint
+> lines, no shading, no closed detailed face.
+>
+> Exactly **ONE small coral `#ff7759` patch** marks a **single ear** — a
+> small flat fill sitting **flush inside the silhouette**, NOT a separate
+> ball/disc floating on top of the line. It is the only colour on the
+> mascot and stands in for Oreo's badge. No second colour.
 >
 > **Typography:** the headline is set in a **bold, high-contrast serif**
 > (editorial, magazine-cover feel) in ink `#212121`, with a **thick coral

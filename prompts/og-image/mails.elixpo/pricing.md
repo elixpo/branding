@@ -19,12 +19,16 @@ Left, grid-aligned: uppercase Space-Mono eyebrow "PRICING" in muted slate
 usage-based pricing", with a thick coral #ff7759 underline; below, a slate
 #75758a line "Bring your own sender — pay for what you send".
 
-Right, vertically centered: ONE continuous, unbroken, thin single-weight line
-— a true one-line / continuous-line drawing — SUGGESTING the facade of Oreo
-the panda (head curve, one folded ear, a single spiral eye, a hint of snout)
+Right, vertically centered: ONE continuous, unbroken, confident thin line — a 
+clean, recognisable one-line / continuous-line drawing in the style of a 
+premium minimalist logo — depicting a resting Oreo panda in profile (head 
+curve, one rounded ear, a single small spiral eye, a soft snout)
 that flows out into a long horizontal horizon line tying into the grid.
-Minimal, elegant, flat 2D, not a detailed face, no shading. Exactly ONE small
-coral #ff7759 patch (a single filled ear) is the only colour on the mascot.
+It must read clearly as a panda — elegant and deliberate, NOT abstract or 
+scribbled, the line never tangling messily. Flat 2D, no shading, no closed 
+detailed face. Exactly ONE small coral #ff7759 patch marks a single ear — a 
+small flat fill flush inside the silhouette, NOT a floating ball — the only 
+colour on the mascot.
 Beside it, in the same hairline weight, a small precise wireframe price tag /
 receipt with clean rule lines — a blueprint callout on the horizon line with
 one coral node dot.

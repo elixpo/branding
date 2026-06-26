@@ -15,10 +15,11 @@ Stickers (prompts/stickers/<name>.md → stickers/<name>.png at 1024x1024):
   python tools/generate_assets.py --stickers --from 22   # sweep 022 → end
   python tools/generate_assets.py --stickers --from 22 --to 60   # range 022–060
 
-OG cards (prompts/og-image/<name>.md → og-image/<name>.png at 1200x630):
-  python tools/generate_assets.py --og                   # every OG card
-  python tools/generate_assets.py --og default           # single card
-  python tools/generate_assets.py --og default docs      # a few cards
+OG cards (prompts/og-image/<site>/<name>.md → prompts/og-image/<site>/output/<name>.png, 1200x630):
+  python tools/generate_assets.py --og                         # every site, every card
+  python tools/generate_assets.py --og mails.elixpo            # one site, all cards
+  python tools/generate_assets.py --og mails.elixpo default    # one card
+  python tools/generate_assets.py --og default docs            # those cards, every site
   # editorial-minimalist; NO transparency pass (flat white card)
 
 Website icons (prompts/icons/<domain>/icon_prompt.md → assets/icons/web/<domain>.png):
@@ -276,52 +277,83 @@ def generate_brand(only_names=None, seed=BRAND_SEED, width=BRAND_W, height=BRAND
         print("\nDone. Transparent brand marks in assets/brand/")
 
 
-def generate_og(only_names=None, seed=42):
-    """Generate open-graph / social cards.
+OG_SKIP = {"readme", "style", "palette"}
 
-    Reads prompts/og-image/<name>.md and writes og-image/<name>.png at
-    1200×630. Editorial tech-minimalism on the coral "oreo" palette (the
+
+def generate_og(only=None, seed=42):
+    """Generate open-graph / social cards, organised per site.
+
+    Layout — one folder per site, each with its own prompts and an output/
+    folder for the rendered images:
+
+        prompts/og-image/<site>/<name>.md  →  prompts/og-image/<site>/output/<name>.png
+
+    e.g. prompts/og-image/mails.elixpo/default.md → .../mails.elixpo/output/default.png
+    at 1200×630. Editorial tech-minimalism on the coral "oreo" palette (the
     light theme from mail.elixpo/app/globals.css): a flat white card with a
-    blueprint grid, a single-weight line-art Oreo, and a bold serif headline.
+    blueprint grid, a one-line Oreo, and a bold serif headline.
 
     UNLIKE stickers/icons/brand marks, OG cards are NOT run through the
-    transparency pass — the white background is part of the card. The
-    non-prompt files (README, STYLE, palette) are skipped automatically.
+    transparency pass — the white background is part of the card. Non-prompt
+    files (README, STYLE, palette) are skipped automatically.
 
-    The default card (default.png) is the one to copy to each app's
-    public/og-image.png. Style spec: prompts/og-image/STYLE.md
+    `only` filters: the first token may be a <site> name (limit to that site);
+    any remaining tokens are card stems (e.g. `["mails.elixpo", "default"]`).
+    With no site token the remaining names filter cards across every site.
+
+    Copy a site's output/default.png → that app's public/og-image.png.
+    Style spec: prompts/og-image/<site>/STYLE.md
     """
-    prompts_dir = Path("prompts") / "og-image"
-    out_dir     = Path("og-image")
-    if not prompts_dir.exists():
-        print("No prompts directory at %s" % prompts_dir)
+    base = Path("prompts") / "og-image"
+    if not base.exists():
+        print("No prompts directory at %s" % base)
         return
 
-    # Only the card prompts are .md with a ## Prompt block; the docs aren't.
-    SKIP = {"readme", "style", "palette"}
-    mds = sorted(prompts_dir.glob("*.md"))
-    mds = [m for m in mds if m.stem.lower() not in SKIP]
-    if only_names:
-        mds = [m for m in mds if m.stem in only_names]
-    if not mds:
-        print("No og-image prompt files in %s (after filtering)" % prompts_dir)
+    sites = [d for d in sorted(base.iterdir()) if d.is_dir() and not d.name.startswith(".")]
+    if not sites:
+        print("No site folders under %s (expected e.g. %s/mails.elixpo/)" % (base, base))
         return
 
-    out_dir.mkdir(parents=True, exist_ok=True)
-    print("Generating %d OG card(s)  [%dx%d, seed=%d]...\n" %
-          (len(mds), OG_W, OG_H, seed))
+    # Split `only` into an optional leading site + trailing card stems.
+    site_filter, card_filter = None, None
+    if only:
+        names = [s.name for s in sites]
+        if only[0] in names:
+            site_filter = only[0]
+            card_filter = only[1:] or None
+        else:
+            card_filter = only
 
-    for md in mds:
-        prompt = _read_prompt(md)
-        if not prompt:
-            print("  SKIP %s — no ## Prompt block" % md.stem)
+    total = 0
+    for site in sites:
+        if site_filter and site.name != site_filter:
             continue
-        out = out_dir / ("%s.png" % md.stem)
-        download_to(prompt, out, width=OG_W, height=OG_H, seed=seed)
-        time.sleep(8)
+        out_dir = site / "output"
+        mds = [m for m in sorted(site.glob("*.md")) if m.stem.lower() not in OG_SKIP]
+        if card_filter:
+            mds = [m for m in mds if m.stem in card_filter]
+        if not mds:
+            continue
 
-    print("\nDone. OG cards in og-image/. Copy og-image/default.png → "
-          "<app>/public/og-image.png.")
+        out_dir.mkdir(parents=True, exist_ok=True)
+        print("[%s] generating %d OG card(s)  [%dx%d, seed=%d]...\n" %
+              (site.name, len(mds), OG_W, OG_H, seed))
+        for md in mds:
+            prompt = _read_prompt(md)
+            if not prompt:
+                print("  SKIP %s — no ## Prompt block" % md.stem)
+                continue
+            download_to(prompt, out_dir / ("%s.png" % md.stem),
+                        width=OG_W, height=OG_H, seed=seed)
+            total += 1
+            time.sleep(8)
+
+    if total == 0:
+        print("No OG prompt files matched (site=%s, cards=%s)." %
+              (site_filter or "all", card_filter or "all"))
+    else:
+        print("\nDone. Rendered %d card(s) into prompts/og-image/<site>/output/. "
+              "Copy <site>/output/default.png → that app's public/og-image.png." % total)
 
 
 def generate_app(app_name, only_names=None, seed=42):
@@ -527,7 +559,7 @@ def main():
     if "--og" in args:
         idx  = args.index("--og")
         only = args[idx + 1:]
-        generate_og(only_names=only or None, seed=seed)
+        generate_og(only=only or None, seed=seed)
         return
 
     # ── per-app mode ─────────────────────────────────────────────────────────

@@ -20,9 +20,10 @@ Left, grid-aligned: uppercase Space-Mono eyebrow "WORKSPACES" in muted slate
 workspace for your whole team", with a thick coral #ff7759 underline; below, a
 slate #75758a line "Invite by link · roles · approve who joins".
 
-Right / center-right: ONE continuous, unbroken, thin single-weight line — a
-true one-line / continuous-line drawing — SUGGESTING the facade of Oreo the
-panda (head curve, one folded ear, a single spiral eye, a hint of snout) that
+Right / center-right: ONE continuous, unbroken, confident thin line — a 
+clean, recognisable one-line / continuous-line drawing in the style of a 
+premium minimalist logo — depicting a resting Oreo panda in profile (head 
+curve, one rounded ear, a single small spiral eye, a soft snout) that
 then flows out into a long horizontal horizon line. Along that horizon line,
 in the SAME hairline weight, sit three small connected member nodes (small
 circles linked by thin edges) — a clean workspace/team graph. Minimal,
