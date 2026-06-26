@@ -1,7 +1,12 @@
 {
   "name": "elixpo-mails-og",
-  "description": "OG/social-card palette for Elixpo Mails — the light 'oreo' (Cohere/coral) system from mail.elixpo/app/globals.css. Editorial tech-minimalism; coral is the only saturated colour.",
-  "canvas": { "width": 1200, "height": 630, "safeMargin": 60 },
+  "description": "OG/social-card palette for Elixpo Mails \u2014 light 'oreo' (Cohere/coral) system from mail.elixpo/app/globals.css. AI renders the text-free design; type is composited by tools/og_compose.py.",
+  "canvas": {
+    "width": 1280,
+    "height": 720,
+    "aspect": "16:9",
+    "safeMargin": 84
+  },
   "colors": {
     "canvas": "#ffffff",
     "softCanvas": "#faf9f6",
@@ -43,9 +48,13 @@
   },
   "mascot": {
     "name": "Oreo",
-    "render": "ONE continuous unbroken line (one-line / continuous-line drawing) suggesting the panda's facade, flowing into a horizon line; flat 2D, no closed shapes, no shading",
+    "render": "ONE entangled continuous line (one-line drawing) that loops and overlaps into a clearly recognisable panda; flat 2D, deliberate balanced tangles, not a scribble",
     "lineColor": "#212121",
     "lineWeight": "matches blueprint hairline",
-    "colorPatch": { "fill": "#ff7759", "where": "a single filled ear", "note": "the ONLY colour on the mascot — stands in for Oreo's badge" }
+    "color": {
+      "fill": "#ff7759",
+      "where": "both ears, one leg, and a round 'E' chest badge",
+      "note": "the ONLY colour on the mascot (Oreo's accents); the 'E' is the lone letter allowed in the design"
+    }
   }
 }

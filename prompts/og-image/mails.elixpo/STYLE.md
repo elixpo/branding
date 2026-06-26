@@ -18,7 +18,8 @@ Paste this first, then the card's own `## Prompt` body.
 > 2D vector only: NO 3D, NO gradients, NO glow, NO neon, NO drop shadows.
 >
 > **CRITICAL — NO TEXT.** Absolutely no words, letters, numbers, captions or
-> typography anywhere in the image. Leave the **entire left ~55%** as clean,
+> typography anywhere in the image — EXCEPT the single letter "E" inside the
+> panda's small chest badge. Leave the **entire left ~55%** as clean,
 > almost-empty negative space (the headline is added later); place the
 > artwork in the **right ~45%**.
 >
@@ -31,19 +32,20 @@ Paste this first, then the card's own `## Prompt` body.
 > overlaps and **entangles** elegantly to form a clearly recognisable panda
 > on the right. Confident and calligraphic, not a messy scribble: the
 > tangles are deliberate and balanced, and the panda still reads instantly.
-> Same crisp weight as the dot matrix. Exactly **ONE small coral `#ff7759`
-> patch** marks a single ear — a small flat fill flush inside the silhouette,
-> the only colour on the mascot.
+> Same crisp weight as the dot matrix. Colour the panda with coral `#ff7759` **only**: both **ears** and **one leg**
+> are filled flat coral, and a small round badge bearing a clean letter
+> **"E"** sits on its chest (Oreo's signature badge). The rest of the panda
+> is the `#212121` line.
 >
 > **Geometry:** add **2–3 understated geometric shapes** — thin single-weight
-> outlines in `#d9d9dd` hairline (one may be coral `#ff7759`): e.g. a large
+> outlines in `#d9d9dd` hairline (no coral — coral stays on the panda): e.g. a large
 > open circle, a triangle, a small square or a thin arc — placed with
 > intent, partly overlapping the panda/dots, perfectly aligned like a design-
 > system wireframe. They frame the mascot; they never fill or clutter.
 >
-> **Colour:** coral `#ff7759` is the ONLY saturated colour and appears at
-> most twice (the ear patch + one shape/dot). Everything else is `#212121`
-> ink line and `#d9d9dd` hairline on white.
+> **Colour:** coral `#ff7759` is the ONLY saturated colour and appears **only on the panda**
+> (both ears, one leg, and the "E" chest badge). Everything else — dots,
+> shapes, line — is `#d9d9dd` hairline and `#212121` ink on white.
 
 ## Composition (the Pillow text lands here)
 
