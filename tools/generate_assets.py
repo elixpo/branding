@@ -15,7 +15,7 @@ Stickers (prompts/stickers/<name>.md → stickers/<name>.png at 1024x1024):
   python tools/generate_assets.py --stickers --from 22   # sweep 022 → end
   python tools/generate_assets.py --stickers --from 22 --to 60   # range 022–060
 
-OG cards (prompts/og-image/<site>/<name>.md → prompts/og-image/<site>/output/<name>.png, 1200x630):
+OG cards (prompts/og-image/<site>/prompts/<name>.md → .../output/<name>.png, 1280x720 16:9):
   python tools/generate_assets.py --og                         # every site, every card
   python tools/generate_assets.py --og mails.elixpo            # one site, all cards
   python tools/generate_assets.py --og mails.elixpo default    # one card
@@ -297,7 +297,7 @@ def generate_og(only=None, seed=42):
     Layout — one folder per site, each with its own prompts and an output/
     folder for the rendered images:
 
-        prompts/og-image/<site>/<name>.md  →  prompts/og-image/<site>/output/<name>.png
+        prompts/og-image/<site>/prompts/<name>.md  →  prompts/og-image/<site>/output/<name>.png
 
     Two-step, so the AI never has to render text:
       1. AI generates the text-free DESIGN (gptlarge, 16:9) →
@@ -341,7 +341,7 @@ def generate_og(only=None, seed=42):
         if site_filter and site.name != site_filter:
             continue
         out_dir = site / "output"
-        mds = [m for m in sorted(site.glob("*.md")) if m.stem.lower() not in OG_SKIP]
+        mds = [m for m in sorted((site / "prompts").glob("*.md")) if m.stem.lower() not in OG_SKIP]
         if card_filter:
             mds = [m for m in mds if m.stem in card_filter]
         if not mds:

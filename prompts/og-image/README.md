@@ -27,10 +27,12 @@ exact proportions:
 
 ```
 prompts/og-image/
+├── palette.json              ← shared palette + type tokens (root)
+├── README.md
 └── mails.elixpo/              ← the first site
     ├── STYLE.md               ← shared design + text spec
-    ├── palette.json           ← palette + type tokens
-    ├── default.md  features.md  workspace.md  docs.md  pricing.md
+    ├── prompts/               ← the card prompts
+    │   └── default.md  features.md  workspace.md  docs.md  pricing.md
     └── output/
         ├── <name>.bg.png      ← AI design (text-free)
         └── <name>.png         ← final composited card (1280×720, 16:9)
@@ -46,7 +48,7 @@ edit each card's `## Text` (and any URLs), and run `--og <newsite>`.
 ## Palette — the "oreo" (Cohere/coral) system
 
 Exact tokens from `mail.elixpo/app/globals.css`, light theme only. See
-[`mails.elixpo/palette.json`](mails.elixpo/palette.json).
+[`palette.json`](palette.json).
 
 | Token | Hex | Role |
 |---|---|---|
@@ -102,10 +104,9 @@ python tools/og_compose.py mails.elixpo                    # re-draw text only
 | File | What |
 |---|---|
 | [`mails.elixpo/STYLE.md`](mails.elixpo/STYLE.md) | Shared design + text spec |
-| [`mails.elixpo/palette.json`](mails.elixpo/palette.json) | Palette + type tokens |
-| [`mails.elixpo/default.md`](mails.elixpo/default.md) | Default / home card (→ `public/og-image.png`) |
-| [`mails.elixpo/features.md`](mails.elixpo/features.md) | Capabilities card |
-| [`mails.elixpo/workspace.md`](mails.elixpo/workspace.md) | Workspaces card |
-| [`mails.elixpo/docs.md`](mails.elixpo/docs.md) | Documentation card |
-| [`mails.elixpo/pricing.md`](mails.elixpo/pricing.md) | Pricing card |
+| [`mails.elixpo/prompts/default.md`](mails.elixpo/prompts/default.md) | Default / home card (→ `public/og-image.png`) |
+| [`mails.elixpo/prompts/features.md`](mails.elixpo/prompts/features.md) | Capabilities card |
+| [`mails.elixpo/prompts/workspace.md`](mails.elixpo/prompts/workspace.md) | Workspaces card |
+| [`mails.elixpo/prompts/docs.md`](mails.elixpo/prompts/docs.md) | Documentation card |
+| [`mails.elixpo/prompts/pricing.md`](mails.elixpo/prompts/pricing.md) | Pricing card |
 | `mails.elixpo/output/` | `<name>.bg.png` (AI design) + `<name>.png` (final 16:9) |

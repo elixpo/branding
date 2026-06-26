@@ -5,8 +5,8 @@ Oreo, a couple of geometric shapes) at 16:9. This script overlays the typography
 ourselves with Pillow — so the model never fumbles letters — at fixed, correct
 proportions in the card's left negative space.
 
-  prompts/og-image/<site>/<name>.bg.png   (AI design)
-  prompts/og-image/<site>/<name>.md        (## Text block: eyebrow/headline/sub/url)
+  prompts/og-image/<site>/prompts/<name>.md     (## Text block: eyebrow/headline/sub/url)
+  prompts/og-image/<site>/output/<name>.bg.png  (AI design)
         → prompts/og-image/<site>/output/<name>.png   (final card)
 
 Usage:
@@ -194,7 +194,7 @@ def main(argv):
         if site_filter and site.name != site_filter:
             continue
         out_dir = site / "output"
-        for md in sorted(site.glob("*.md")):
+        for md in sorted((site / "prompts").glob("*.md")):
             if md.stem.lower() in {"readme", "style", "palette"}:
                 continue
             if card_filter and md.stem not in card_filter:
