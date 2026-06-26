@@ -1,0 +1,95 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg" font-family="'Space Mono', ui-monospace, monospace">
+  <title>Elixpo Mails — OG card (editorial tech-minimalism, line-art Oreo)</title>
+
+  <!-- Palette: canvas #ffffff · ink #212121 · slate #75758a · muted #93939f
+       · hairline #d9d9dd · coral #ff7759 · near-black #17171c -->
+
+  <defs>
+    <!-- Blueprint grid -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#d9d9dd" stroke-width="1" opacity="0.55"/>
+    </pattern>
+    <pattern id="gridMajor" width="200" height="200" patternUnits="userSpaceOnUse">
+      <path d="M200 0H0V200" fill="none" stroke="#d9d9dd" stroke-width="1.2" opacity="0.9"/>
+    </pattern>
+  </defs>
+
+  <!-- Canvas -->
+  <rect width="1200" height="630" fill="#ffffff"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect width="1200" height="630" fill="url(#gridMajor)"/>
+
+  <!-- Structural blueprint details: crop marks + measurement ticks + guides -->
+  <g stroke="#d9d9dd" stroke-width="1.4">
+    <!-- corner crop marks -->
+    <path d="M40 24V56 M24 40H56"/>
+    <path d="M1160 24V56 M1144 40H1176"/>
+    <path d="M40 574V606 M24 590H56"/>
+    <path d="M1160 574V606 M1144 590H1176"/>
+    <!-- top measurement ticks -->
+    <path d="M80 40V52 M280 40V52 M480 40V52 M680 40V52 M880 40V52 M1080 40V52" opacity="0.8"/>
+    <!-- vertical alignment guide between copy and mascot -->
+    <path d="M640 90V540" stroke-dasharray="4 6" opacity="0.8"/>
+    <!-- guide lines tying the mascot into the grid -->
+    <path d="M640 300H772" opacity="0.7"/>
+    <path d="M905 150V96" opacity="0.7"/>
+  </g>
+
+  <!-- coral grid nodes -->
+  <g fill="#ff7759">
+    <circle cx="640" cy="300" r="4.5"/>
+    <circle cx="905" cy="96" r="4.5"/>
+    <circle cx="1080" cy="540" r="4.5"/>
+  </g>
+
+  <!-- ── Left: editorial type block ───────────────────────────────────── -->
+  <!-- eyebrow (mono) -->
+  <text x="80" y="150" font-size="20" letter-spacing="6" fill="#93939f">ELIXPO · MAILS</text>
+
+  <!-- headline (bold high-contrast serif) -->
+  <g font-family="Fraunces, 'Playfair Display', Georgia, serif" font-weight="700" fill="#212121">
+    <text x="78" y="262" font-size="78" letter-spacing="-1.5">Event-based</text>
+    <text x="78" y="344" font-size="78" letter-spacing="-1.5">transactional email</text>
+  </g>
+  <!-- heavy coral underline -->
+  <rect x="80" y="366" width="372" height="9" rx="4.5" fill="#ff7759"/>
+
+  <!-- sub copy (sans) -->
+  <text x="80" y="424" font-family="Inter, ui-sans-serif, system-ui" font-size="22" fill="#75758a">Bring your own sender · design · send one-time or by webhook.</text>
+
+  <!-- footer url (mono) -->
+  <text x="80" y="566" font-size="18" letter-spacing="2" fill="#93939f">mails.elixpo.com</text>
+
+  <!-- ── Right: line-art Oreo (single-weight) ─────────────────────────── -->
+  <g stroke="#212121" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <!-- ears (near-black fills) -->
+    <circle cx="828" cy="192" r="36" fill="#17171c"/>
+    <circle cx="982" cy="192" r="36" fill="#17171c"/>
+    <circle cx="828" cy="192" r="16" fill="#ffffff" stroke="none"/>
+    <circle cx="982" cy="192" r="16" fill="#ffffff" stroke="none"/>
+
+    <!-- body (rounded torso behind head) -->
+    <path d="M812 402 Q905 384 998 402 Q1016 470 998 540 Q905 582 812 540 Q794 470 812 402 Z" fill="#ffffff"/>
+
+    <!-- coral chest badge -->
+    <circle cx="905" cy="476" r="30" fill="#ff7759" stroke="none"/>
+    <text x="905" y="488" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="30" fill="#ffffff" stroke="none">E</text>
+
+    <!-- head -->
+    <circle cx="905" cy="288" r="124" fill="#ffffff"/>
+
+    <!-- eye patches (near-black) -->
+    <ellipse cx="861" cy="276" rx="30" ry="40" fill="#17171c" stroke="none" transform="rotate(-14 861 276)"/>
+    <ellipse cx="949" cy="276" rx="30" ry="40" fill="#17171c" stroke="none" transform="rotate(14 949 276)"/>
+    <!-- eyes -->
+    <circle cx="869" cy="282" r="12" fill="#ffffff" stroke="none"/>
+    <circle cx="941" cy="282" r="12" fill="#ffffff" stroke="none"/>
+    <circle cx="872" cy="284" r="5" fill="#17171c" stroke="none"/>
+    <circle cx="938" cy="284" r="5" fill="#17171c" stroke="none"/>
+
+    <!-- nose -->
+    <ellipse cx="905" cy="330" rx="13" ry="9" fill="#17171c" stroke="none"/>
+    <!-- mouth (single continuous line) -->
+    <path d="M905 339 V352 M905 352 Q888 368 872 358 M905 352 Q922 368 938 358" fill="none"/>
+  </g>
+</svg>

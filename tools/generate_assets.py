@@ -15,6 +15,12 @@ Stickers (prompts/stickers/<name>.md → stickers/<name>.png at 1024x1024):
   python tools/generate_assets.py --stickers --from 22   # sweep 022 → end
   python tools/generate_assets.py --stickers --from 22 --to 60   # range 022–060
 
+OG cards (prompts/og-image/<name>.md → og-image/<name>.png at 1200x630):
+  python tools/generate_assets.py --og                   # every OG card
+  python tools/generate_assets.py --og default           # single card
+  python tools/generate_assets.py --og default docs      # a few cards
+  # editorial-minimalist; NO transparency pass (flat white card)
+
 Website icons (prompts/icons/<domain>/icon_prompt.md → assets/icons/web/<domain>.png):
   python tools/generate_assets.py --web                  # all website icons
   python tools/generate_assets.py --web sketch.elixpo    # single icon
@@ -47,6 +53,11 @@ MODEL = "gptimage"
 # horizontal). Per-app sprites stay square (1:1). The optimiser downscales
 # each to its real target size afterwards.
 BRAND_W, BRAND_H = 1024, 576
+
+# Open-graph / social cards render at the standard 1200×630. Unlike stickers
+# and brand marks, OG cards keep their flat white background (NO transparency
+# pass) — they are full-bleed editorial-minimalist cards, not cut-out sprites.
+OG_W, OG_H = 1200, 630
 
 # The brand marks are the fixed identity — they must come out IDENTICAL on
 # every run. So `--brand` always pins this seed (override only by passing an
@@ -265,6 +276,54 @@ def generate_brand(only_names=None, seed=BRAND_SEED, width=BRAND_W, height=BRAND
         print("\nDone. Transparent brand marks in assets/brand/")
 
 
+def generate_og(only_names=None, seed=42):
+    """Generate open-graph / social cards.
+
+    Reads prompts/og-image/<name>.md and writes og-image/<name>.png at
+    1200×630. Editorial tech-minimalism on the coral "oreo" palette (the
+    light theme from mail.elixpo/app/globals.css): a flat white card with a
+    blueprint grid, a single-weight line-art Oreo, and a bold serif headline.
+
+    UNLIKE stickers/icons/brand marks, OG cards are NOT run through the
+    transparency pass — the white background is part of the card. The
+    non-prompt files (README, STYLE, palette) are skipped automatically.
+
+    The default card (default.png) is the one to copy to each app's
+    public/og-image.png. Style spec: prompts/og-image/STYLE.md
+    """
+    prompts_dir = Path("prompts") / "og-image"
+    out_dir     = Path("og-image")
+    if not prompts_dir.exists():
+        print("No prompts directory at %s" % prompts_dir)
+        return
+
+    # Only the card prompts are .md with a ## Prompt block; the docs aren't.
+    SKIP = {"readme", "style", "palette"}
+    mds = sorted(prompts_dir.glob("*.md"))
+    mds = [m for m in mds if m.stem.lower() not in SKIP]
+    if only_names:
+        mds = [m for m in mds if m.stem in only_names]
+    if not mds:
+        print("No og-image prompt files in %s (after filtering)" % prompts_dir)
+        return
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    print("Generating %d OG card(s)  [%dx%d, seed=%d]...\n" %
+          (len(mds), OG_W, OG_H, seed))
+
+    for md in mds:
+        prompt = _read_prompt(md)
+        if not prompt:
+            print("  SKIP %s — no ## Prompt block" % md.stem)
+            continue
+        out = out_dir / ("%s.png" % md.stem)
+        download_to(prompt, out, width=OG_W, height=OG_H, seed=seed)
+        time.sleep(8)
+
+    print("\nDone. OG cards in og-image/. Copy og-image/default.png → "
+          "<app>/public/og-image.png.")
+
+
 def generate_app(app_name, only_names=None, seed=42):
     """Generate all assets for one app: prompts/<app>/*.md → apps/<app>/assets/raw/*.png"""
     prompts_dir = Path("prompts") / app_name
@@ -460,6 +519,15 @@ def main():
         only = args[idx + 1:]
         brand_seed = seed if "--seed" in sys.argv[1:] else BRAND_SEED
         generate_brand(only_names=only or None, seed=brand_seed)
+        return
+
+    # ── open-graph cards mode ────────────────────────────────────────────────
+    # Editorial-minimalist social cards → og-image/, NO transparency pass.
+    # Positional args after --og filter by stem (e.g. `--og default docs`).
+    if "--og" in args:
+        idx  = args.index("--og")
+        only = args[idx + 1:]
+        generate_og(only_names=only or None, seed=seed)
         return
 
     # ── per-app mode ─────────────────────────────────────────────────────────
