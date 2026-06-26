@@ -1,44 +1,39 @@
 # Elixpo Mails — default OG card
 
-The canonical share card → `og-image/default.png` → each app's
-`public/og-image.png`. Headline names the product; subject is the line-art
-Oreo wired into the blueprint.
+Canonical share card. The AI renders the text-free design; og_compose draws
+the headline. → output/default.png → each app's public/og-image.png.
 
 ## Prompt
 
-A 1200×630 open-graph social card in editorial tech-minimalism — clean
-corporate design meets a modern web-architecture portfolio. Structured,
-intellectual, airy, with generous whitespace. Flat 2D vector art only: NO
-3D, NO gradients, NO glow, NO neon, NO drop shadows.
+A 16:9 social-card background design (1280x720) in editorial tech-minimalism —
+clean corporate design meets a modern web-architecture portfolio. Structured,
+intellectual, airy. Flat 2D vector only: NO 3D, NO gradients, NO glow, NO neon,
+NO shadows.
 
-Background: pure white (#ffffff) with a subtle, precise blueprint grid of
-thin, crisp, single-weight hairline lines in #d9d9dd — evenly spaced and
-perfectly aligned like a high-end design-system wireframe — plus a few
-understated structural details in the same weight: alignment guides, tiny
-measurement ticks, and corner crop-marks. The grid stays faint and recedes.
+CRITICAL: NO TEXT — no words, letters, numbers or typography anywhere. Leave
+the entire LEFT ~55% as clean, almost-empty negative space; place ALL artwork
+in the RIGHT ~45%.
 
-Left two-thirds, grid-aligned text block: a small uppercase Space-Mono
-eyebrow "ELIXPO · MAILS" in muted slate #93939f; below it a bold,
-high-contrast SERIF headline in ink #212121 reading "Event-based
-transactional email", set in two lines; directly under the headline a thick
-coral #ff7759 underline bar; beneath that one line of slate #75758a sub-copy
-"Bring your own sender · design · send one-time or by webhook".
+Background: white (#ffffff) covered edge-to-edge by a faint dotted matrix —
+tiny, evenly-spaced #d9d9dd dots (a subtle halftone / pegboard dot field)
+receding behind everything.
 
-Right third, vertically centered: ONE continuous, unbroken, confident thin
-line — a clean, recognisable continuous-line / one-line drawing in the style
-of a premium minimalist logo — depicting a resting Oreo panda in profile /
-three-quarter view: one smooth stroke traces the head curve, one rounded ear,
-a single small spiral eye, a soft snout, then glides out into a long
-horizontal horizon line that ties into the blueprint grid. It must read
-clearly and immediately as a panda — elegant, balanced, deliberate; NOT
-abstract, NOT scribbled, the line never tangling or crossing itself messily.
-Strictly flat 2D, no closed detailed face, no shading. Exactly ONE small coral
-#ff7759 patch marks a single ear — a small flat fill flush inside the
-silhouette, NOT a separate ball/disc floating on the line — the only colour on
-the mascot. One or two grid intersections on the horizon line carry small
-coral node dots.
+Mascot: Oreo the panda as an ENTANGLED one-line drawing — ONE single, unbroken,
+thin #212121 line that loops, overlaps and entangles elegantly into a clearly
+recognisable panda on the right side. The tangles are deliberate and balanced —
+confident and calligraphic, NOT a messy scribble — and the panda reads
+instantly. Exactly ONE small coral #ff7759 patch marks a single ear (a small
+flat fill flush inside the silhouette) — the only colour on the mascot.
 
-Footer-left, Space-Mono lowercase in muted slate: "mails.elixpo.com". Keep
-all type at least 60px from every edge. Coral is the ONLY saturated colour —
-used only for the underline, the badge, and one or two grid nodes; everything
-else is ink, slate and hairline on white.
+Geometry: 2-3 understated geometric shapes in thin single-weight hairline
+#d9d9dd outlines (one may be coral #ff7759) — a large open circle, a slim
+triangle and a thin arc — placed with intent, partly overlapping the panda and
+the dot field, perfectly aligned like a design-system wireframe, never filled,
+never cluttered. Coral is the ONLY saturated colour and appears at most twice;
+everything else is #212121 line and #d9d9dd hairline on white.
+
+## Text
+eyebrow: ELIXPO · MAILS
+headline: Event-based transactional email
+sub: Bring your own sender · design · send one-time or by webhook.
+url: mails.elixpo.com

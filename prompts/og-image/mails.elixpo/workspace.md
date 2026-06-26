@@ -1,36 +1,34 @@
 # Elixpo Mails — workspaces OG card
 
-For the team-workspaces / invite share. Two or three line-art pandas linked by
-hairline edges = a workspace graph.
+Text-free design + composited text. → output/workspace.png
 
 ## Prompt
 
-A 1200×630 open-graph social card in editorial tech-minimalism — clean
-corporate design, modern web-architecture portfolio. Structured,
-intellectual, airy, generous whitespace. Flat 2D vector only: NO 3D, NO
-gradients, NO glow, NO neon, NO shadows.
+A 16:9 social-card background design (1280x720) in editorial tech-minimalism —
+clean corporate design meets a modern web-architecture portfolio. Structured,
+intellectual, airy. Flat 2D vector only: NO 3D, NO gradients, NO glow, NO neon,
+NO shadows.
 
-Background: pure white (#ffffff) with a subtle precise blueprint grid of thin
-single-weight hairline lines in #d9d9dd, perfectly aligned like a design-
-system wireframe, with faint alignment guides, measurement ticks and corner
-crop-marks, receding behind the content.
+CRITICAL: NO TEXT — no words, letters, numbers or typography anywhere. Leave
+the entire LEFT ~55% as clean, almost-empty negative space; place ALL artwork
+in the RIGHT ~45%.
 
-Left, grid-aligned: uppercase Space-Mono eyebrow "WORKSPACES" in muted slate
-#93939f; a bold high-contrast SERIF headline in ink #212121 reading "One
-workspace for your whole team", with a thick coral #ff7759 underline; below, a
-slate #75758a line "Invite by link · roles · approve who joins".
+Background: white (#ffffff) covered edge-to-edge by a faint dotted matrix —
+tiny, evenly-spaced #d9d9dd dots (a subtle halftone / pegboard dot field)
+receding behind everything.
 
-Right / center-right: ONE continuous, unbroken, confident thin line — a 
-clean, recognisable one-line / continuous-line drawing in the style of a 
-premium minimalist logo — depicting a resting Oreo panda in profile (head 
-curve, one rounded ear, a single small spiral eye, a soft snout) that
-then flows out into a long horizontal horizon line. Along that horizon line,
-in the SAME hairline weight, sit three small connected member nodes (small
-circles linked by thin edges) — a clean workspace/team graph. Minimal,
-elegant, flat 2D, not a detailed face, no shading. Exactly ONE small coral
-#ff7759 patch (the panda's filled ear, the owner) is the only colour; the
-other member nodes are plain hairline circles, with one small coral dot.
+Mascot: Oreo the panda as an ENTANGLED one-line drawing — ONE single, unbroken,
+thin #212121 line that loops, overlaps and entangles elegantly into a clearly
+recognisable panda on the right side. The tangles are deliberate and balanced —
+confident and calligraphic, NOT a messy scribble — and the panda reads
+instantly. Exactly ONE small coral #ff7759 patch marks a single ear (a small
+flat fill flush inside the silhouette) — the only colour on the mascot.
 
-Footer-left, Space-Mono lowercase muted slate: "mails.elixpo.com". All type ≥
-60px from edges. Coral is the ONLY saturated colour; everything else
-ink/slate/hairline on white.
+Geometry: the 2-3 geometric shapes form a small node graph — three thin hairline #d9d9dd circles joined by thin connector lines (one node filled coral #ff7759) — sitting beside and partly overlapping the panda, perfectly aligned like a workspace/org diagram, never filled otherwise. Coral is the ONLY saturated colour and appears at most twice;
+everything else is #212121 line and #d9d9dd hairline on white.
+
+## Text
+eyebrow: WORKSPACES
+headline: One workspace for your whole team
+sub: Invite by link · roles · approve who joins.
+url: mails.elixpo.com
