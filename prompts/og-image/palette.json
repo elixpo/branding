@@ -43,10 +43,9 @@
   },
   "mascot": {
     "name": "Oreo",
-    "render": "single-weight continuous line art, flat 2D",
+    "render": "ONE continuous unbroken line (one-line / continuous-line drawing) suggesting the panda's facade, flowing into a horizon line; flat 2D, no closed shapes, no shading",
     "lineColor": "#212121",
     "lineWeight": "matches blueprint hairline",
-    "patchFill": "#17171c",
-    "badge": { "letter": "E", "fill": "#ff7759", "note": "mandatory chest badge — keeps the panda recognisably Oreo" }
+    "colorPatch": { "fill": "#ff7759", "where": "a single filled ear", "note": "the ONLY colour on the mascot — stands in for Oreo's badge" }
   }
 }

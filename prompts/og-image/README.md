@@ -51,11 +51,13 @@ the **light** theme only. See [`palette.json`](palette.json).
    lines forming a precise background grid + a few structural / measurement
    lines (ticks, crop marks, alignment guides). Everything aligned to a
    wireframe.
-3. **Line-art Oreo** — a minimalist, continuous **single-weight** line
-   drawing of the panda, strictly 2D, elegant and simplified, seamlessly
-   joined to the surrounding geometry. Keep the **coral "E" chest badge**
-   so it's still Oreo (see `ref/MASCOT.md`). Eyes/ears may be small
-   near-black (`#17171c`) fills; everything else is line.
+3. **One-line Oreo** — **ONE continuous, unbroken thin line** (a true
+   continuous-line / one-line drawing) that *suggests* the panda's facade —
+   head curve, one folded ear, a single spiral eye, a hint of snout — then
+   flows out into a long **horizon line** that ties into the grid. NOT a
+   detailed full face, no closed shapes, no shading. Exactly **one small
+   coral `#ff7759` patch** (a single filled ear) is the only colour on the
+   mascot — it stands in for Oreo's badge (see `ref/MASCOT.md`).
 4. **Type** — bold serif headline with a **heavy coral underline** or a
    structured text container for emphasis.
 5. **Coral is the only saturated colour.** Use it sparingly — underline,
