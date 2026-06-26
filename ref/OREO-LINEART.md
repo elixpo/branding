@@ -34,7 +34,7 @@ pick pixel-art for playful / celebratory surfaces.
   **LINE ART** — **never** a polished, accurately-rendered or filled
   illustration: no solid fills, no detailed/shaded face, no smooth cartoon.
 - **Cute but minimal** — round, plump *in shape*; the face **suggested with a
-  few simple strokes** (small dot eyes + a little smile), never a detailed
+  few simple strokes** (cute **gleamy, sparkling eyes** with a tiny white catch-light + a little smile), never a detailed
   rendered face. A relaxed sitting pose.
 - **Head turned slightly toward the LEFT** (toward the headline) — a gentle
   three-quarter view, not full-front, not full-profile.

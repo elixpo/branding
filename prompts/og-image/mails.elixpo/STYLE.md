@@ -37,7 +37,7 @@ Paste this first, then the card's own `## Prompt` body.
 > **not** a polished, accurately-rendered or filled illustration: no solid
 > fills, no detailed/shaded face, no smooth cartoon. The line forms a **cute,
 > friendly** panda, round and plump in shape, its face **suggested minimally**
-> (small dot eyes + a little smile), head turned **slightly left** toward the
+> (cute **gleamy, sparkling eyes** with a tiny white catch-light glint + a little smile), head turned **slightly left** toward the
 > text. Make it **fairly large** and prominent, filling the
 > **right ~40–42%**, pushed to the right edge and clear of the text zone. Confident and calligraphic, not a messy scribble: the
 > tangles are deliberate and balanced, and the panda still reads instantly.
