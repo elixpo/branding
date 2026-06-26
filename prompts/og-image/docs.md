@@ -19,12 +19,15 @@ slate #93939f; a bold high-contrast SERIF headline in ink #212121 reading
 "Send your first email in minutes", with a thick coral #ff7759 underline;
 below, a slate #75758a line "Quickstart · API · webhooks · templates".
 
-Right, vertically centered: a minimalist continuous SINGLE-WEIGHT line-art
-Oreo panda, flat 2D, outline weight matching the blueprint, small near-black
-#17171c eye-patches/ears, small coral #ff7759 "E" chest badge. Next to it, in
-the same hairline weight, a small precise wireframe of a code block / terminal
-window with a few mono "curl" lines abstracted as thin rules — a blueprint
-callout connected to the grid with thin guides and one coral node dot.
+Right, vertically centered: ONE continuous, unbroken, thin single-weight line
+— a true one-line / continuous-line drawing — SUGGESTING the facade of Oreo
+the panda (head curve, one folded ear, a single spiral eye, a hint of snout)
+that flows out into a long horizontal horizon line tying into the grid.
+Minimal, elegant, flat 2D, not a detailed face, no shading. Exactly ONE small
+coral #ff7759 patch (a single filled ear) is the only colour on the mascot.
+Next to it, in the same hairline weight, a small precise wireframe of a code
+block / terminal window with a few mono "curl" lines abstracted as thin rules
+— a blueprint callout on the horizon line with one coral node dot.
 
 Footer-left, Space-Mono lowercase muted slate: "mails.elixpo.com/docs". All
 type ≥ 60px from edges. Coral is the ONLY saturated colour; everything else

@@ -19,12 +19,15 @@ Left, grid-aligned: uppercase Space-Mono eyebrow "PRICING" in muted slate
 usage-based pricing", with a thick coral #ff7759 underline; below, a slate
 #75758a line "Bring your own sender — pay for what you send".
 
-Right, vertically centered: a minimalist continuous SINGLE-WEIGHT line-art
-Oreo panda, flat 2D, outline weight matching the blueprint, small near-black
-#17171c eye-patches/ears, small coral #ff7759 "E" chest badge. Beside it, in
-the same hairline weight, a small precise wireframe price tag / receipt with
-clean rule lines — a blueprint callout connected to the grid with thin guides
-and one coral node dot.
+Right, vertically centered: ONE continuous, unbroken, thin single-weight line
+— a true one-line / continuous-line drawing — SUGGESTING the facade of Oreo
+the panda (head curve, one folded ear, a single spiral eye, a hint of snout)
+that flows out into a long horizontal horizon line tying into the grid.
+Minimal, elegant, flat 2D, not a detailed face, no shading. Exactly ONE small
+coral #ff7759 patch (a single filled ear) is the only colour on the mascot.
+Beside it, in the same hairline weight, a small precise wireframe price tag /
+receipt with clean rule lines — a blueprint callout on the horizon line with
+one coral node dot.
 
 Footer-left, Space-Mono lowercase muted slate: "mails.elixpo.com/pricing".
 All type ≥ 60px from edges. Coral is the ONLY saturated colour; everything

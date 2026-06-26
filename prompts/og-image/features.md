@@ -20,13 +20,16 @@ slate #93939f; below it a bold high-contrast SERIF headline in ink #212121
 reading "Everything you need to send", with a thick coral #ff7759 underline;
 beneath, a slate #75758a line "Your sender · your templates · your team".
 
-Right, vertically centered: a minimalist continuous SINGLE-WEIGHT line-art
-Oreo panda, flat 2D, outline weight matching the blueprint, with small near-
-black #17171c eye-patches and ears and a small coral #ff7759 "E" chest badge.
-Beside the panda, drawn in the SAME hairline weight, a small precise wireframe
-of an email envelope / template card with {{ }} placeholder marks and a tiny
-webhook node — like a blueprint detail callout, connected to the grid with
-thin guide lines and one or two coral node dots.
+Right, vertically centered: ONE continuous, unbroken, thin single-weight line
+— a true one-line / continuous-line drawing — SUGGESTING the facade of Oreo
+the panda (the curve of the head, one folded ear, a single spiral eye, a hint
+of snout) that then flows out into a long horizontal horizon line tying into
+the grid. Minimal, elegant, flat 2D, NOT a detailed face, no shading. Exactly
+ONE small coral #ff7759 patch (a single filled ear) is the only colour on the
+mascot. Beside it, in the SAME hairline weight, a small precise wireframe of
+an email / template card with {{ }} placeholder marks and a tiny webhook node
+— a blueprint detail callout sitting on the horizon line, with one coral node
+dot.
 
 Footer-left, Space-Mono lowercase muted slate: "mails.elixpo.com". All type
 ≥ 60px from edges. Coral is the ONLY saturated colour — underline, badge, a

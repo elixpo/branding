@@ -20,13 +20,15 @@ Left, grid-aligned: uppercase Space-Mono eyebrow "WORKSPACES" in muted slate
 workspace for your whole team", with a thick coral #ff7759 underline; below, a
 slate #75758a line "Invite by link · roles · approve who joins".
 
-Right / center-right: THREE minimalist continuous SINGLE-WEIGHT line-art Oreo
-pandas of slightly different sizes arranged as a small node graph, connected
-by thin hairline edges (the same weight as the grid) — a clean org/workspace
-diagram. Each panda has small near-black #17171c eye-patches and ears; ONE
-panda (the owner) carries the coral #ff7759 "E" chest badge, the others have a
-plain small coral dot. Connection nodes sit on grid intersections marked with
-small coral dots.
+Right / center-right: ONE continuous, unbroken, thin single-weight line — a
+true one-line / continuous-line drawing — SUGGESTING the facade of Oreo the
+panda (head curve, one folded ear, a single spiral eye, a hint of snout) that
+then flows out into a long horizontal horizon line. Along that horizon line,
+in the SAME hairline weight, sit three small connected member nodes (small
+circles linked by thin edges) — a clean workspace/team graph. Minimal,
+elegant, flat 2D, not a detailed face, no shading. Exactly ONE small coral
+#ff7759 patch (the panda's filled ear, the owner) is the only colour; the
+other member nodes are plain hairline circles, with one small coral dot.
 
 Footer-left, Space-Mono lowercase muted slate: "mails.elixpo.com". All type ≥
 60px from edges. Coral is the ONLY saturated colour; everything else

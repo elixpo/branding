@@ -24,14 +24,15 @@ transactional email", set in two lines; directly under the headline a thick
 coral #ff7759 underline bar; beneath that one line of slate #75758a sub-copy
 "Bring your own sender · design · send one-time or by webhook".
 
-Right third, vertically centered: a minimalist, continuous SINGLE-WEIGHT
-line-art drawing of Oreo the panda — friendly, simplified, strictly flat 2D,
-its outline the exact same crisp weight as the blueprint lines so it reads as
-part of the geometry. Small near-black #17171c fills for the eye-patches and
-ears; a small coral #ff7759 round chest badge with a clean "E" on it. No fur
-texture, no shading — pure line. A couple of hairline guides connect the
-panda to the grid; one or two grid intersections are marked with small coral
-node dots.
+Right third, vertically centered: ONE continuous, unbroken, thin single-
+weight line — a true continuous-line / one-line drawing — that SUGGESTS the
+facade of Oreo the panda rather than a detailed full face: with a single
+calligraphic stroke it traces the curve of the head, one folded ear, a single
+spiral for the eye, the hint of a snout, then flows out into a long horizontal
+horizon line that ties into the blueprint grid. Minimal, elegant, strictly
+flat 2D — no closed shapes, no shading, no second line. Exactly ONE small
+coral #ff7759 patch (a single filled ear) is the only colour on the mascot.
+One or two grid intersections on the horizon line carry small coral node dots.
 
 Footer-left, Space-Mono lowercase in muted slate: "mails.elixpo.com". Keep
 all type at least 60px from every edge. Coral is the ONLY saturated colour —
