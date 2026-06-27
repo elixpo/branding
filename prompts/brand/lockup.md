@@ -1,34 +1,31 @@
-# Elixpo primary lockup (mascot mark + wordmark + tagline)
+# Elixpo primary lockup - line-art (mascot mark + wordmark + tagline)
 
-The primary horizontal logo: the Oreo mark to the left, the "Elixpo"
-wordmark to the right with the **"Built in the Open"** tagline beneath it.
-This is the default Elixpo logo — site header, README hero, slide decks.
-Text colours come from the panda palette (charcoal patches + red E-badge)
-so mark and wordmark read as one brand.
+The primary horizontal logo in the **line-art** register (see
+[`references/OREO-LINEART.md`](../../references/OREO-LINEART.md)): the one-line
+Oreo to the left, the "Elixpo" wordmark to the right with the **"Built in the
+Open"** tagline beneath it. This is the default Elixpo logo - site header,
+README hero, slide decks. Mark and wordmark share the line-art palette (ink +
+coral + red E-badge) so they read as one brand.
 
 ## Prompt
-A horizontal brand logo lockup on a warm cream background. On the LEFT, the
-Oreo panda mascot crest as a compact emblem. On the RIGHT, a two-line
-wordmark vertically centered against the mascot: the TOP LINE is the single
-word "Elixpo" in chunky rounded friendly pixel-art letters, correctly
-spelled E-l-i-x-p-o, lowercase with a capital E, on one baseline; directly
-BENEATH it, in a MUCH SMALLER delicate rounded font — roughly a third the
-height of the wordmark, with relaxed letter-spacing — the tagline "Built in
-the Open", three words, correctly spelled, Title Case. Featuring the Oreo
-panda mascot: warm cream-white fur rgb(240,238,232), dark rounded ear and
-eye patches rgb(38,38,48), big sparkly black eyes with white catchlights,
-rosy pink cheeks rgb(255,93,104), and a round red chest badge rgb(220,60,50)
-bearing a single bold clean capital letter E in cream-white and nothing
-else. The "Elixpo" letters are deep charcoal rgb(38,38,48) matching the
-panda's dark patches, with a thick dark outline and the capital E filled in
-the signature badge-red rgb(220,60,50) to echo the chest badge; the tiny
-tagline is in warm muted brown-pink rgb(160,120,100). Scatter a few small
-cute hand-drawn pixel-art doodles in the empty cream space around the
-wordmark — never on the letters or the mascot — like a sparkle, a little
-star, a tiny heart and a bamboo leaf, lightly coloured in the brand accents
-(coral-pink rgb(255,93,104), gold rgb(255,190,30), teal rgb(0,180,165)),
-kept sparse so mark and wordmark stay the focus. Balanced spacing between
-mark and wordmark, pixel art cartoon style, thick uniform dark outline,
-vibrant warm celebration colours, cute kawaii style, flat even lighting,
-warm cream white background rgb(255,248,235), wide horizontal 16:9 crop, no
-other words, no watermark.
+A horizontal brand logo lockup on a plain flat white background rgb(255,255,255),
+calm editorial tech-minimalism with generous airy spacing. On the LEFT, the Oreo
+panda drawn as a single continuous one-line drawing - one unbroken, very thin,
+single-weight ink line rgb(33,33,33) that never lifts the pen, a cute, happy,
+healthy chibi panda in a relaxed compact sitting pose, head turned slightly
+toward the wordmark; the face SUGGESTED with a few simple strokes (cute gleamy
+sparkling eyes with tiny white catch-lights and a small smile), never detailed
+or filled; both ears filled coral rgb(255,119,89) and one leg filled coral
+rgb(255,119,89); a small compact perfectly round red rgb(220,60,50) chest badge
+carrying a single bold capital "E". On the RIGHT, vertically centered against the
+mark, a two-line wordmark: the TOP LINE is the single word "Elixpo" - correctly
+spelled E-l-i-x-p-o, a capital E then lowercase l-i-x-p-o, on one baseline - in
+an elegant high-contrast serif logotype (Fraunces / Playfair feel) in ink
+rgb(33,33,33), with the capital "E" tinted badge-red rgb(220,60,50); a heavy
+coral rgb(255,119,89) underline bar beneath the word; and BELOW it a much
+smaller uppercase letter-tracked monospace (Space Mono feel) tagline "Built in
+the Open" in muted slate rgb(147,147,159). Flat 2D vector, fine single-weight
+lines, NO solid fills except the coral ears, the one coral leg, the red badge and
+the coral underline; no 3D, no gradients, no glow, no shadows, no pixel art, no
+thick outline. Balanced spacing between mark and wordmark, plain white
+background, wide horizontal 16:9 crop, no other words, no watermark.

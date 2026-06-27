@@ -4,11 +4,15 @@ The **brand-mark prompts**: the Elixpo logo, the wordmark, and their
 lockup. These are the top-of-funnel identity assets — what goes on the
 site header, the GitHub org avatar, the app splash, the favicon.
 
-Everything here obeys [`references/MASCOT.md`](../../references/MASCOT.md) — same panda
-(**Oreo**), same palette, same thick-outline pixel-art look. The one
-deliberate exception: the brand marks **may contain the word "Elixpo"**,
-because a wordmark is text by definition. (Stickers/icons stay text-free;
-brand marks don't.)
+The brand marks use the **line-art** register - a continuous one-line Oreo,
+fine single-weight ink strokes, coral ears + one leg and the red "E" badge, on
+a clean white canvas. The locked spec is
+[`references/OREO-LINEART.md`](../../references/OREO-LINEART.md) (the calm,
+editorial counterpart to the pixel-art mascot in
+[`references/MASCOT.md`](../../references/MASCOT.md)). The one deliberate
+exception to the no-text rule: the wordmark and lockup **may contain the word
+"Elixpo"**, because a wordmark is text by definition. (The mascot mark stays
+text-free except its "E" badge.)
 
 ## Generate (script + prompt)
 
