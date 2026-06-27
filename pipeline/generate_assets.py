@@ -295,14 +295,14 @@ OG_SKIP = {"readme", "style", "palette"}
 def generate_og(only=None, seed=42, force=False):
     """Generate open-graph / social cards, organised per site.
 
-    Layout — one folder per site, each with its own prompts and an output/
-    folder for the rendered images:
+    Layout — prompt sources live per site under prompts/og/; the rendered
+    images are written to branding/og/ (the generated-assets tree):
 
-        prompts/og/<site>/prompts/<name>.md  →  prompts/og/<site>/output/<name>.png
+        prompts/og/<site>/prompts/<name>.md  →  branding/og/<site>/<name>.png
 
     Two-step, so the AI never has to render text:
       1. AI generates the text-free DESIGN (16:9) → a temporary <name>.bg.png
-      2. Pillow composites the `## Text` → <site>/output/<name>.png, then the
+      2. Pillow composites the `## Text` → branding/og/<site>/<name>.png, then the
          intermediate .bg.png is DELETED — the final .png is the only artifact.
 
     LOCKED: AI generation is not reproducible run-to-run, so once <name>.png
@@ -389,8 +389,8 @@ def generate_og(only=None, seed=42, force=False):
     if total == 0:
         print("No new OG cards generated (existing ones are locked; --force to reroll).")
     else:
-        print("\nDone. Final cards → <site>/output/<name>.png (intermediates removed). "
-              "Copy <site>/output/default.png → that app's public/og-image.png.")
+        print("\nDone. Final cards → branding/og/<site>/<name>.png (intermediates removed). "
+              "Copy branding/og/<site>/default.png → that app's public/og-image.png.")
 
 
 def _compose_og_text(card_md, bg_path, out_path):
