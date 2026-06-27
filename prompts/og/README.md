@@ -42,7 +42,7 @@ prompts/og/
 
 Each card `.md` holds **two blocks**: `## Prompt` (the text-free design, fed to
 the model) and `## Text` (`eyebrow` / `headline` / `sub` / `url`, drawn by
-Pillow). Copy a site's `output/default.png` → that app's `public/og-image.png`.
+Pillow). Copy a site's `branding/og/<site>/default.png` → that app's `public/og-image.png`.
 
 To **add a site**, copy `mails.elixpo/` to `prompts/og/<newsite>/`,
 edit each card's `## Text` (and any URLs), and run `--og <newsite>`.

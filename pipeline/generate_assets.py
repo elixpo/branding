@@ -15,7 +15,7 @@ Stickers (prompts/stickers/<name>.md → stickers/<name>.png at 1024x1024):
   python pipeline/generate_assets.py --stickers --from 22   # sweep 022 → end
   python pipeline/generate_assets.py --stickers --from 22 --to 60   # range 022–060
 
-OG cards (prompts/og/<site>/prompts/<name>.md → .../output/<name>.png, 1280x720 16:9):
+OG cards (prompts/og/<site>/prompts/<name>.md → branding/og/<site>/<name>.png, 1280x720 16:9):
   python pipeline/generate_assets.py --og                         # every site, every card
   python pipeline/generate_assets.py --og mails.elixpo            # one site, all cards
   python pipeline/generate_assets.py --og mails.elixpo default    # one card
@@ -317,7 +317,7 @@ def generate_og(only=None, seed=42, force=False):
     any remaining tokens are card stems (e.g. `["mails.elixpo", "default"]`).
     With no site token the remaining names filter cards across every site.
 
-    Copy a site's output/default.png → that app's public/og-image.png.
+    Copy a site's branding/og/<site>/default.png → that app's public/og-image.png.
     Style spec: prompts/og/<site>/STYLE.md
     """
     base = Path("prompts") / "og"
@@ -344,7 +344,7 @@ def generate_og(only=None, seed=42, force=False):
     for site in sites:
         if site_filter and site.name != site_filter:
             continue
-        out_dir = site / "output"
+        out_dir = Path("branding") / "og" / site.name
         mds = [m for m in sorted((site / "prompts").glob("*.md")) if m.stem.lower() not in OG_SKIP]
         if card_filter:
             mds = [m for m in mds if m.stem in card_filter]

@@ -6,8 +6,8 @@ ourselves with Pillow — so the model never fumbles letters — at fixed, corre
 proportions in the card's left negative space.
 
   prompts/og/<site>/prompts/<name>.md     (## Text block: eyebrow/headline/sub/url)
-  prompts/og/<site>/output/<name>.bg.png  (AI design)
-        → prompts/og/<site>/output/<name>.png   (final card)
+  branding/og/<site>/<name>.bg.png  (AI design)
+        → branding/og/<site>/<name>.png   (final card)
 
 Usage:
   python pipeline/og_compose.py                      # every site, every card
@@ -193,7 +193,7 @@ def main(argv):
     for site in sites:
         if site_filter and site.name != site_filter:
             continue
-        out_dir = site / "output"
+        out_dir = Path("branding") / "og" / site.name
         for md in sorted((site / "prompts").glob("*.md")):
             if md.stem.lower() in {"readme", "style", "palette"}:
                 continue
