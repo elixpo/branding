@@ -1,9 +1,21 @@
-NOTICES
-=======
+THIRD-PARTY NOTICES
+===================
 
-This project incorporates and depends on third-party components, each
-distributed under its own license. Source code in this repository is
-licensed under MIT (see LICENSE and LICENSES/preferred/MIT).
+This repository depends on third-party components, each distributed under its
+own license. Source code here is licensed under the Elixpo standard (MIT for
+code, CC-BY-4.0 for assets); see ../../LICENSE.
 
-If you believe an upstream component is missing from this list, please
-open an issue or email hello@elixpo.com.
+Generation pipeline (tools/, scripts/, editing/ - see requirements.txt):
+
+  * Pillow (PIL fork)        - HPND (MIT-CMU style)
+  * python-dotenv            - BSD-3-Clause
+  * Python standard library  - PSF License
+
+Services:
+
+  * Pollinations.ai          - image-generation API used by the generators.
+                               Generated imagery is subject to Pollinations'
+                               terms in addition to this repository's license.
+
+If you believe a component is missing from this list, please open an issue or
+email hello@elixpo.com.
