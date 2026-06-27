@@ -1,31 +1,46 @@
-# Elixpo primary lockup - line-art (mascot mark + wordmark + tagline)
+# Elixpo primary lockup - OG-style (line-art panda + wordmark + tagline)
 
-The primary horizontal logo in the **line-art** register (see
-[`references/OREO-LINEART.md`](../../references/OREO-LINEART.md)): the one-line
-Oreo to the left, the "Elixpo" wordmark to the right with the **"Built in the
-Open"** tagline beneath it. This is the default Elixpo logo - site header,
-README hero, slide decks. Mark and wordmark share the line-art palette (ink +
-coral + red E-badge) so they read as one brand.
+The primary horizontal logo, generated EXACTLY like an OG card: the AI renders
+the one-line Oreo DESIGN (text-free), then Pillow composites the "Elixpo"
+headline (fancy serif) and the "Built in the Open" tagline. 16:9, no alpha pass.
+Spec: [`references/OREO-LINEART.md`](../../references/OREO-LINEART.md).
 
 ## Prompt
-A horizontal brand logo lockup on a plain flat white background rgb(255,255,255),
-calm editorial tech-minimalism with generous airy spacing. On the LEFT, the Oreo
-panda drawn as a single continuous one-line drawing - one unbroken, very thin,
-single-weight ink line rgb(33,33,33) that never lifts the pen, a cute, happy,
-healthy chibi panda in a relaxed compact sitting pose, head turned slightly
-toward the wordmark; the face SUGGESTED with a few simple strokes (cute gleamy
-sparkling eyes with tiny white catch-lights and a small smile), never detailed
-or filled; both ears filled coral rgb(255,119,89) and one leg filled coral
-rgb(255,119,89); a small compact perfectly round red rgb(220,60,50) chest badge
-carrying a single bold capital "E". On the RIGHT, vertically centered against the
-mark, a two-line wordmark: the TOP LINE is the single word "Elixpo" - correctly
-spelled E-l-i-x-p-o, a capital E then lowercase l-i-x-p-o, on one baseline - in
-an elegant high-contrast serif logotype (Fraunces / Playfair feel) in ink
-rgb(33,33,33), with the capital "E" tinted badge-red rgb(220,60,50); a heavy
-coral rgb(255,119,89) underline bar beneath the word; and BELOW it a much
-smaller uppercase letter-tracked monospace (Space Mono feel) tagline "Built in
-the Open" in muted slate rgb(147,147,159). Flat 2D vector, fine single-weight
-lines, NO solid fills except the coral ears, the one coral leg, the red badge and
-the coral underline; no 3D, no gradients, no glow, no shadows, no pixel art, no
-thick outline. Balanced spacing between mark and wordmark, plain white
-background, wide horizontal 16:9 crop, no other words, no watermark.
+
+A 16:9 brand-logo background design (1280x720) in editorial tech-minimalism -
+structured, intellectual, airy. Flat 2D vector only: NO 3D, NO gradients, NO
+glow, NO neon, NO shadows.
+
+CRITICAL: NO TEXT - no words, letters, numbers or typography anywhere, EXCEPT
+the single letter "E" inside the panda's small chest badge. Leave the entire
+LEFT ~55% as clean, almost-empty negative space; place ALL artwork in the RIGHT
+~40%, pushed toward the right edge with a clear gap before the left text zone.
+
+Background: white (#ffffff) covered edge-to-edge by a faint dotted matrix - tiny,
+evenly-spaced #d9d9dd dots (a subtle halftone / pegboard dot field) receding
+behind everything.
+
+Mascot: Oreo the panda as a TRUE SINGLE-LINE / continuous-line drawing - ONE
+unbroken, flowing, hand-drawn VERY thin #212121 line (a single pen stroke that
+never lifts the nib), with only a few gentle loops - loose, minimal and elegant.
+This is LINE ART, NOT a polished, rendered or filled illustration: NO solid
+fills, NO detailed or shaded face, NO smooth rendered cartoon. The single line
+forms a cute, friendly, clearly recognisable panda in a relaxed sitting pose -
+round and plump in SHAPE, its face suggested MINIMALLY with just a few simple
+strokes (cute GLEAMY sparkling eyes, each with a tiny white catch-light, and a
+little smile), head turned slightly toward the LEFT (toward the wordmark) in a
+gentle three-quarter view. Make the panda fairly LARGE and prominent, filling
+the RIGHT ~40-42% of the canvas, kept on the right and CLEAR of the left text
+zone. Both ears and one leg are filled flat coral #ff7759. On its chest,
+centred, sits a SMALL, compact, perfectly round RED #DC3C32 badge carrying a
+single clean, bold letter "E". The coral ear/leg patches and the red "E" badge
+are the ONLY filled areas - everything else is the single #212121 line on white.
+
+Geometry: 2-3 understated shapes in thin single-weight hairline #d9d9dd outlines
+(never filled) - a large open circle, a slim triangle and a thin arc - aligned
+like a design-system wireframe. Coral and the red E-badge appear ONLY on the
+panda.
+
+## Text
+headline: Elixpo
+sub: Built in the Open

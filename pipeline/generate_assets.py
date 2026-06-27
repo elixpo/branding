@@ -29,14 +29,15 @@ Website icons (prompts/icons/<domain>/icon_prompt.md → branding/icons/web/<dom
   (sticker-style on a cream background, transparency applied automatically)
 
 Brand marks (prompts/brand/<variant>.md → branding/brand/<variant>.png):
-  python pipeline/generate_assets.py --brand                # logo, wordmark, lockup
+  python pipeline/generate_assets.py --brand                # mascot mark, wordmark, lockup
   python pipeline/generate_assets.py --brand lockup         # single variant
   python pipeline/generate_assets.py --brand --force        # reroll a locked mark
-  (cream-background marks, transparency applied; wordmarks may contain text)
-  (seed pinned to BRAND_SEED so the logo is identical every run; pass
-   --seed N only to explore a different one)
-  # a finished <variant>.png is LOCKED (not regenerated) — pass --force to reroll,
-  #   exactly like the OG cards. This is how a good generation stays frozen.
+  # Generated EXACTLY like the OG cards: the AI renders the line-art DESIGN
+  #   (text-free), then Pillow composites the fancy serif headline + the
+  #   "Built in the Open" sub. NO alpha-removal pass. A prompt with no `## Text`
+  #   block (e.g. the panda-only mascot mark) keeps the design as the final.
+  # Seed defaults to OG_SEED (the proven line-art seed); pass --seed N to explore.
+  # A finished <variant>.png is LOCKED (not regenerated) — pass --force to reroll.
 
 Mascot reference: references/MASCOT.md
 """
@@ -281,23 +282,75 @@ def generate_web_icons(only_names=None, seed=42, size=1024):
         print("\nDone. Transparent PNGs in branding/icons/web/")
 
 
-def generate_brand(only_names=None, seed=BRAND_SEED, width=BRAND_W, height=BRAND_H, force=False):
-    """Generate the brand marks (logo, wordmark, lockup).
+def generate_brand(only_names=None, seed=OG_SEED, force=False):
+    """Generate the brand marks (mascot mark, wordmark, lockup).
 
-    Reads prompts/brand/<variant>.md and writes branding/brand/<variant>.png.
-    Same flat sticker-style pipeline as the web icons (cream background →
-    transparency pass), so the marks land transparent-ready for the web —
-    but on a wide 16:9 canvas, since the wordmark and lockup are horizontal.
-    The wordmark/lockup deliberately contain the "Elixpo" text — that's the
-    one place the no-text rule is lifted (see prompts/brand/README.md).
+    Generated EXACTLY like the OG cards (see generate_og / OREO-LINEART.md), NOT
+    the sticker pipeline — so the marks are line-art on the editorial card, with
+    NO alpha-removal pass:
 
-    Seed is pinned to BRAND_SEED so the logo is identical on every run.
+      1. AI renders the line-art DESIGN ONLY (16:9, text-free) → <name>.bg.png
+      2. If the prompt has a `## Text` block, Pillow composites the fancy serif
+         headline + the "Built in the Open" sub onto it → <name>.png; otherwise
+         the design itself IS the final (e.g. the panda-only mascot mark).
+      3. The intermediate .bg.png is deleted - the final <name>.png is kept.
+
+    Reads prompts/brand/<variant>.md → branding/brand/<variant>.png.
+
+    LOCKED: AI generation isn't reproducible, so a finished <name>.png is kept
+    (the approved mark is frozen). Pass `force` (CLI: --force) or delete the .png
+    to reroll. Seed defaults to OG_SEED (the proven line-art seed).
     """
-    n = _generate_alpha_batch(Path("prompts") / "brand", Path("branding") / "brand",
-                              only_names, seed, width, "brand mark", height=height,
-                              lock=True, force=force)
-    if n:
-        print("\nDone. Transparent brand marks in branding/brand/")
+    base = Path("prompts") / "brand"
+    out_dir = Path("branding") / "brand"
+    if not base.exists():
+        print("No prompts directory at %s" % base)
+        return
+
+    mds = [m for m in sorted(base.glob("*.md")) if m.stem.lower() not in OG_SKIP]
+    if only_names:
+        mds = [m for m in mds if m.stem in only_names]
+    if not mds:
+        print("No brand prompt files in %s (after filtering)" % base)
+        return
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    print("Brand marks (%d)  [%dx%d, seed=%d, model=%s]%s...\n" %
+          (len(mds), OG_W, OG_H, seed, MODEL_OG, "  --force" if force else ""))
+
+    total = 0
+    for md in mds:
+        final = out_dir / ("%s.png" % md.stem)
+        if final.exists() and not force:
+            print("  [locked] %s — keeping %s (pass --force to reroll)"
+                  % (md.stem, final.name))
+            continue
+
+        prompt = _read_prompt(md)
+        if not prompt:
+            print("  SKIP %s — no ## Prompt block" % md.stem)
+            continue
+        bg = out_dir / ("%s.bg.png" % md.stem)
+        ok = download_to(prompt, bg, width=OG_W, height=OG_H, seed=seed, model=MODEL_OG)
+        total += 1
+        if ok and bg.exists():
+            if "## Text" in md.read_text():
+                _compose_og_text(md, bg, final)
+                if final.exists():
+                    try:
+                        bg.unlink()
+                    except OSError:
+                        pass
+            else:
+                # No text to overlay - the line-art design IS the final mark.
+                bg.replace(final)
+                print("  design kept as %s (no ## Text)" % final.name)
+        time.sleep(8)
+
+    if total == 0:
+        print("No new brand marks generated (existing ones are locked; --force to reroll).")
+    else:
+        print("\nDone. Brand marks → branding/brand/<variant>.png")
 
 
 OG_SKIP = {"readme", "style", "palette"}
@@ -606,16 +659,16 @@ def main():
         return
 
     # ── brand marks mode ─────────────────────────────────────────────────────
-    # Logo / wordmark / lockup → branding/brand/, transparency applied.
+    # Logo / wordmark / lockup → branding/brand/, OG-card style (line-art design
+    # + composited fancy text, no alpha pass).
     # Positional args after --brand filter by variant (e.g. `--brand lockup`).
-    # Seed is pinned to BRAND_SEED for a reproducible logo unless the user
-    # explicitly passes --seed.
+    # Seed defaults to OG_SEED (the proven line-art seed) unless --seed is passed.
     if "--brand" in args:
         force = "--force" in args
         args = [a for a in args if a != "--force"]
         idx  = args.index("--brand")
         only = args[idx + 1:]
-        brand_seed = seed if "--seed" in sys.argv[1:] else BRAND_SEED
+        brand_seed = seed if "--seed" in sys.argv[1:] else OG_SEED
         generate_brand(only_names=only or None, seed=brand_seed, force=force)
         return
 
