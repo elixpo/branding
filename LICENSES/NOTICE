@@ -1,0 +1,42 @@
+NOTICE - the Elixpo notice board
+================================
+
+This repository is licensed under the Elixpo License (see ./LICENSE). This
+NOTICE file is the "notice board": it records reservations and product-specific
+terms that sit ON TOP of the base license. Read it together with LICENSE and
+LICENSES/exceptions/Oreo-trademarks.
+
+REPOSITORY
+----------
+
+  Name:        elixpo/brand
+  What it is:  The originating home of the Elixpo brand - the brand source of
+               truth, the asset-generation pipeline, the prompt sources, and the
+               generated sticker / icon / mascot sets.
+
+EXCLUSIVE TO THIS REPOSITORY
+----------------------------
+
+  This repository IS the brand. The following are reserved (see
+  LICENSES/exceptions/Oreo-trademarks) and are the exclusive property of Elixpo:
+
+    * The Oreo mascot character, the chest "E-badge", and the rules in
+      MASCOT.md.
+    * The Elixpo / Oreo names, the *.elixpo.com identifiers, and the palette.
+    * The generated brand marks, service icons, stickers, and mascot clips, as
+      *brand identity*. The files are offered under CC-BY-4.0, but the identity
+      they depict remains reserved.
+
+ASSETS & DISTRIBUTION
+---------------------
+
+  * Stickers, marks, icons, and mascot clips live here under stickers/, assets/,
+    and videos/, generated from the prompt sources in prompts/ by the pipeline
+    in tools/ and scripts/.
+  * Per-product Open Graph / social images are generated here (prompts/og-image,
+    tools/og_compose.py) and DISTRIBUTED to the individual product repositories.
+    The originating prompts and code stay in this repository.
+
+  All generated assets are licensed CC-BY-4.0 WITH Oreo-trademarks.
+
+Contact: hello@elixpo.com
