@@ -31,9 +31,12 @@ Website icons (prompts/icons/<domain>/icon_prompt.md → branding/icons/web/<dom
 Brand marks (prompts/brand/<variant>.md → branding/brand/<variant>.png):
   python pipeline/generate_assets.py --brand                # logo, wordmark, lockup
   python pipeline/generate_assets.py --brand lockup         # single variant
+  python pipeline/generate_assets.py --brand --force        # reroll a locked mark
   (cream-background marks, transparency applied; wordmarks may contain text)
   (seed pinned to BRAND_SEED so the logo is identical every run; pass
    --seed N only to explore a different one)
+  # a finished <variant>.png is LOCKED (not regenerated) — pass --force to reroll,
+  #   exactly like the OG cards. This is how a good generation stays frozen.
 
 Mascot reference: references/MASCOT.md
 """
@@ -162,7 +165,7 @@ def download_to(prompt, out_path, width=200, height=200, seed=42, model=MODEL):
 
 
 def _generate_alpha_batch(prompts_dir, out_dir, only_names, seed, size, label,
-                          nested=False, height=None):
+                          nested=False, height=None, lock=False, force=False):
     """Generate a folder of sticker-style PNGs with the cream-background
     transparency pass applied. Shared by stickers, website icons and brand
     marks — all want a flat cream background flood-filled to transparent.
@@ -226,6 +229,13 @@ def _generate_alpha_batch(prompts_dir, out_dir, only_names, seed, size, label,
             print("  SKIP %s — no ## Prompt block" % name_of(md))
             continue
         out = out_dir / ("%s.png" % name_of(md))
+        # Lock: once a good mark is committed, keep it. AI generation isn't
+        # reproducible run-to-run, so a frozen brand mark stays put unless the
+        # caller passes --force (or deletes the .png) to intentionally reroll.
+        if lock and out.exists() and not force:
+            print("  [locked] %s — keeping %s (pass --force to reroll)"
+                  % (name_of(md), out.name))
+            continue
         ok = download_to(prompt, out, width=size, height=h, seed=seed)
         # Auto-strip the warm-cream background as soon as the file
         # lands. Done per-asset (not in a final pass) so a
@@ -265,13 +275,13 @@ def generate_web_icons(only_names=None, seed=42, size=1024):
     icon_prompt.md (e.g. the oreoOS app-icon set) are ignored.
     """
     n = _generate_alpha_batch(Path("prompts") / "icons",
-                              Path("assets") / "icons" / "web",
+                              Path("branding") / "icons" / "web",
                               only_names, seed, size, "web icon", nested=True)
     if n:
         print("\nDone. Transparent PNGs in branding/icons/web/")
 
 
-def generate_brand(only_names=None, seed=BRAND_SEED, width=BRAND_W, height=BRAND_H):
+def generate_brand(only_names=None, seed=BRAND_SEED, width=BRAND_W, height=BRAND_H, force=False):
     """Generate the brand marks (logo, wordmark, lockup).
 
     Reads prompts/brand/<variant>.md and writes branding/brand/<variant>.png.
@@ -283,8 +293,9 @@ def generate_brand(only_names=None, seed=BRAND_SEED, width=BRAND_W, height=BRAND
 
     Seed is pinned to BRAND_SEED so the logo is identical on every run.
     """
-    n = _generate_alpha_batch(Path("prompts") / "brand", Path("assets") / "brand",
-                              only_names, seed, width, "brand mark", height=height)
+    n = _generate_alpha_batch(Path("prompts") / "brand", Path("branding") / "brand",
+                              only_names, seed, width, "brand mark", height=height,
+                              lock=True, force=force)
     if n:
         print("\nDone. Transparent brand marks in branding/brand/")
 
@@ -600,10 +611,12 @@ def main():
     # Seed is pinned to BRAND_SEED for a reproducible logo unless the user
     # explicitly passes --seed.
     if "--brand" in args:
+        force = "--force" in args
+        args = [a for a in args if a != "--force"]
         idx  = args.index("--brand")
         only = args[idx + 1:]
         brand_seed = seed if "--seed" in sys.argv[1:] else BRAND_SEED
-        generate_brand(only_names=only or None, seed=brand_seed)
+        generate_brand(only_names=only or None, seed=brand_seed, force=force)
         return
 
     # ── open-graph cards mode ────────────────────────────────────────────────

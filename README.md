@@ -1,140 +1,99 @@
-# elixpo/brand
+<p align="center">
+  <img src="branding/brand/lockup.png" alt="Elixpo - Oreo brand" width="420" />
+</p>
 
-The originating home of the **Elixpo** brand - the brand source of truth, the
-asset-generation pipeline, the prompt sources, and the generated sticker, icon
-and mascot sets. Everything orbits around **Oreo**, the pixel-art panda mascot.
+<h1 align="center">elixpo/brand</h1>
 
-> Want to use these assets? Browse [`branding/brand/`](branding/brand/),
-> [`stickers/`](stickers/) and [`prompts/icons/`](prompts/icons/). Want a new
-> one made? **Open an issue.** A maintainer reviews, applies the `approved`
-> label, and a bot generates the image straight into the repo.
+<p align="center">
+  <strong>The originating home of the Elixpo brand.</strong><br/>
+  The brand source of truth, the asset-generation pipeline, and the generated
+  sticker, icon, and mascot sets. Everything orbits around <strong>Oreo</strong>,
+  the pixel-art panda mascot.
+</p>
 
-A browsable, downloadable brand kit also lives at
-**[elixpo.com/assets](https://elixpo.com/assets)**.
+<p align="center">
+  <a href="https://elixpo.com/assets">Brand kit</a> ·
+  <a href="https://github.com/orgs/elixpo/discussions">Discussions</a> ·
+  <a href="https://github.com/elixpo/elixpo_chapter">Monorepo</a> ·
+  <a href="https://github.com/sponsors/Circuit-Overtime">Sponsor</a>
+</p>
 
 ---
+
+## About
+
+This repository defines the Elixpo brand and the tooling that produces it.
+Browse the finished assets in [`branding/`](branding/), read the rules in
+[`references/MASCOT.md`](references/MASCOT.md), or open an issue to request a new
+one. A browsable, downloadable kit also lives at
+**[elixpo.com/assets](https://elixpo.com/assets)**.
 
 ## Repository layout
 
 ```
 references/   Brand source-of-truth: MASCOT.md (identity, palette, rules),
               OREO-LINEART.md, and image_models.md (model registry).
-prompts/      Prompt sources, by class:
-                brand/      logo · wordmark · lockup
-                icons/      per-domain web/app service icons
-                og/         per-domain Open Graph / social images
-                stickers/   the printable sticker set
-                videos/     per-domain mascot clips
-pipeline/     Generation + processing code (Python + Pillow):
-                generate_assets · sticker_transparency · og_compose
-                make_pwa · generate_videos · compile_sticker_sheet
-                asset_optimize · asset_transparent
+prompts/      Prompt sources, by class: brand · icons · og · stickers · videos.
+pipeline/     Generation + processing code (Python + Pillow).
 branding/     Generated brand marks (brand/), web icons (icons/web/),
-              and PWA bundles (pwa/).
+              PWA bundles (pwa/), and per-product OG cards (og/).
 stickers/     Generated 1024² sticker PNGs (transparent, optimised).
 videos/       Generated mascot MP4s.
-editing/      The Elixpo "scrapbook" photo effect (klein) - see below.
-docs/         Guides - pollinations-api.md (the generation API reference).
+editing/      The Elixpo "scrapbook" photo effect (klein).
+docs/         Generation guides.
 requested/    Community asset-request outputs.
 ```
 
-> **Where assets go:** stickers, marks, and mascot clips live here. Per-product
-> **Open Graph / social images** are generated here (`prompts/og`,
-> `pipeline/og_compose.py`) and **distributed to the individual product repos** -
-> the originating prompts and code stay in this repository.
+> **Where assets go:** stickers, marks, icons, and mascot clips live here.
+> Per-product **Open Graph images** are generated into `branding/og/<site>/` and
+> **distributed to the individual product repos** - the prompts and code stay here.
 
----
+## Requesting an asset
 
-## Requesting an asset (community workflow)
+1. **Open an issue** using the **"Sticker / Icon Request"** template and
+   describe the vibe in a line or two.
+2. A maintainer reviews it against [`references/MASCOT.md`](references/MASCOT.md)
+   and applies the **`approved`** label.
+3. A GitHub Action renders it via Pollinations, runs the transparency pass, and
+   commits the result, then comments with a link. Add **`regenerate`** to reroll.
 
-1. **Open an issue** using the **"Sticker / Icon Request"** template. Describe
-   the vibe in one or two lines. Optionally attach a doodle for reference.
-2. A maintainer reviews the prompt against [references/MASCOT.md](references/MASCOT.md). If it
-   fits the brand, they apply the **`approved`** label.
-3. The label fires a GitHub Action that reads the prompt, appends the canonical
-   Mascot Clause and Style Suffix, calls Pollinations.ai to render a 1024×1024
-   image, runs the transparency pass for stickers, commits the result to
-   [`requested/`](requested/), and comments on the issue with a link.
-4. If the result misses the mark, add the **`regenerate`** label to retry with a
-   different seed.
+The review step is intentional - it keeps the brand from drifting.
 
-The maintainer review step is intentional - it stops drift, slop, and abuse of
-the generator.
+## Generation & locking
 
----
-
-## Local generation
-
-```bash
-# Brand marks - logo, wordmark, lockup -> branding/brand/:
-python pipeline/generate_assets.py --brand
-python pipeline/generate_assets.py --brand lockup        # one variant
-
-# Generate every sticker that has a prompt:
-python pipeline/generate_assets.py --stickers
-python pipeline/generate_assets.py --stickers 01_hello   # one sticker
-
-# Strip the cream background to transparent + save optimised PNG:
-python pipeline/sticker_transparency.py 01_hello
-python pipeline/sticker_transparency.py --optimize-only  # re-compress only
-
-# Compile all stickers into a printable A4 sheet:
-python pipeline/compile_sticker_sheet.py
-
-# Per-product Open Graph images (then distribute to the product repos):
-python pipeline/og_compose.py
-```
-
-Generated stickers and marks are saved as **optimised** PNGs - lossless
-`optimize + compress_level=9`, so the art is pixel-identical but smaller on disk.
-The Pollinations endpoint backs every generator.
-
----
-
-## Scrapbook photo effect (`editing/`)
-
-The Elixpo **scrapbook** look - a warm torn-paper journal effect, the go-to
-treatment used by the [me.elixpo](https://me.elixpo.com) site. Drop photos in
-`editing/raw/`, run the pipeline (default model **`klein`**), and get
-doodle-decorated edits in `editing/edited/` with the subject kept 100% intact.
-See [`editing/README.md`](editing/README.md).
-
-```bash
-python editing/edit.py                  # edit every editing/raw/ photo
-```
-
----
-
-## Icon sync
-
-Icon prompts (`prompts/icons/`) are **mirrored** from the OreoOS firmware
-repository (`elixpo/oreo`), where the icons live alongside the apps that use
-them. The upstream repo is the source of truth for icon prompts. A scheduled
-GitHub Action pushes any changes under `prompts/icons/` here every night.
-**Do not edit `prompts/icons/` here directly** - open a PR upstream instead.
-
----
+The pipeline lives in [`pipeline/`](pipeline/) (`generate_assets.py` plus
+helpers). Finished brand marks and OG cards are **locked** - once committed, they
+are kept rather than re-rendered, so the official identity never drifts by
+accident. Pass `--force` (or delete the file) to intentionally reroll. See
+[`prompts/brand/README.md`](prompts/brand/README.md).
 
 ## Standards
 
-This repository follows the **Elixpo standard**, shared by every Elixpo repo:
+This repository follows the **Elixpo standard**, shared by every Elixpo repo
+(see [`STANDARDS.md`](https://github.com/elixpo/elixpo/blob/main/STANDARDS.md)):
 
-- [`LICENSE`](LICENSE) - the Elixpo License (MIT for code, CC-BY-4.0 for assets).
-- [`LICENSES/`](LICENSES/) - canonical texts + the
+- [`LICENSE`](LICENSE) + [`LICENSES/`](LICENSES/) - the Elixpo License (MIT for
+  code, CC-BY-4.0 for assets) and the
   [Oreo-trademarks exception](LICENSES/exceptions/Oreo-trademarks).
 - [`LICENSES/NOTICE`](LICENSES/NOTICE) - the notice board (per-repo reservations).
 - [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) and [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-## Branding & legal
+## License & brand
 
-- The **Oreo mascot character**, the **chest E-badge**, and the **brand palette**
-  in [references/MASCOT.md](references/MASCOT.md) are © 2026 Ayushman Bhattacharya and form part
-  of the copyright registration (Indian Copyright Office Diary `LD-26455/2026-CO`).
-- The licence covers the **assets as files** (CC-BY-4.0); it does **not** transfer
-  rights to the **Oreo character / Elixpo brand** for use outside Elixpo-aligned
-  projects. See [`LICENSES/exceptions/Oreo-trademarks`](LICENSES/exceptions/Oreo-trademarks).
-- "Oreo" is an internal codename; the public brand is **Elixpo Badge** - see
-  [`references/MASCOT.md`](references/MASCOT.md) §Versioning.
+- The **Oreo mascot**, the **chest E-badge**, and the **palette** in
+  [`references/MASCOT.md`](references/MASCOT.md) are © 2026 Ayushman Bhattacharya
+  and part of the copyright registration (Indian Copyright Office Diary
+  `LD-26455/2026-CO`).
+- Assets are CC-BY-4.0; the licence covers the **files**, not the **Oreo
+  character / Elixpo brand** for use outside Elixpo-aligned projects. See
+  [`LICENSES/exceptions/Oreo-trademarks`](LICENSES/exceptions/Oreo-trademarks).
+
+## Exclusive
+
+> Per-repo reserved artifacts are declared in [`LICENSES/NOTICE`](LICENSES/NOTICE).
+
+**This repository:** the brand itself - the Oreo mascot, names, and palette are
+reserved. The generated asset files are free to use under CC-BY-4.0.
 
 <p align="center">
   <sub>Made in the open, together. © 2023-2026 Elixpo.</sub>

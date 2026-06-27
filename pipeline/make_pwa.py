@@ -28,8 +28,8 @@ from pathlib import Path
 BG_COLOUR    = "#FFF8EB"   # warm ivory canvas
 THEME_COLOUR = "#FF5D68"   # primary pink/red
 
-SRC_DIR = Path("assets") / "icons" / "web"
-OUT_DIR = Path("assets") / "pwa"
+SRC_DIR = Path("branding") / "icons" / "web"
+OUT_DIR = Path("branding") / "pwa"
 
 
 def _names(domain):

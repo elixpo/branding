@@ -10,6 +10,26 @@ deliberate exception: the brand marks **may contain the word "Elixpo"**,
 because a wordmark is text by definition. (Stickers/icons stay text-free;
 brand marks don't.)
 
+## Generate (script + prompt)
+
+```bash
+python pipeline/generate_assets.py --brand            # logo, wordmark, lockup
+python pipeline/generate_assets.py --brand lockup     # one variant
+python pipeline/generate_assets.py --brand --force    # reroll a locked mark
+```
+
+Each `<variant>.md` here is one prompt; the generator renders it (seed pinned to
+`BRAND_SEED`), applies the cream-background transparency pass, and writes the
+result to `branding/brand/<variant>.png`.
+
+## Locking a good generation
+
+AI generation isn't reproducible run-to-run, so once a mark looks right and is
+committed under `branding/brand/`, it is **LOCKED** — `--brand` will keep it and
+print `[locked] ...` instead of regenerating. To intentionally reroll, pass
+`--force` (or delete the `.png`). This mirrors how the OG cards are frozen, so
+the official identity never drifts by accident.
+
 ## Variants
 
 | File | Variant | Has text | Has mascot | Use |
