@@ -14,7 +14,7 @@ by the me.elixpo site. Reads raw photos from editing/raw/, and for each one:
 The vision step is what makes the doodles match THIS image (bookstore -> books &
 bookmarks, café -> mugs & steam, beach -> waves & shells) instead of generic decor.
 
-Free image-editing models (paid_only excluded — see ref/image_models.md), all text+image:
+Free image-editing models (paid_only excluded — see references/image_models.md), all text+image:
   klein           FLUX.2 Klein 4B    preserves subject + adds doodles   (default)
   kontext         FLUX.1 Kontext     max preservation, few doodles
   gptimage-large  GPT Image 1.5      rich doodles but redraws the face

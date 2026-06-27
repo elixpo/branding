@@ -2,7 +2,7 @@
 
 **Asset name:** `url.elixpo`
 **Output size:** 1024×1024
-**Target file:** `assets/icons/web/url.elixpo.png`
+**Target file:** `branding/icons/web/url.elixpo.png`
 **Service:** URL shortener (long link → short link).
 
 ## Prompt

@@ -2,7 +2,7 @@
 
 **Asset name:** `payouts.elixpo`
 **Output size:** 1024×1024
-**Target file:** `assets/icons/web/payouts.elixpo.png`
+**Target file:** `branding/icons/web/payouts.elixpo.png`
 **Service:** payouts / payments service.
 
 ## Prompt

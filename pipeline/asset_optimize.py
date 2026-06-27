@@ -1,7 +1,7 @@
 """Asset optimizer for Oreo Badge.
 
 Top-level icons (32×32):
-  assets/icons/raw/{name}.{png,jpg,jpeg}   →   assets/icons/optimized/{name}.py
+  branding/icons/raw/{name}.{png,jpg,jpeg}   →   branding/icons/optimized/{name}.py
 
 Status icons (13×13 white-on-pink, rasterized from SVG):
   assets/status/raw/*.svg                  →   assets/status/optimized/*.py
@@ -10,10 +10,10 @@ Per-app sprites/backgrounds (arbitrary size via SIZES table or _bg suffix):
   apps/<app>/assets/raw/*.{png,jpg,jpeg}   →   apps/<app>/assets/optimized/*.py
 
 Run from project root:
-    python tools/optimize_assets.py                 # all top-level icons
-    python tools/optimize_assets.py snake_icon      # single icon
-    python tools/optimize_assets.py --status        # SVG status icons
-    python tools/optimize_assets.py --app flappy    # all sprites in apps/flappy/assets/raw
+    python pipeline/optimize_assets.py                 # all top-level icons
+    python pipeline/optimize_assets.py snake_icon      # single icon
+    python pipeline/optimize_assets.py --status        # SVG status icons
+    python pipeline/optimize_assets.py --app flappy    # all sprites in apps/flappy/assets/raw
 """
 
 import sys
@@ -23,8 +23,8 @@ from PIL import Image
 
 # ── config ────────────────────────────────────────────────────────────────────
 
-RAW_DIR      = Path("assets/icons/raw")
-HW_DIR       = Path("assets/icons/optimized")
+RAW_DIR      = Path("branding/icons/raw")
+HW_DIR       = Path("branding/icons/optimized")
 
 ICON_SIZE    = 32
 BG_W         = 80
@@ -150,7 +150,7 @@ def _write_py_module(path: Path, data: bytes, w: int, h: int):
     words = struct.unpack_from(">%dH" % (len(data) // 2), data)
     chunk = 16
     lines = [
-        '"""Auto-generated bitmap — do not edit. Re-run tools/optimize_assets.py."""',
+        '"""Auto-generated bitmap — do not edit. Re-run pipeline/optimize_assets.py."""',
         "W = %d" % w,
         "H = %d" % h,
         "DATA = (",

@@ -2,7 +2,7 @@
 
 **Asset name:** `agent.elixpo`
 **Output size:** 1024×1024
-**Target file:** `assets/icons/web/agent.elixpo.png`
+**Target file:** `branding/icons/web/agent.elixpo.png`
 **Service:** agentic service that automates GitHub work (octocat-flavoured).
 
 ## Prompt

@@ -23,7 +23,7 @@ ending on the same pose for a seamless loop
 
 Oreo himself stays **exactly like the Elixpo stickers** — cute kawaii
 pixel art, thick dark outline, big sparkly eyes, pink cheeks, red E-badge
-([ref/MASCOT.md](../../ref/MASCOT.md)). **Not** 3D, not voxel, not Minecraft.
+([references/MASCOT.md](../../references/MASCOT.md)). **Not** 3D, not voxel, not Minecraft.
 
 But the **world has depth**. The trap to avoid is flat paper-cutout
 parallax — that reads like a PowerPoint slide, no atmosphere. Instead aim
@@ -46,14 +46,14 @@ sticker-matching mascot clause and the HD-2D style suffix automatically.
 ## Generate
 
 ```bash
-python tools/generate_videos.py                  # every domain → videos/<domain>.mp4
-python tools/generate_videos.py sketch.elixpo    # just one domain
-python tools/generate_videos.py --duration 8 --aspect 9:16
+python pipeline/generate_videos.py                  # every domain → videos/<domain>.mp4
+python pipeline/generate_videos.py sketch.elixpo    # just one domain
+python pipeline/generate_videos.py --duration 8 --aspect 9:16
 
 # A/B different models on the same prompt+seed (output gets a __<model> suffix
 # so they don't overwrite each other):
-python tools/generate_videos.py sketch.elixpo --model veo
-python tools/generate_videos.py sketch.elixpo --model seedance-pro
+python pipeline/generate_videos.py sketch.elixpo --model veo
+python pipeline/generate_videos.py sketch.elixpo --model seedance-pro
 ```
 
 Output MP4s land in [`videos/`](../../videos/). Default model `nova-reel`

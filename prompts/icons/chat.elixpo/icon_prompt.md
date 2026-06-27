@@ -2,7 +2,7 @@
 
 **Asset name:** `chat.elixpo`
 **Output size:** 1024×1024
-**Target file:** `assets/icons/web/chat.elixpo.png`
+**Target file:** `branding/icons/web/chat.elixpo.png`
 **Service:** Elixpo Chat — messaging / conversation.
 
 ## Prompt

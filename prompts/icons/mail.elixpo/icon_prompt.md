@@ -2,7 +2,7 @@
 
 **Asset name:** `mail.elixpo`
 **Output size:** 1024×1024
-**Target file:** `assets/icons/web/mail.elixpo.png`
+**Target file:** `branding/icons/web/mail.elixpo.png`
 **Service:** Elixpo Mail — email service.
 
 ## Prompt

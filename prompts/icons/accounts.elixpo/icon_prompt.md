@@ -2,7 +2,7 @@
 
 **Asset name:** `accounts.elixpo`
 **Output size:** 1024×1024
-**Target file:** `assets/icons/web/accounts.elixpo.png`
+**Target file:** `branding/icons/web/accounts.elixpo.png`
 **Service:** single sign-on / accounts (one key, many doors).
 
 ## Prompt

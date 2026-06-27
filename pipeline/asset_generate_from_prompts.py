@@ -1,17 +1,17 @@
 """Generate Oreo Badge assets via the Pollinations AI image API.
 
 Top-level icons:
-  python tools/generate_assets.py              # all active entries
-  python tools/generate_assets.py home_bg
+  python pipeline/generate_assets.py              # all active entries
+  python pipeline/generate_assets.py home_bg
 
 Per-app sprites (prompts/<app>/<name>.md → apps/<app>/assets/raw/<name>.png):
-  python tools/generate_assets.py --app flappy           # all prompts under prompts/flappy/
-  python tools/generate_assets.py --app flappy obstacle  # single sprite
+  python pipeline/generate_assets.py --app flappy           # all prompts under prompts/flappy/
+  python pipeline/generate_assets.py --app flappy obstacle  # single sprite
 
 Stickers (prompts/stickers/<name>.md → stickers/<name>.png at 1024x1024):
-  python tools/generate_assets.py --stickers             # all 12 prompts
-  python tools/generate_assets.py --stickers 01_hello    # single sticker
-  python tools/generate_assets.py --stickers --seed 7    # different seed
+  python pipeline/generate_assets.py --stickers             # all 12 prompts
+  python pipeline/generate_assets.py --stickers 01_hello    # single sticker
+  python pipeline/generate_assets.py --stickers --seed 7    # different seed
 
 Theme reference: prompts/THEME.md
 """
@@ -120,7 +120,7 @@ def generate_stickers(only_names=None, seed=42, size=1024):
     Reads prompts/stickers/*.md and writes stickers/<stem>.png at
     `size`x`size` (default 1024). Different from icons/app sprites:
     these aren't device assets — they're print artwork that gets
-    composited into a sheet by tools/compile_sticker_sheet.py.
+    composited into a sheet by pipeline/compile_sticker_sheet.py.
     """
     prompts_dir = Path("prompts") / "stickers"
     out_dir     = Path("stickers")
@@ -147,18 +147,18 @@ def generate_stickers(only_names=None, seed=42, size=1024):
     # run the icon/app generators. If it's unavailable we just warn
     # and skip the post-step — raw cream PNGs are still useful.
     try:
-        from tools.sticker_transparency import make_transparent  # type: ignore
+        from pipeline.sticker_transparency import make_transparent  # type: ignore
         _alpha_ok = True
     except Exception:
         try:
             # Direct path when generate_assets is invoked as a script
-            # (tools/ isn't on sys.path).
-            sys.path.insert(0, str(Path("tools").resolve()))
+            # (pipeline/ isn't on sys.path).
+            sys.path.insert(0, str(Path("pipeline").resolve()))
             from sticker_transparency import make_transparent  # type: ignore
             _alpha_ok = True
         except Exception as e:
             print("  warn: transparency pass unavailable (%s)" % e)
-            print("        run `python tools/sticker_transparency.py` later")
+            print("        run `python pipeline/sticker_transparency.py` later")
             make_transparent = None  # type: ignore
             _alpha_ok = False
 
@@ -180,7 +180,7 @@ def generate_stickers(only_names=None, seed=42, size=1024):
             except Exception as e:
                 print("  warn: transparency pass failed: %s" % e)
         time.sleep(8)
-    print("\nDone. Run:  python tools/compile_sticker_sheet.py")
+    print("\nDone. Run:  python pipeline/compile_sticker_sheet.py")
 
 
 def generate_app(app_name, only_names=None, seed=42):
@@ -209,7 +209,7 @@ def generate_app(app_name, only_names=None, seed=42):
         out = out_dir / ("%s.png" % md.stem)
         download_to(prompt, out, width=200, height=200, seed=seed)
         time.sleep(8)
-    print("\nDone. Run:  python tools/optimize_assets.py --app %s" % app_name)
+    print("\nDone. Run:  python pipeline/optimize_assets.py --app %s" % app_name)
 
 
 
@@ -261,7 +261,7 @@ ICON_STYLE = (
 # ── Download ──────────────────────────────────────────────────────────────────
 
 def download(name, width=200, height=200, seed=42):
-    """Top-level icon: prompts/{name,icons/<name>}.md → assets/icons/raw/<name>.png."""
+    """Top-level icon: prompts/{name,icons/<name>}.md → branding/icons/raw/<name>.png."""
     prompt = (_read_prompt("prompts/%s.md" % name)
               or _read_prompt("prompts/icons/%s.md" % name)
               or _FALLBACK_PROMPTS.get(name))
@@ -269,7 +269,7 @@ def download(name, width=200, height=200, seed=42):
         print("  SKIP %s — no prompt at prompts/%s.md or prompts/icons/%s.md"
               % (name, name, name))
         return
-    download_to(prompt, "assets/icons/raw/%s.png" % name,
+    download_to(prompt, "branding/icons/raw/%s.png" % name,
                 width, height, seed=seed)
 
 
@@ -330,10 +330,10 @@ def main():
             print("  SKIP %s — no prompt at prompts/%s.md or prompts/icons/%s.md"
                   % (name, name, name))
             continue
-        download_to(prompt, "assets/icons/raw/%s.png" % name, w, h, seed=seed)
+        download_to(prompt, "branding/icons/raw/%s.png" % name, w, h, seed=seed)
         time.sleep(8)
 
-    print("\nDone. Run:  python tools/optimize_assets.py")
+    print("\nDone. Run:  python pipeline/optimize_assets.py")
 
 
 if __name__ == "__main__":

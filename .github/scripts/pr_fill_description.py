@@ -43,7 +43,7 @@ Rules:
   1. `## Changes Made` — 3-7 bullets. Each bullet references a file in backticks and says what changed and why. Skip lockfiles, generated files, formatting-only noise.
   2. `## Checklist` — only include items that actually apply to this diff:
      - `- [ ] MicroPython compat: no f-strings with `=`, no pathlib, no walrus in modules that ship to flash` (only if oreoOS/ or oreoWare/ or apps/ changed)
-     - `- [ ] App ships through \\`tools/deploy.py\\` DEPLOY list / \\`tools/build_release.py\\` SHIP_PATTERNS` (only if a new file under oreoOS/ or oreoWare/ or apps/ was added)
+     - `- [ ] App ships through \\`pipeline/deploy.py\\` DEPLOY list / \\`pipeline/build_release.py\\` SHIP_PATTERNS` (only if a new file under oreoOS/ or oreoWare/ or apps/ was added)
      - `- [ ] No secrets committed (.env, secrets.py)` (always, but only flag if any .env*, secrets.py, or credentials.json appears in the diff)
      - `- [ ] Flashed + smoke-tested on hardware` (always, leave a prompt for the author)
      - `- [ ] Tested locally: <how>` (always, leave the "how" as a prompt for the author)

@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 REQUESTED = ROOT / "requested"
 REQUESTED.mkdir(exist_ok=True)
 
-# --- Style snippets from ref/MASCOT.md (kept in sync by hand for now) -------
+# --- Style snippets from references/MASCOT.md (kept in sync by hand for now) -------
 
 STYLE_SUFFIX_DEFAULT = (
     "pixel art cartoon style, thick dark outline, vibrant warm celebration "

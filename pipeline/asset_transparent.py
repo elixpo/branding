@@ -12,11 +12,11 @@ Optional: pass `--rembg` to use the rembg AI model (better for complex
 backgrounds, but pulls a ~100 MB model on first run).
 
 Usage:
-  python tools/transparent.py --app flappy
-  python tools/transparent.py --app flappy panda_up_a panda_up_b
-  python tools/transparent.py --app flappy --tolerance 60
-  python tools/transparent.py --app flappy --rembg
-  python tools/transparent.py --app flappy --feather 1     # 1-pixel edge soften
+  python pipeline/transparent.py --app flappy
+  python pipeline/transparent.py --app flappy panda_up_a panda_up_b
+  python pipeline/transparent.py --app flappy --tolerance 60
+  python pipeline/transparent.py --app flappy --rembg
+  python pipeline/transparent.py --app flappy --feather 1     # 1-pixel edge soften
 """
 
 import sys
@@ -149,7 +149,7 @@ def main():
         print("  %-25s  %dx%d  →  %s   [%s]" %
               (src.stem, img.size[0], img.size[1], dst.name, note))
 
-    print("\nDone. Run:  python tools/optimize_assets.py --app %s" % opts["app"])
+    print("\nDone. Run:  python pipeline/optimize_assets.py --app %s" % opts["app"])
 
 
 if __name__ == "__main__":

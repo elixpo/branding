@@ -24,13 +24,13 @@ the full palette.
 
 ```bash
 # Generate (1024×1024) + auto-strip the cream background to transparent:
-python tools/generate_assets.py --stickers
+python pipeline/generate_assets.py --stickers
 
 # Then composite into a printable sheet:
-python tools/compile_sticker_sheet.py
+python pipeline/compile_sticker_sheet.py
 ```
 
-The generator calls `tools/sticker_transparency.py` after each download
+The generator calls `pipeline/sticker_transparency.py` after each download
 so PNGs land transparent-ready out of the box. The transparency pass
 uses corner flood-fill (with tolerance 45) so the panda's white-cream
 fur stays opaque — only the *background* cream connected to the edges
@@ -42,13 +42,13 @@ tolerance:
 
 ```bash
 # Looser fill — kills more bg but may leak into the panda
-python tools/sticker_transparency.py 03_soldering --tolerance 55
+python pipeline/sticker_transparency.py 03_soldering --tolerance 55
 
 # Tighter fill — preserves the panda but may leave cream halos
-python tools/sticker_transparency.py 03_soldering --tolerance 35
+python pipeline/sticker_transparency.py 03_soldering --tolerance 35
 
 # Save copies to a separate folder instead of overwriting
-python tools/sticker_transparency.py --out stickers/transparent/
+python pipeline/sticker_transparency.py --out stickers/transparent/
 ```
 
 `compile_sticker_sheet.py` reads `stickers/*.png` and composites them

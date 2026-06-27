@@ -2,7 +2,7 @@
 
 **Asset name:** `me.elixpo`
 **Output size:** 1024×1024
-**Target file:** `assets/icons/web/me.elixpo.png`
+**Target file:** `branding/icons/web/me.elixpo.png`
 **Service:** personal portfolio / showcase pages.
 
 ## Prompt

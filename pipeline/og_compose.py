@@ -5,14 +5,14 @@ Oreo, a couple of geometric shapes) at 16:9. This script overlays the typography
 ourselves with Pillow — so the model never fumbles letters — at fixed, correct
 proportions in the card's left negative space.
 
-  prompts/og-image/<site>/prompts/<name>.md     (## Text block: eyebrow/headline/sub/url)
-  prompts/og-image/<site>/output/<name>.bg.png  (AI design)
-        → prompts/og-image/<site>/output/<name>.png   (final card)
+  prompts/og/<site>/prompts/<name>.md     (## Text block: eyebrow/headline/sub/url)
+  prompts/og/<site>/output/<name>.bg.png  (AI design)
+        → prompts/og/<site>/output/<name>.png   (final card)
 
 Usage:
-  python tools/og_compose.py                      # every site, every card
-  python tools/og_compose.py mails.elixpo         # one site
-  python tools/og_compose.py mails.elixpo default # one card
+  python pipeline/og_compose.py                      # every site, every card
+  python pipeline/og_compose.py mails.elixpo         # one site
+  python pipeline/og_compose.py mails.elixpo default # one card
 """
 
 import sys
@@ -32,7 +32,7 @@ MUTED  = (147, 147, 159)
 CORAL  = (255, 119, 89)
 
 # ── Fonts ─────────────────────────────────────────────────────────────────────
-# Drop Fraunces / Space Mono / Inter .ttf into tools/fonts/ to upgrade from the
+# Drop Fraunces / Space Mono / Inter .ttf into pipeline/fonts/ to upgrade from the
 # DejaVu fallbacks. First existing path in each list wins.
 _FONT_DIR = Path(__file__).resolve().parent / "fonts"
 _SYS = "/usr/share/fonts/truetype"

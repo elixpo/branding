@@ -91,7 +91,7 @@ jobs:
           # at the actual GitHub Release asset URLs once they're uploaded
           # by the next step.
           ASSET_BASE="https://github.com/${{ github.repository }}/releases/download/${{ steps.meta.outputs.tag }}/"
-          python tools/build_release.py \
+          python pipeline/build_release.py \
             --version "${{ steps.meta.outputs.version }}" \
             --channel "${{ steps.meta.outputs.channel }}" \
             --notes   "${{ github.event.head_commit.message || github.event.inputs.version }}" \
@@ -125,7 +125,7 @@ jobs:
           name: "OreoOS ${{ steps.meta.outputs.version }} (${{ steps.meta.outputs.channel }})"
           prerelease: ${{ steps.meta.outputs.channel != 'stable' }}
           body: |
-            Auto-built by `tools/build_release.py`.
+            Auto-built by `pipeline/build_release.py`.
             Channel: `${{ steps.meta.outputs.channel }}`
             Version: `${{ steps.meta.outputs.version }}`
 

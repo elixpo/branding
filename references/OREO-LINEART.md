@@ -99,9 +99,9 @@ whole design.
 3. the temp .bg.png is DELETED — the final .png is the only kept artifact
 ```
 
-- Generator: `tools/generate_assets.py --og <site> [card]`
-- Compositor: `tools/og_compose.py <site> [card]`
-- Prompts + per-site cards: `prompts/og-image/<site>/`
+- Generator: `pipeline/generate_assets.py --og <site> [card]`
+- Compositor: `pipeline/og_compose.py <site> [card]`
+- Prompts + per-site cards: `prompts/og/<site>/`
 - **Locked:** AI runs vary, so a finished `output/<name>.png` is **never
   regenerated**. Reroll only with `--force` (or by deleting the `.png`). Seed
   is pinned (`OG_SEED`); `--seed` explores.
@@ -131,6 +131,6 @@ whole design.
 
 New surfaces inherit this page: keep the **one-line Oreo + dotted matrix +
 hairline geometry + coral/red accents**, vary only the **composition** and the
-`## Text`. To add a site, copy `prompts/og-image/mails.elixpo/` and edit its
+`## Text`. To add a site, copy `prompts/og/mails.elixpo/` and edit its
 `## Text`. For non-card surfaces (heroes, dividers), reuse the locked panda
 spec above and drop the headline scaffold.

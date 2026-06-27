@@ -2,20 +2,20 @@
 
 Reads prompts/videos/<domain>/video_prompt.md (the block after '## Prompt')
 and writes videos/<domain>.mp4 — one clip per service domain. Mirrors
-tools/generate_assets.py: same POLLINATIONS_KEY from .env, same '## Prompt'
+pipeline/generate_assets.py: same POLLINATIONS_KEY from .env, same '## Prompt'
 convention, same retry/backoff. The difference is the endpoint (/video
 instead of /image), an MP4 payload, and the duration/aspect-ratio knobs.
 
 Usage:
-  python tools/generate_videos.py                      # all domains
-  python tools/generate_videos.py sketch.elixpo        # single domain
-  python tools/generate_videos.py --seed 7             # different seed
-  python tools/generate_videos.py --duration 8         # longer (default 5s)
-  python tools/generate_videos.py --aspect 9:16        # vertical (default 16:9)
-  python tools/generate_videos.py --model veo          # A/B a different model
+  python pipeline/generate_videos.py                      # all domains
+  python pipeline/generate_videos.py sketch.elixpo        # single domain
+  python pipeline/generate_videos.py --seed 7             # different seed
+  python pipeline/generate_videos.py --duration 8         # longer (default 5s)
+  python pipeline/generate_videos.py --aspect 9:16        # vertical (default 16:9)
+  python pipeline/generate_videos.py --model veo          # A/B a different model
                                               # (non-default → videos/<domain>__<model>.mp4)
 
-Mascot reference: ref/MASCOT.md
+Mascot reference: references/MASCOT.md
 """
 
 import os
@@ -40,7 +40,7 @@ MODEL    = "nova-reel"
 DURATION = 5         # seconds — short, cozy, looping
 ASPECT   = "16:9"    # nova-reel renders landscape; keep the request consistent
 
-# ── Style snippets (kept in sync with ref/MASCOT.md by hand) ─────────────────────
+# ── Style snippets (kept in sync with references/MASCOT.md by hand) ─────────────────────
 # Appended to every prompt so clips stay on-brand even when the .md only
 # describes the scene. The video Oreo must look EXACTLY like the Elixpo
 # stickers — cute kawaii 2D pixel art, NOT 3D / voxel / Minecraft.

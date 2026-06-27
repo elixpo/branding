@@ -18,7 +18,7 @@ editing/
 ├── raw/              # INPUT photos   — gitignored
 ├── edited/           # OUTPUT edits   — gitignored
 └── README.md
-ref/image_models.md   # Pollinations image/video model registry (reference)
+references/image_models.md   # Pollinations image/video model registry (reference)
 ```
 
 ## How it works

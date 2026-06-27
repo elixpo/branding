@@ -13,11 +13,11 @@ You drive the layout by **how many stickers per row/column** and a
 to fit. Output goes to `stickers/sheet.png`.
 
 Usage:
-    python tools/compile_sticker_sheet.py
-    python tools/compile_sticker_sheet.py --cols 5            # 5 per row
-    python tools/compile_sticker_sheet.py --cols 5 --rows 4   # fixed 5x4 grid
-    python tools/compile_sticker_sheet.py --cell-w 400 --cell-h 400
-    python tools/compile_sticker_sheet.py --gap 24 --margin 40
+    python pipeline/compile_sticker_sheet.py
+    python pipeline/compile_sticker_sheet.py --cols 5            # 5 per row
+    python pipeline/compile_sticker_sheet.py --cols 5 --rows 4   # fixed 5x4 grid
+    python pipeline/compile_sticker_sheet.py --cell-w 400 --cell-h 400
+    python pipeline/compile_sticker_sheet.py --gap 24 --margin 40
 
 Requires: Pillow (already in oreoOS/requirements.txt for the optimiser).
 """

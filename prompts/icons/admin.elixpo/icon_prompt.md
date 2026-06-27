@@ -2,7 +2,7 @@
 
 **Asset name:** `admin.elixpo`
 **Output size:** 1024×1024
-**Target file:** `assets/icons/web/admin.elixpo.png`
+**Target file:** `branding/icons/web/admin.elixpo.png`
 **Service:** admin dashboard / control panel.
 
 ## Prompt

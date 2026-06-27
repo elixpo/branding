@@ -1,41 +1,41 @@
 """Generate Oreo Badge assets via the Pollinations AI image API.
 
 Top-level icons:
-  python tools/generate_assets.py              # all active entries
-  python tools/generate_assets.py home_bg
+  python pipeline/generate_assets.py              # all active entries
+  python pipeline/generate_assets.py home_bg
 
 Per-app sprites (prompts/<app>/<name>.md → apps/<app>/assets/raw/<name>.png):
-  python tools/generate_assets.py --app flappy           # all prompts under prompts/flappy/
-  python tools/generate_assets.py --app flappy obstacle  # single sprite
+  python pipeline/generate_assets.py --app flappy           # all prompts under prompts/flappy/
+  python pipeline/generate_assets.py --app flappy obstacle  # single sprite
 
 Stickers (prompts/stickers/<name>.md → stickers/<name>.png at 1024x1024):
-  python tools/generate_assets.py --stickers             # every sticker prompt
-  python tools/generate_assets.py --stickers 01_hello    # single sticker
-  python tools/generate_assets.py --stickers --seed 7    # different seed
-  python tools/generate_assets.py --stickers --from 22   # sweep 022 → end
-  python tools/generate_assets.py --stickers --from 22 --to 60   # range 022–060
+  python pipeline/generate_assets.py --stickers             # every sticker prompt
+  python pipeline/generate_assets.py --stickers 01_hello    # single sticker
+  python pipeline/generate_assets.py --stickers --seed 7    # different seed
+  python pipeline/generate_assets.py --stickers --from 22   # sweep 022 → end
+  python pipeline/generate_assets.py --stickers --from 22 --to 60   # range 022–060
 
-OG cards (prompts/og-image/<site>/prompts/<name>.md → .../output/<name>.png, 1280x720 16:9):
-  python tools/generate_assets.py --og                         # every site, every card
-  python tools/generate_assets.py --og mails.elixpo            # one site, all cards
-  python tools/generate_assets.py --og mails.elixpo default    # one card
-  python tools/generate_assets.py --og default docs            # those cards, every site
-  python tools/generate_assets.py --og mails.elixpo --force    # reroll a locked card
+OG cards (prompts/og/<site>/prompts/<name>.md → .../output/<name>.png, 1280x720 16:9):
+  python pipeline/generate_assets.py --og                         # every site, every card
+  python pipeline/generate_assets.py --og mails.elixpo            # one site, all cards
+  python pipeline/generate_assets.py --og mails.elixpo default    # one card
+  python pipeline/generate_assets.py --og default docs            # those cards, every site
+  python pipeline/generate_assets.py --og mails.elixpo --force    # reroll a locked card
   # finished <name>.png is LOCKED (not regenerated); .bg.png is deleted after compositing
 
-Website icons (prompts/icons/<domain>/icon_prompt.md → assets/icons/web/<domain>.png):
-  python tools/generate_assets.py --web                  # all website icons
-  python tools/generate_assets.py --web sketch.elixpo    # single icon
+Website icons (prompts/icons/<domain>/icon_prompt.md → branding/icons/web/<domain>.png):
+  python pipeline/generate_assets.py --web                  # all website icons
+  python pipeline/generate_assets.py --web sketch.elixpo    # single icon
   (sticker-style on a cream background, transparency applied automatically)
 
-Brand marks (prompts/brand/<variant>.md → assets/brand/<variant>.png):
-  python tools/generate_assets.py --brand                # logo, wordmark, lockup
-  python tools/generate_assets.py --brand lockup         # single variant
+Brand marks (prompts/brand/<variant>.md → branding/brand/<variant>.png):
+  python pipeline/generate_assets.py --brand                # logo, wordmark, lockup
+  python pipeline/generate_assets.py --brand lockup         # single variant
   (cream-background marks, transparency applied; wordmarks may contain text)
   (seed pinned to BRAND_SEED so the logo is identical every run; pass
    --seed N only to explore a different one)
 
-Mascot reference: ref/MASCOT.md
+Mascot reference: references/MASCOT.md
 """
 
 import os
@@ -59,13 +59,13 @@ BRAND_W, BRAND_H = 1024, 576
 # Open-graph / social cards render 16:9, full-bleed, NO cropping. The AI
 # generates the DESIGN ONLY (faint dotted-matrix background, an entangled
 # one-line Oreo, a couple of geometric shapes) — text-free. We composite the
-# headline/eyebrow/sub/url ourselves with Pillow (tools/og_compose.py) so the
+# headline/eyebrow/sub/url ourselves with Pillow (pipeline/og_compose.py) so the
 # model never fumbles the typography. No transparency pass.
 OG_W, OG_H = 1280, 720          # 16:9
 MODEL_OG   = "gptimage-large"   # higher-fidelity line art for the OG design
 
 # Locked Oreo line-art look reproduces on this seed (override only with --seed).
-# Canonical reference: ref/OREO-LINEART.md
+# Canonical reference: references/OREO-LINEART.md
 OG_SEED = 7
 
 # The brand marks are the fixed identity — they must come out IDENTICAL on
@@ -205,18 +205,18 @@ def _generate_alpha_batch(prompts_dir, out_dir, only_names, seed, size, label,
     # run the icon/app generators. If it's unavailable we just warn
     # and skip the post-step — raw cream PNGs are still useful.
     try:
-        from tools.sticker_transparency import make_transparent  # type: ignore
+        from pipeline.sticker_transparency import make_transparent  # type: ignore
         _alpha_ok = True
     except Exception:
         try:
             # Direct path when generate_assets is invoked as a script
-            # (tools/ isn't on sys.path).
-            sys.path.insert(0, str(Path("tools").resolve()))
+            # (pipeline/ isn't on sys.path).
+            sys.path.insert(0, str(Path("pipeline").resolve()))
             from sticker_transparency import make_transparent  # type: ignore
             _alpha_ok = True
         except Exception as e:
             print("  warn: transparency pass unavailable (%s)" % e)
-            print("        run `python tools/sticker_transparency.py` later")
+            print("        run `python pipeline/sticker_transparency.py` later")
             make_transparent = None  # type: ignore
             _alpha_ok = False
 
@@ -247,19 +247,19 @@ def generate_stickers(only_names=None, seed=42, size=1024):
     Reads prompts/stickers/*.md and writes stickers/<stem>.png at
     `size`x`size` (default 1024). Different from icons/app sprites:
     these aren't device assets — they're print artwork that gets
-    composited into a sheet by tools/compile_sticker_sheet.py.
+    composited into a sheet by pipeline/compile_sticker_sheet.py.
     """
     n = _generate_alpha_batch(Path("prompts") / "stickers", Path("stickers"),
                               only_names, seed, size, "sticker")
     if n:
-        print("\nDone. Run:  python tools/compile_sticker_sheet.py")
+        print("\nDone. Run:  python pipeline/compile_sticker_sheet.py")
 
 
 def generate_web_icons(only_names=None, seed=42, size=1024):
     """Generate the website service icons.
 
     Reads prompts/icons/<domain>/icon_prompt.md and writes
-    assets/icons/web/<domain>.png. Sticker-style art on a flat cream
+    branding/icons/web/<domain>.png. Sticker-style art on a flat cream
     background, run through the same transparency pass so they land
     transparent-ready for favicons / headers. Folders without an
     icon_prompt.md (e.g. the oreoOS app-icon set) are ignored.
@@ -268,13 +268,13 @@ def generate_web_icons(only_names=None, seed=42, size=1024):
                               Path("assets") / "icons" / "web",
                               only_names, seed, size, "web icon", nested=True)
     if n:
-        print("\nDone. Transparent PNGs in assets/icons/web/")
+        print("\nDone. Transparent PNGs in branding/icons/web/")
 
 
 def generate_brand(only_names=None, seed=BRAND_SEED, width=BRAND_W, height=BRAND_H):
     """Generate the brand marks (logo, wordmark, lockup).
 
-    Reads prompts/brand/<variant>.md and writes assets/brand/<variant>.png.
+    Reads prompts/brand/<variant>.md and writes branding/brand/<variant>.png.
     Same flat sticker-style pipeline as the web icons (cream background →
     transparency pass), so the marks land transparent-ready for the web —
     but on a wide 16:9 canvas, since the wordmark and lockup are horizontal.
@@ -286,7 +286,7 @@ def generate_brand(only_names=None, seed=BRAND_SEED, width=BRAND_W, height=BRAND
     n = _generate_alpha_batch(Path("prompts") / "brand", Path("assets") / "brand",
                               only_names, seed, width, "brand mark", height=height)
     if n:
-        print("\nDone. Transparent brand marks in assets/brand/")
+        print("\nDone. Transparent brand marks in branding/brand/")
 
 
 OG_SKIP = {"readme", "style", "palette"}
@@ -298,7 +298,7 @@ def generate_og(only=None, seed=42, force=False):
     Layout — one folder per site, each with its own prompts and an output/
     folder for the rendered images:
 
-        prompts/og-image/<site>/prompts/<name>.md  →  prompts/og-image/<site>/output/<name>.png
+        prompts/og/<site>/prompts/<name>.md  →  prompts/og/<site>/output/<name>.png
 
     Two-step, so the AI never has to render text:
       1. AI generates the text-free DESIGN (16:9) → a temporary <name>.bg.png
@@ -318,7 +318,7 @@ def generate_og(only=None, seed=42, force=False):
     With no site token the remaining names filter cards across every site.
 
     Copy a site's output/default.png → that app's public/og-image.png.
-    Style spec: prompts/og-image/<site>/STYLE.md
+    Style spec: prompts/og/<site>/STYLE.md
     """
     base = Path("prompts") / "og-image"
     if not base.exists():
@@ -394,19 +394,19 @@ def generate_og(only=None, seed=42, force=False):
 
 
 def _compose_og_text(card_md, bg_path, out_path):
-    """Overlay the card's `## Text` onto the AI design via tools/og_compose.py.
+    """Overlay the card's `## Text` onto the AI design via pipeline/og_compose.py.
     Best-effort: warns and skips if Pillow or the composer is unavailable."""
     try:
         try:
-            from tools.og_compose import compose_card  # type: ignore
+            from pipeline.og_compose import compose_card  # type: ignore
         except Exception:
-            sys.path.insert(0, str(Path("tools").resolve()))
+            sys.path.insert(0, str(Path("pipeline").resolve()))
             from og_compose import compose_card  # type: ignore
         compose_card(card_md, bg_path, out_path)
         print("  text composited → %s" % out_path)
     except Exception as e:
         print("  warn: text overlay skipped (%s)" % e)
-        print("        run `python tools/og_compose.py` once Pillow is available")
+        print("        run `python pipeline/og_compose.py` once Pillow is available")
 
 
 def generate_app(app_name, only_names=None, seed=42):
@@ -435,7 +435,7 @@ def generate_app(app_name, only_names=None, seed=42):
         out = out_dir / ("%s.png" % md.stem)
         download_to(prompt, out, width=200, height=200, seed=seed)
         time.sleep(8)
-    print("\nDone. Run:  python tools/optimize_assets.py --app %s" % app_name)
+    print("\nDone. Run:  python pipeline/optimize_assets.py --app %s" % app_name)
 
 
 
@@ -487,7 +487,7 @@ ICON_STYLE = (
 # ── Download ──────────────────────────────────────────────────────────────────
 
 def download(name, width=200, height=200, seed=42):
-    """Top-level icon: prompts/{name,icons/<name>}.md → assets/icons/raw/<name>.png."""
+    """Top-level icon: prompts/{name,icons/<name>}.md → branding/icons/raw/<name>.png."""
     prompt = (_read_prompt("prompts/%s.md" % name)
               or _read_prompt("prompts/icons/%s.md" % name)
               or _FALLBACK_PROMPTS.get(name))
@@ -495,7 +495,7 @@ def download(name, width=200, height=200, seed=42):
         print("  SKIP %s — no prompt at prompts/%s.md or prompts/icons/%s.md"
               % (name, name, name))
         return
-    download_to(prompt, "assets/icons/raw/%s.png" % name,
+    download_to(prompt, "branding/icons/raw/%s.png" % name,
                 width, height, seed=seed)
 
 
@@ -586,7 +586,7 @@ def main():
         return
 
     # ── website icons mode ───────────────────────────────────────────────────
-    # Sticker-style service icons → assets/icons/web/, transparency applied.
+    # Sticker-style service icons → branding/icons/web/, transparency applied.
     # Positional args after --web filter by stem (e.g. `--web lixsketch`).
     if "--web" in args:
         idx  = args.index("--web")
@@ -595,7 +595,7 @@ def main():
         return
 
     # ── brand marks mode ─────────────────────────────────────────────────────
-    # Logo / wordmark / lockup → assets/brand/, transparency applied.
+    # Logo / wordmark / lockup → branding/brand/, transparency applied.
     # Positional args after --brand filter by variant (e.g. `--brand lockup`).
     # Seed is pinned to BRAND_SEED for a reproducible logo unless the user
     # explicitly passes --seed.
@@ -649,10 +649,10 @@ def main():
             print("  SKIP %s — no prompt at prompts/%s.md or prompts/icons/%s.md"
                   % (name, name, name))
             continue
-        download_to(prompt, "assets/icons/raw/%s.png" % name, w, h, seed=seed)
+        download_to(prompt, "branding/icons/raw/%s.png" % name, w, h, seed=seed)
         time.sleep(8)
 
-    print("\nDone. Run:  python tools/optimize_assets.py")
+    print("\nDone. Run:  python pipeline/optimize_assets.py")
 
 
 if __name__ == "__main__":

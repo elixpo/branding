@@ -17,11 +17,11 @@ the flood-fill and just re-compress existing transparent stickers in
 place (useful for shrinking the committed set without re-rendering).
 
 Usage:
-    python tools/sticker_transparency.py                    # all stickers/*.png
-    python tools/sticker_transparency.py 01_hello           # single sticker
-    python tools/sticker_transparency.py --tolerance 50     # looser fill
-    python tools/sticker_transparency.py --out stickers/transparent/   # write copies
-    python tools/sticker_transparency.py --optimize-only    # just recompress, no fill
+    python pipeline/sticker_transparency.py                    # all stickers/*.png
+    python pipeline/sticker_transparency.py 01_hello           # single sticker
+    python pipeline/sticker_transparency.py --tolerance 50     # looser fill
+    python pipeline/sticker_transparency.py --out stickers/transparent/   # write copies
+    python pipeline/sticker_transparency.py --optimize-only    # just recompress, no fill
 
 Defaults overwrite the source PNG in place — pass `--out <dir>` to
 write to a separate folder instead, so you can keep the warm-cream

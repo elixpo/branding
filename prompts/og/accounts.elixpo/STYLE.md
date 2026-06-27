@@ -1,6 +1,6 @@
 # OG style — design prompt + text block
 
-> Derived from the LOCKED reference **`ref/OREO-LINEART.md`**. Keep this in
+> Derived from the LOCKED reference **`references/OREO-LINEART.md`**. Keep this in
 > sync with it; that page wins on any conflict.
 
 The AI generates the **design only** (no text); we composite the type with
@@ -8,7 +8,7 @@ Pillow. So each card `.md` has **two** blocks:
 
 ```
 ## Prompt   →  the text-free DESIGN (fed to the image model, gptlarge, 16:9)
-## Text     →  eyebrow / headline / sub / url  (drawn by tools/og_compose.py)
+## Text     →  eyebrow / headline / sub / url  (drawn by pipeline/og_compose.py)
 ```
 
 ## Design style preamble (shared)
@@ -86,4 +86,4 @@ url: accounts.elixpo.com
 high-contrast **serif** headline (auto-fit, wrapped, ink) → heavy coral
 underline → sub (Inter, slate) → url (mono, bottom-left). Drop
 `Fraunces-Bold.ttf` / `SpaceMono-Regular.ttf` / `Inter-Regular.ttf` into
-`tools/fonts/` to upgrade from the DejaVu fallbacks.
+`pipeline/fonts/` to upgrade from the DejaVu fallbacks.

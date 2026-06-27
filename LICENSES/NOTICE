@@ -33,7 +33,7 @@ ASSETS & DISTRIBUTION
   * Stickers, marks, icons, and mascot clips live here under stickers/, assets/,
     and videos/, generated from the prompt sources in prompts/ by the pipeline
     in tools/ and scripts/.
-  * Per-product Open Graph / social images are generated here (prompts/og-image,
+  * Per-product Open Graph / social images are generated here (prompts/og,
     tools/og_compose.py) and DISTRIBUTED to the individual product repositories.
     The originating prompts and code stay in this repository.
 

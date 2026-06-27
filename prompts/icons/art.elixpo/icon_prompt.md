@@ -2,7 +2,7 @@
 
 **Asset name:** `art.elixpo`
 **Output size:** 1024×1024
-**Target file:** `assets/icons/web/art.elixpo.png`
+**Target file:** `branding/icons/web/art.elixpo.png`
 **Service:** Elixpo Art — AI image & video generation.
 
 ## Prompt

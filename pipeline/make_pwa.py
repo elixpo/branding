@@ -1,7 +1,7 @@
 """Build per-product PWA icon + manifest bundles from the web icons.
 
-Source:  assets/icons/web/<domain>.png   (the transparent sticker-style icon)
-Output:  assets/pwa/<domain>/
+Source:  branding/icons/web/<domain>.png   (the transparent sticker-style icon)
+Output:  branding/pwa/<domain>/
            icon-192.png            (any-purpose, transparent)
            icon-512.png            (any-purpose, transparent)
            icon-maskable-512.png   (maskable: cream bg, icon in safe zone)
@@ -10,21 +10,21 @@ Output:  assets/pwa/<domain>/
            manifest.webmanifest    (name, icons, theme/background colours)
 
 Usage:
-  python tools/make_pwa.py                 # every icon in assets/icons/web/
-  python tools/make_pwa.py sketch.elixpo   # one product
+  python pipeline/make_pwa.py                 # every icon in branding/icons/web/
+  python pipeline/make_pwa.py sketch.elixpo   # one product
 
-Each product app just serves its assets/pwa/<domain>/ folder and links the
+Each product app just serves its branding/pwa/<domain>/ folder and links the
 manifest:  <link rel="manifest" href="manifest.webmanifest">
 
 Requires Pillow (in requirements.txt). Generate the web icons first:
-  python tools/generate_assets.py --web
+  python pipeline/generate_assets.py --web
 """
 
 import json
 import sys
 from pathlib import Path
 
-# Brand colours from ref/MASCOT.md.
+# Brand colours from references/MASCOT.md.
 BG_COLOUR    = "#FFF8EB"   # warm ivory canvas
 THEME_COLOUR = "#FF5D68"   # primary pink/red
 
@@ -118,7 +118,7 @@ def build(domain):
 
 def main():
     if not SRC_DIR.exists():
-        print("No web icons at %s — run `python tools/generate_assets.py --web` first."
+        print("No web icons at %s — run `python pipeline/generate_assets.py --web` first."
               % SRC_DIR)
         return 1
 

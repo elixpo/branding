@@ -1,11 +1,11 @@
-# prompts/og-image — Elixpo Mails OG / social cards
+# prompts/og — Elixpo Mails OG / social cards
 
 Open-graph (social share) cards for **Elixpo Mails** and the wider suite, in
 **editorial tech minimalism**: a faint **dotted matrix** background, a
 **continuous one-line** Oreo, 2–3 understated geometric shapes, and a bold
 serif headline. High-end design-system wireframe, not glowing 3D tech.
 
-> **LOCKED spec:** [`ref/OREO-LINEART.md`](../../ref/OREO-LINEART.md) is the
+> **LOCKED spec:** [`references/OREO-LINEART.md`](../../references/OREO-LINEART.md) is the
 > single source of truth for the line-art Oreo + this card system. Everything
 > here derives from it; the seed is pinned (`OG_SEED`) so the look reproduces.
 
@@ -28,7 +28,7 @@ the `.png`) to intentionally reroll a card.
 ## Structure — one folder per site
 
 ```
-prompts/og-image/
+prompts/og/
 ├── palette.json              ← shared palette + type tokens (root)
 ├── README.md
 └── mails.elixpo/              ← the first site
@@ -44,7 +44,7 @@ Each card `.md` holds **two blocks**: `## Prompt` (the text-free design, fed to
 the model) and `## Text` (`eyebrow` / `headline` / `sub` / `url`, drawn by
 Pillow). Copy a site's `output/default.png` → that app's `public/og-image.png`.
 
-To **add a site**, copy `mails.elixpo/` to `prompts/og-image/<newsite>/`,
+To **add a site**, copy `mails.elixpo/` to `prompts/og/<newsite>/`,
 edit each card's `## Text` (and any URLs), and run `--og <newsite>`.
 
 ## Palette — the "oreo" (Cohere/coral) system
@@ -65,7 +65,7 @@ Exact tokens from `mail.elixpo/app/globals.css`, light theme only. See
 ## Type (composited by `og_compose.py`, not the AI)
 
 - **Headline** — bold high-contrast **serif** (Fraunces / Playfair), auto-fit
-  + wrapped, ink. Drop `Fraunces-Bold.ttf` into `tools/fonts/` to upgrade
+  + wrapped, ink. Drop `Fraunces-Bold.ttf` into `pipeline/fonts/` to upgrade
   from the DejaVu fallback.
 - **Eyebrow / url** — **Space Mono**, uppercase, tracked, muted slate.
 - **Sub** — Inter, slate.
@@ -82,7 +82,7 @@ Exact tokens from `mail.elixpo/app/globals.css`, light theme only. See
    toward the text), kept **fairly large** in the **right ~40–42%**, clear of
    the text. Coral `#ff7759` fills **both
    ears and one leg**; a small, **compact** round **red `#DC3C32` "E" chest badge** (centred, stylish) is Oreo's signature — the only saturated colours, both on the mascot
-   (see `ref/MASCOT.md`).
+   (see `references/MASCOT.md`).
 4. **2–3 geometric shapes** — thin `#d9d9dd` hairline outlines (circle / triangle
    / square / arc), framing the mascot, never filled. Coral stays on the panda.
 5. **NO TEXT in the AI image** — the left ~55% is kept empty; the type is added
@@ -93,11 +93,11 @@ Exact tokens from `mail.elixpo/app/globals.css`, light theme only. See
 ## Generate
 
 ```bash
-python tools/generate_assets.py --og                       # every site, every card
-python tools/generate_assets.py --og mails.elixpo          # one site
-python tools/generate_assets.py --og mails.elixpo default  # one card
-python tools/generate_assets.py --og mails.elixpo --force  # reroll a locked card
-python tools/generate_assets.py --og --seed 11 --force     # reroll with another seed
+python pipeline/generate_assets.py --og                       # every site, every card
+python pipeline/generate_assets.py --og mails.elixpo          # one site
+python pipeline/generate_assets.py --og mails.elixpo default  # one card
+python pipeline/generate_assets.py --og mails.elixpo --force  # reroll a locked card
+python pipeline/generate_assets.py --og --seed 11 --force     # reroll with another seed
 ```
 
 ## Files (per site, e.g. `mails.elixpo/`)
