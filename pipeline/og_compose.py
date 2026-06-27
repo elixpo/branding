@@ -175,7 +175,7 @@ def compose_card(card_md, bg_path, out_path):
 
 # ── CLI: re-composite existing designs ────────────────────────────────────────
 def main(argv):
-    base = Path("prompts") / "og-image"
+    base = Path("prompts") / "og"
     if not base.exists():
         print("No %s" % base)
         return

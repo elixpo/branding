@@ -320,7 +320,7 @@ def generate_og(only=None, seed=42, force=False):
     Copy a site's output/default.png → that app's public/og-image.png.
     Style spec: prompts/og/<site>/STYLE.md
     """
-    base = Path("prompts") / "og-image"
+    base = Path("prompts") / "og"
     if not base.exists():
         print("No prompts directory at %s" % base)
         return
@@ -607,7 +607,7 @@ def main():
         return
 
     # ── open-graph cards mode ────────────────────────────────────────────────
-    # Editorial-minimalist social cards → og-image/, NO transparency pass.
+    # Editorial-minimalist social cards → og/, NO transparency pass.
     # Positional args after --og filter by stem (e.g. `--og default docs`).
     if "--og" in args:
         force = "--force" in args
